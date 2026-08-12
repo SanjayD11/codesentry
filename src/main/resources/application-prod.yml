@@ -93,3 +93,8 @@ ai:
     max-attempts: 3
     delay: 5000
     exponential-backoff: true
+
+
+# Security overrides
+cors:
+  allowed-origins: ${APP_FRONTEND_URL}

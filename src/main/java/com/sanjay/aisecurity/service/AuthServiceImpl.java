@@ -135,7 +135,7 @@ public class AuthServiceImpl implements AuthService {
                 .build();
         emailVerificationTokenRepository.save(verificationToken);
         
-        String verifyLink = "http://localhost:3000/verify-email?token=" + rawToken;
+        String verifyLink = frontendBaseUrl + "/verify-email?token=" + rawToken;
         emailService.sendVerificationEmail(savedUser.getEmail(), verifyLink);
 
         // Do not log them in immediately if verification is required
@@ -369,7 +369,7 @@ public class AuthServiceImpl implements AuthService {
                 .build();
         emailVerificationTokenRepository.save(verificationToken);
         
-        String verifyLink = "http://localhost:3000/verify-email?token=" + rawToken;
+        String verifyLink = frontendBaseUrl + "/verify-email?token=" + rawToken;
         emailService.sendVerificationEmail(user.getEmail(), verifyLink);
     }
 
