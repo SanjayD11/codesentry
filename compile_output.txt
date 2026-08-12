@@ -1,0 +1,36 @@
+﻿mvn.cmd : WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+At line:1 char:1
++ & 'C:\Program Files\JetBrains\IntelliJ IDEA 2026.1.1\plugins\maven\li ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (WARNING: A term...has been called:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+WARNING: sun.misc.Unsafe::staticFieldBase has been called by com.google.inject.internal.aop.HiddenClassDefiner 
+(file:/C:/Program%20Files/JetBrains/IntelliJ%20IDEA%202026.1.1/plugins/maven/lib/maven3/lib/guice-5.1.0-classes.jar)
+WARNING: Please consider reporting this to the maintainers of class com.google.inject.internal.aop.HiddenClassDefiner
+WARNING: sun.misc.Unsafe::staticFieldBase will be removed in a future release
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ------------------< com.sanjay:ai-security-platform >-------------------
+[INFO] Building AI Security Analysis Platform 1.0.0
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.3.2:clean (default-clean) @ ai-security-platform ---
+[INFO] Deleting D:\Micro Project\target
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ ai-security-platform ---
+[INFO] Copying 3 resources from src\main\resources to target\classes
+[INFO] Copying 4 resources from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.13.0:compile (default-compile) @ ai-security-platform ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 202 source files with javac [debug parameters release 17] to target\classes
+[INFO] /D:/Micro Project/src/main/java/com/sanjay/aisecurity/service/AdminServiceImpl.java: D:\Micro Project\src\main\java\com\sanjay\aisecurity\service\AdminServiceImpl.java uses unchecked or unsafe operations.
+[INFO] /D:/Micro Project/src/main/java/com/sanjay/aisecurity/service/AdminServiceImpl.java: Recompile with -Xlint:unchecked for details.
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  6.801 s
+[INFO] Finished at: 2026-07-22T15:48:42+05:30
+[INFO] ------------------------------------------------------------------------

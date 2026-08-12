@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Aegis Nexus - Profile</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "secondary-container": "#d0e1fb",
+                      "on-surface": "#111c2d",
+                      "on-secondary-fixed": "#0b1c30",
+                      "primary-container": "#2170e4",
+                      "on-primary-container": "#fefcff",
+                      "secondary-fixed": "#d3e4fe",
+                      "outline": "#727785",
+                      "tertiary": "#006947",
+                      "tertiary-fixed-dim": "#4edea3",
+                      "surface-container-lowest": "#ffffff",
+                      "surface": "#f9f9ff",
+                      "on-primary-fixed-variant": "#004395",
+                      "surface-bright": "#f9f9ff",
+                      "on-secondary": "#ffffff",
+                      "surface-container-low": "#f0f3ff",
+                      "on-error": "#ffffff",
+                      "on-surface-variant": "#424754",
+                      "on-tertiary": "#ffffff",
+                      "tertiary-container": "#00855b",
+                      "inverse-on-surface": "#ecf1ff",
+                      "background": "#f9f9ff",
+                      "on-tertiary-fixed": "#002113",
+                      "primary-fixed-dim": "#adc6ff",
+                      "error": "#ba1a1a",
+                      "surface-container": "#e7eeff",
+                      "error-container": "#ffdad6",
+                      "secondary-fixed-dim": "#b7c8e1",
+                      "primary": "#0058be",
+                      "on-secondary-fixed-variant": "#38485d",
+                      "secondary": "#505f76",
+                      "on-primary": "#ffffff",
+                      "surface-variant": "#d8e3fb",
+                      "surface-tint": "#005ac2",
+                      "primary-fixed": "#d8e2ff",
+                      "on-secondary-container": "#54647a",
+                      "surface-dim": "#cfdaf2",
+                      "outline-variant": "#c2c6d6",
+                      "surface-container-highest": "#d8e3fb",
+                      "on-tertiary-container": "#f5fff6",
+                      "on-primary-fixed": "#001a42",
+                      "on-error-container": "#93000a",
+                      "on-background": "#111c2d",
+                      "tertiary-fixed": "#6ffbbe",
+                      "inverse-primary": "#adc6ff",
+                      "surface-container-high": "#dee8ff",
+                      "on-tertiary-fixed-variant": "#005236",
+                      "inverse-surface": "#263143"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "md": "16px",
+                      "xs": "4px",
+                      "sm": "8px",
+                      "margin-desktop": "32px",
+                      "base": "8px",
+                      "xl": "32px",
+                      "margin-mobile": "16px",
+                      "3xl": "64px",
+                      "lg": "24px",
+                      "2xl": "48px",
+                      "gutter": "24px",
+                      "max-width": "1440px"
+              },
+              "fontFamily": {
+                      "label-md": ["Geist"],
+                      "display": ["Inter"],
+                      "headline-md": ["Inter"],
+                      "body-lg": ["Inter"],
+                      "code": ["Geist"],
+                      "title-lg": ["Inter"],
+                      "body-md": ["Inter"],
+                      "headline-lg-mobile": ["Inter"],
+                      "headline-lg": ["Inter"]
+              },
+              "fontSize": {
+                      "label-md": ["13px", {"lineHeight": "18px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                      "display": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "code": ["13px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "title-lg": ["18px", {"lineHeight": "28px", "fontWeight": "600"}],
+                      "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "headline-lg-mobile": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600"}]
+              }
+            },
+          },
+        }
+    </script>
+<style>
+        body { background-color: #f9f9ff; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0; }
+        .material-symbols-outlined.filled { font-variation-settings: 'FILL' 1; }
+        
+        /* Subtle Shadows */
+        .card-shadow { box-shadow: 0px 1px 3px rgba(0,0,0,0.05), 0px 1px 2px rgba(0,0,0,0.03); }
+        .card-shadow-hover:hover { box-shadow: 0px 10px 15px -3px rgba(0,0,0,0.05), 0px 4px 6px -2px rgba(0,0,0,0.02); }
+        
+        /* Custom Scrollbar for Sidebar if needed */
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #c2c6d6; border-radius: 4px; }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-lg min-h-screen flex flex-col md:flex-row">
+<!-- SideNavBar -->
+<aside class="hidden md:flex flex-col bg-surface-container-lowest border-r border-outline-variant shadow-sm fixed left-0 top-0 h-full w-64 p-md z-40">
+<div class="flex items-center gap-sm mb-xl px-sm">
+<div class="w-8 h-8 rounded-md bg-primary flex items-center justify-center">
+  <span class="material-symbols-outlined text-on-primary text-sm" style="font-variation-settings: 'FILL' 1;">security</span>
+</div>
+<div>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">Aegis Nexus</h1>
+<p class="font-label-md text-label-md text-on-surface-variant text-xs">AI Security Platform</p>
+</div>
+</div>
+<!-- Navigation Tabs -->
+<nav class="flex-1 overflow-y-auto custom-scrollbar flex flex-col gap-xs">
+<a class="flex items-center gap-md px-sm py-2 rounded-lg font-body-md text-body-md text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 ease-in-out" href="dashboard.html">
+<span class="material-symbols-outlined">dashboard</span>
+                Dashboard
+            </a>
+<a class="flex items-center gap-md px-sm py-2 rounded-lg font-body-md text-body-md text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 ease-in-out" href="scanner.html">
+<span class="material-symbols-outlined">code</span>
+                Source Code Scanner
+            </a>
+<a class="flex items-center gap-md px-sm py-2 rounded-lg font-body-md text-body-md text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 ease-in-out" href="reports.html">
+<span class="material-symbols-outlined">description</span>
+                Analysis Reports
+            </a>
+<a class="flex items-center gap-md px-sm py-2 rounded-lg font-body-md text-body-md text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">history</span>
+                Scan History
+            </a>
+<a class="flex items-center gap-md px-sm py-2 rounded-lg font-body-md text-body-md text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">smart_toy</span>
+                AI Assistant
+            </a>
+<a class="flex items-center gap-md px-sm py-2 rounded-lg font-body-md text-body-md text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 ease-in-out" href="settings.html">
+<span class="material-symbols-outlined">settings</span>
+                Settings
+            </a>
+<a class="flex items-center gap-md px-sm py-2 bg-secondary-container text-on-secondary-container rounded-lg font-bold font-body-md text-body-md duration-200 ease-in-out" href="profile.html">
+<span class="material-symbols-outlined filled">account_circle</span>
+                Profile
+            </a>
+</nav>
+<!-- Footer -->
+<div class="mt-auto pt-md border-t border-outline-variant">
+<a href="login.html" class="w-full flex items-center justify-center gap-sm px-sm py-2 rounded-lg font-body-md text-body-md text-error hover:bg-error-container/20 transition-colors duration-200 ease-in-out">
+<span class="material-symbols-outlined">logout</span>
+                Logout
+            </a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col md:ml-64 w-full min-h-screen">
+<!-- TopAppBar -->
+<header class="sticky top-0 w-full z-30 bg-surface/80 backdrop-blur-md border-b border-outline-variant h-16 px-lg flex justify-between items-center transition-all duration-150">
+<!-- Left: Breadcrumbs -->
+<div class="flex items-center gap-sm text-on-surface-variant font-label-md text-label-md">
+<span class="font-title-lg text-title-lg font-semibold text-on-surface hidden md:block mr-4">Aegis Nexus</span>
+<span class="material-symbols-outlined text-[16px] md:hidden">menu</span>
+<span>Aegis Nexus</span>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+<span class="text-primary font-semibold">Profile</span>
+</div>
+<!-- Right: Actions -->
+<div class="flex items-center gap-md">
+<button class="bg-primary text-on-primary px-4 py-1.5 rounded-DEFAULT font-label-md text-label-md hover:bg-surface-tint transition-colors shadow-sm hidden sm:block">
+                    Quick Scan
+                </button>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-primary-fixed-dim border border-outline-variant flex items-center justify-center">
+  <span class="material-symbols-outlined text-sm text-on-surface-variant">account_circle</span>
+</div>
+</div>
+</header>
+<!-- Page Content -->
+<div class="flex-1 p-margin-mobile md:p-margin-desktop max-w-[max-width] mx-auto w-full">
+<!-- Page Header -->
+<div class="mb-xl">
+<h2 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface mb-xs">My Profile</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant">View and update your account information.</p>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-gutter">
+<!-- Left Column: Profile Card & Status -->
+<div class="lg:col-span-1 flex flex-col gap-gutter">
+<!-- Profile Summary Card -->
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant p-lg card-shadow flex flex-col items-center text-center">
+<div class="w-24 h-24 rounded-full border-4 border-surface-container-highest flex items-center justify-center bg-primary-fixed-dim mb-md shadow-sm">
+  <span class="material-symbols-outlined text-[48px] text-on-surface-variant">account_circle</span>
+</div>
+<h3 class="font-title-lg text-title-lg text-on-surface mb-xs">Dr. Sarah Chen</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mb-md">sarah.chen@aegis-nexus.com</p>
+<div class="w-full border-t border-outline-variant pt-md flex justify-between items-center">
+<div class="text-left">
+<span class="block font-label-md text-label-md text-outline">Role</span>
+<span class="font-body-md text-body-md text-on-surface">User</span>
+</div>
+<div class="text-right">
+<span class="block font-label-md text-label-md text-outline">Member Since</span>
+<span class="font-body-md text-body-md text-on-surface">October 2023</span>
+</div>
+</div>
+</div>
+<!-- Account Info Card (Read-only) -->
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant p-lg card-shadow">
+<h4 class="font-title-lg text-title-lg text-on-surface mb-md pb-xs border-b border-outline-variant">Account Details</h4>
+<div class="flex justify-between items-center mb-md">
+<span class="font-label-md text-label-md text-on-surface-variant">User ID</span>
+<span class="font-code text-code text-on-surface bg-surface-container-low px-2 py-1 rounded-DEFAULT border border-outline-variant">AN-98234-X</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-label-md text-label-md text-on-surface-variant">Account Status</span>
+<span class="inline-flex items-center gap-xs px-2 py-1 rounded-full bg-tertiary-container/10 text-tertiary-container font-label-md text-label-md border border-tertiary-container/20">
+<span class="w-2 h-2 rounded-full bg-tertiary-container"></span>
+                                Active
+                            </span>
+</div>
+</div>
+</div>
+<!-- Right Column: Editable Forms & Actions -->
+<div class="lg:col-span-2 flex flex-col gap-gutter">
+<!-- Edit Information Form -->
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant p-lg card-shadow flex-1">
+<div class="flex justify-between items-center mb-xl pb-sm border-b border-outline-variant">
+<h4 class="font-title-lg text-title-lg text-on-surface">Personal Information</h4>
+<button class="text-primary hover:text-surface-tint font-label-md text-label-md flex items-center gap-xs transition-colors">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+                                Edit Profile
+                            </button>
+</div>
+<form class="space-y-lg">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+<div>
+<label class="block font-label-md text-label-md text-on-surface-variant mb-xs" for="firstName">First Name</label>
+<input class="w-full h-[40px] px-sm bg-surface-bright border border-outline-variant rounded-DEFAULT font-body-md text-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all" disabled="" id="firstName" type="text" value="Sarah"/>
+</div>
+<div>
+<label class="block font-label-md text-label-md text-on-surface-variant mb-xs" for="lastName">Last Name</label>
+<input class="w-full h-[40px] px-sm bg-surface-bright border border-outline-variant rounded-DEFAULT font-body-md text-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all" disabled="" id="lastName" type="text" value="Chen"/>
+</div>
+</div>
+<div>
+<label class="block font-label-md text-label-md text-on-surface-variant mb-xs" for="email">Email Address</label>
+<input class="w-full h-[40px] px-sm bg-surface-bright border border-outline-variant rounded-DEFAULT font-body-md text-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all" disabled="" id="email" type="email" value="sarah.chen@aegis-nexus.com"/>
+<p class="mt-1 font-label-md text-label-md text-outline text-[11px]">Contact IT support to change your primary email address.</p>
+</div>
+<div class="pt-lg border-t border-outline-variant flex flex-col sm:flex-row gap-md justify-between items-center">
+<a href="settings.html" class="w-full sm:w-auto px-lg py-2 bg-surface-container-lowest border border-outline-variant text-on-surface rounded-DEFAULT font-label-md text-label-md hover:bg-surface-container-low transition-colors shadow-sm flex items-center justify-center gap-xs">
+<span class="material-symbols-outlined text-[18px]">lock_reset</span>
+                                    Change Password
+                                </a>
+<div class="flex gap-sm w-full sm:w-auto">
+<button class="flex-1 sm:flex-none px-lg py-2 bg-surface-container-lowest border border-outline-variant text-on-surface rounded-DEFAULT font-label-md text-label-md hover:bg-surface-container-low transition-colors shadow-sm" type="button">
+                                        Cancel
+                                    </button>
+<button class="flex-1 sm:flex-none px-lg py-2 bg-primary text-on-primary rounded-DEFAULT font-label-md text-label-md hover:bg-surface-tint transition-colors shadow-sm opacity-50 cursor-not-allowed" type="button">
+                                        Save Changes
+                                    </button>
+</div>
+</div>
+</form>
+</div>
+<!-- Quick Navigation -->
+<div class="bg-primary-container/5 rounded-xl border border-primary-container/20 p-lg flex flex-col sm:flex-row items-center justify-between gap-md">
+<div>
+<h5 class="font-title-lg text-title-lg text-on-surface mb-xs">Ready to scan?</h5>
+<p class="font-body-md text-body-md text-on-surface-variant">Return to the dashboard to initiate a new security analysis.</p>
+</div>
+<a href="dashboard.html" class="whitespace-nowrap px-lg py-2 bg-primary-container text-on-primary-container rounded-DEFAULT font-label-md text-label-md hover:bg-surface-tint transition-colors shadow-sm flex items-center gap-xs">
+                            Go to Dashboard
+                            <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

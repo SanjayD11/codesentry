@@ -1,0 +1,95 @@
+# ==============================================================================
+# AI Security Analysis Platform - Production Profile Configuration
+# ==============================================================================
+# Activated when: spring.profiles.active=prod
+# Purpose: Hardened, secure production settings.
+# All secrets MUST be provided via environment variables — never hardcoded.
+# ==============================================================================
+
+spring:
+
+  # ----------------------------------------------------------------------------
+  # PRODUCTION MYSQL DATASOURCE (Aiven or any SSL-enabled MySQL)
+  # ----------------------------------------------------------------------------
+  # All three variables MUST be set in the deployment environment.
+  # DB_URL format: jdbc:mysql://<host>:<port>/<dbname>?sslMode=REQUIRED&serverTimezone=UTC&...
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 20
+      idle-timeout: 120000
+      connection-timeout: 30000
+      max-lifetime: 600000
+      connection-test-query: SELECT 1
+      pool-name: AiSecurityProdPool
+
+  # ----------------------------------------------------------------------------
+  # JPA / HIBERNATE — strict production settings
+  # ----------------------------------------------------------------------------
+  jpa:
+    hibernate:
+      ddl-auto: validate             # never auto-create tables in production
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+
+  # ----------------------------------------------------------------------------
+  # MAIL — production SMTP
+  # ----------------------------------------------------------------------------
+  mail:
+    host: ${MAIL_HOST}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+
+# ==============================================================================
+# SERVER — production hardening
+# ==============================================================================
+server:
+  port: ${SERVER_PORT:8080}
+  compression:
+    enabled: true
+    mime-types: application/json,application/xml,text/html,text/plain
+    min-response-size: 1024
+
+# ==============================================================================
+# LOGGING — production: only warnings and errors
+# ==============================================================================
+logging:
+  level:
+    root: WARN
+    com.sanjay.aisecurity: INFO
+    org.springframework.security: WARN
+    org.hibernate.SQL: WARN
+  file:
+    name: /var/log/ai-security/application.log
+  logback:
+    rollingpolicy:
+      max-file-size: 50MB
+      max-history: 30
+
+# ==============================================================================
+# APPLICATION PRODUCTION OVERRIDES
+# ==============================================================================
+app:
+  upload:
+    base-dir: ${UPLOAD_DIR:/data/ai-security/uploads}
+  jwt:
+    secret: ${JWT_SECRET}
+    expiration: ${JWT_EXPIRATION:86400000}
+  ai:
+    gemini:
+      api-key: ${GEMINI_API_KEY}
+  mail:
+    from-address: ${MAIL_FROM_ADDRESS}
+    from-name: ${MAIL_FROM_NAME:CodeSentry Support}
+
+ai:
+  retry:
+    max-attempts: 3
+    delay: 5000
+    exponential-backoff: true

@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Aegis Nexus - Settings</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-container": "#e7eeff",
+                      "on-primary": "#ffffff",
+                      "surface-bright": "#f9f9ff",
+                      "error-container": "#ffdad6",
+                      "on-background": "#111c2d",
+                      "outline-variant": "#c2c6d6",
+                      "on-secondary-fixed-variant": "#38485d",
+                      "on-error-container": "#93000a",
+                      "outline": "#727785",
+                      "secondary-container": "#d0e1fb",
+                      "on-secondary-container": "#54647a",
+                      "on-tertiary-container": "#f5fff6",
+                      "tertiary-container": "#00855b",
+                      "on-error": "#ffffff",
+                      "secondary-fixed-dim": "#b7c8e1",
+                      "surface-variant": "#d8e3fb",
+                      "on-primary-container": "#fefcff",
+                      "surface-container-low": "#f0f3ff",
+                      "surface-container-high": "#dee8ff",
+                      "on-surface": "#111c2d",
+                      "surface-container-lowest": "#ffffff",
+                      "on-tertiary-fixed-variant": "#005236",
+                      "on-tertiary-fixed": "#002113",
+                      "primary-container": "#2170e4",
+                      "inverse-primary": "#adc6ff",
+                      "tertiary-fixed": "#6ffbbe",
+                      "on-tertiary": "#ffffff",
+                      "primary-fixed": "#d8e2ff",
+                      "on-primary-fixed-variant": "#004395",
+                      "tertiary": "#006947",
+                      "secondary": "#505f76",
+                      "on-secondary-fixed": "#0b1c30",
+                      "on-primary-fixed": "#001a42",
+                      "surface-container-highest": "#d8e3fb",
+                      "surface-tint": "#005ac2",
+                      "surface": "#f9f9ff",
+                      "tertiary-fixed-dim": "#4edea3",
+                      "error": "#ba1a1a",
+                      "primary-fixed-dim": "#adc6ff",
+                      "on-surface-variant": "#424754",
+                      "secondary-fixed": "#d3e4fe",
+                      "inverse-surface": "#263143",
+                      "inverse-on-surface": "#ecf1ff",
+                      "surface-dim": "#cfdaf2",
+                      "background": "#f9f9ff",
+                      "primary": "#0058be",
+                      "on-secondary": "#ffffff"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px",
+                      "round-eight": "16px"
+              },
+              "spacing": {
+                      "sm": "8px",
+                      "3xl": "64px",
+                      "margin-mobile": "16px",
+                      "2xl": "48px",
+                      "lg": "24px",
+                      "gutter": "24px",
+                      "max-width": "1440px",
+                      "margin-desktop": "32px",
+                      "xl": "32px",
+                      "md": "16px",
+                      "xs": "4px",
+                      "base": "8px"
+              },
+              "fontFamily": {
+                      "headline-md": ["Plus Jakarta Sans", "sans-serif"],
+                      "display": ["Plus Jakarta Sans", "sans-serif"],
+                      "headline-lg-mobile": ["Plus Jakarta Sans", "sans-serif"],
+                      "title-lg": ["Plus Jakarta Sans", "sans-serif"],
+                      "code": ["Plus Jakarta Sans", "sans-serif"],
+                      "body-md": ["Plus Jakarta Sans", "sans-serif"],
+                      "headline-lg": ["Plus Jakarta Sans", "sans-serif"],
+                      "body-lg": ["Plus Jakarta Sans", "sans-serif"],
+                      "label-md": ["Plus Jakarta Sans", "sans-serif"]
+              },
+              "fontSize": {
+                      "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "display": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "headline-lg-mobile": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "title-lg": ["18px", {"lineHeight": "28px", "fontWeight": "600"}],
+                      "code": ["13px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                      "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "label-md": ["13px", {"lineHeight": "18px", "letterSpacing": "0.01em", "fontWeight": "500"}]
+              }
+            },
+          },
+        }
+      </script>
+<style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .focus-ring:focus-within {
+            border-color: #0058be;
+            box-shadow: 0 0 0 3px rgba(0, 88, 190, 0.2);
+        }
+      </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex">
+
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-full w-64 bg-surface-container-lowest border-r border-outline-variant shadow-sm flex flex-col p-md z-40 hidden md:flex">
+<div class="flex items-center gap-3 mb-8 px-2">
+<div class="w-8 h-8 rounded-md bg-primary flex items-center justify-center">
+  <span class="material-symbols-outlined text-on-primary text-sm" style="font-variation-settings: 'FILL' 1;">security</span>
+</div>
+<div>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">Aegis Nexus</h1>
+<p class="font-label-md text-label-md text-on-surface-variant">AI Security Platform</p>
+</div>
+</div>
+<nav class="flex-1 flex flex-col gap-1 overflow-y-auto">
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 ease-in-out rounded-lg font-body-md text-body-md" href="dashboard.html">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 ease-in-out rounded-lg font-body-md text-body-md" href="scanner.html">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">code</span>
+<span>Source Code Scanner</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 ease-in-out rounded-lg font-body-md text-body-md" href="reports.html">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">description</span>
+<span>Analysis Reports</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 ease-in-out rounded-lg font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">history</span>
+<span>Scan History</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 ease-in-out rounded-lg font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">smart_toy</span>
+<span>AI Assistant</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 bg-secondary-container text-on-secondary-container rounded-lg font-bold font-body-md text-body-md" href="settings.html">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">settings</span>
+<span>Settings</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 ease-in-out rounded-lg font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">account_circle</span>
+<span>Profile</span>
+</a>
+</nav>
+<div class="mt-auto pt-4 border-t border-outline-variant/30">
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 ease-in-out rounded-lg font-body-md text-body-md" href="login.html">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">logout</span>
+<span>Logout</span>
+</a>
+</div>
+</aside>
+
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col md:ml-64 w-full min-h-screen">
+<!-- TopAppBar -->
+<header class="sticky top-0 w-full bg-surface/80 backdrop-blur-md border-b border-outline-variant flex justify-between items-center h-16 px-lg z-30 transition-all duration-150">
+<div class="flex items-center gap-4">
+<div class="flex items-center text-on-surface-variant font-label-md text-label-md">
+<span class="hover:text-primary transition-colors cursor-pointer">Aegis Nexus</span>
+<span class="material-symbols-outlined text-sm mx-1">chevron_right</span>
+<span class="text-primary font-semibold">Settings</span>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="bg-primary text-on-primary px-4 py-2 rounded font-label-md text-label-md font-semibold hover:bg-primary/90 transition-colors shadow-sm hover:shadow-md border-t border-white/20">
+  Quick Scan
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors p-2 rounded-full hover:bg-surface-container-high">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">notifications</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-primary-fixed-dim border border-outline-variant flex items-center justify-center">
+  <span class="material-symbols-outlined text-sm text-on-surface-variant">account_circle</span>
+</div>
+</div>
+</header>
+
+<!-- Page Content -->
+<div class="flex-1 p-lg md:p-xl max-w-5xl mx-auto w-full">
+<div class="mb-xl">
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-2">Settings</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Manage your account and application preferences.</p>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-lg">
+<!-- Main Settings Column -->
+<div class="lg:col-span-2 flex flex-col gap-lg">
+
+  <!-- Account Information Card -->
+  <div class="bg-surface-container-lowest border border-outline-variant rounded-round-eight p-lg shadow-sm hover:shadow-md transition-shadow duration-300">
+    <div class="flex items-center justify-between mb-6 border-b border-outline-variant/50 pb-4">
+      <h3 class="font-title-lg text-title-lg text-on-surface">Account Information</h3>
+      <button class="text-primary font-label-md text-label-md font-semibold hover:bg-surface-container-high px-3 py-1.5 rounded transition-colors flex items-center gap-1">
+        <span class="material-symbols-outlined text-sm">edit</span> Edit
+      </button>
+    </div>
+    <div class="space-y-4">
+      <div>
+        <label class="block font-label-md text-label-md text-on-surface-variant mb-1">Full Name</label>
+        <div class="relative focus-ring rounded">
+          <input class="w-full h-10 px-3 bg-surface border border-outline-variant rounded text-on-surface font-body-md text-body-md outline-none transition-colors" readonly type="text" value="Dr. Sarah Chen"/>
+        </div>
+      </div>
+      <div>
+        <label class="block font-label-md text-label-md text-on-surface-variant mb-1">Email Address</label>
+        <div class="relative focus-ring rounded">
+          <input class="w-full h-10 px-3 bg-surface border border-outline-variant rounded text-on-surface font-body-md text-body-md outline-none transition-colors" readonly type="email" value="sarah.chen@aegis-nexus.com"/>
+        </div>
+      </div>
+    </div>
+    <div class="mt-6 flex justify-end">
+      <button class="bg-primary text-on-primary px-4 py-2 rounded font-label-md text-label-md font-semibold hover:bg-primary/90 transition-colors shadow-sm border-t border-white/20">
+        Save Changes
+      </button>
+    </div>
+  </div>
+
+  <!-- Change Password Card -->
+  <div class="bg-surface-container-lowest border border-outline-variant rounded-round-eight p-lg shadow-sm hover:shadow-md transition-shadow duration-300">
+    <div class="mb-6 border-b border-outline-variant/50 pb-4">
+      <h3 class="font-title-lg text-title-lg text-on-surface">Change Password</h3>
+    </div>
+    <div class="space-y-4">
+      <div>
+        <label class="block font-label-md text-label-md text-on-surface-variant mb-1">Current Password</label>
+        <div class="relative focus-ring rounded">
+          <input class="w-full h-10 px-3 bg-surface border border-outline-variant rounded text-on-surface font-body-md text-body-md outline-none transition-colors pr-10" placeholder="••••••••" type="password"/>
+          <button class="absolute right-3 top-1/2 -translate-y-1/2 text-outline hover:text-on-surface transition-colors">
+            <span class="material-symbols-outlined text-sm">visibility_off</span>
+          </button>
+        </div>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block font-label-md text-label-md text-on-surface-variant mb-1">New Password</label>
+          <div class="relative focus-ring rounded">
+            <input class="w-full h-10 px-3 bg-surface border border-outline-variant rounded text-on-surface font-body-md text-body-md outline-none transition-colors pr-10" type="password"/>
+            <button class="absolute right-3 top-1/2 -translate-y-1/2 text-outline hover:text-on-surface transition-colors">
+              <span class="material-symbols-outlined text-sm">visibility_off</span>
+            </button>
+          </div>
+        </div>
+        <div>
+          <label class="block font-label-md text-label-md text-on-surface-variant mb-1">Confirm Password</label>
+          <div class="relative focus-ring rounded">
+            <input class="w-full h-10 px-3 bg-surface border border-outline-variant rounded text-on-surface font-body-md text-body-md outline-none transition-colors pr-10" type="password"/>
+            <button class="absolute right-3 top-1/2 -translate-y-1/2 text-outline hover:text-on-surface transition-colors">
+              <span class="material-symbols-outlined text-sm">visibility_off</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mt-6 flex justify-end">
+      <button class="bg-surface text-on-surface border border-outline-variant px-4 py-2 rounded font-label-md text-label-md font-semibold hover:bg-surface-container-high transition-colors shadow-sm">
+        Update Password
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<!-- Side Settings Column -->
+<div class="flex flex-col gap-lg">
+
+  <!-- Appearance Card -->
+  <div class="bg-surface-container-lowest border border-outline-variant rounded-round-eight p-lg shadow-sm hover:shadow-md transition-shadow duration-300">
+    <div class="mb-4 border-b border-outline-variant/50 pb-2">
+      <h3 class="font-title-lg text-title-lg text-on-surface">Appearance</h3>
+    </div>
+    <div class="grid grid-cols-2 gap-4">
+      <button class="border-2 border-primary bg-surface-container flex flex-col items-center justify-center p-4 rounded-lg gap-2 hover:bg-surface-container-high transition-colors">
+        <span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">light_mode</span>
+        <span class="font-label-md text-label-md text-primary font-semibold">Light</span>
+      </button>
+      <button class="border border-outline-variant bg-inverse-surface flex flex-col items-center justify-center p-4 rounded-lg gap-2 hover:opacity-90 transition-opacity">
+        <span class="material-symbols-outlined text-inverse-on-surface" style="font-variation-settings: 'FILL' 0;">dark_mode</span>
+        <span class="font-label-md text-label-md text-inverse-on-surface font-semibold">Dark</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Preferences Card -->
+  <div class="bg-surface-container-lowest border border-outline-variant rounded-round-eight p-lg shadow-sm hover:shadow-md transition-shadow duration-300">
+    <div class="mb-4 border-b border-outline-variant/50 pb-2">
+      <h3 class="font-title-lg text-title-lg text-on-surface">Preferences</h3>
+    </div>
+    <div class="space-y-4">
+      <label class="flex items-center justify-between cursor-pointer group">
+        <span class="font-body-md text-body-md text-on-surface group-hover:text-primary transition-colors">Remember Me</span>
+        <div class="relative">
+          <input checked class="sr-only" type="checkbox"/>
+          <div class="w-10 h-6 bg-primary rounded-full shadow-inner transition-colors"></div>
+          <div class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform translate-x-4"></div>
+        </div>
+      </label>
+      <label class="flex items-center justify-between cursor-pointer group">
+        <span class="font-body-md text-body-md text-on-surface group-hover:text-primary transition-colors">Auto Save Preferences</span>
+        <div class="relative">
+          <input class="sr-only" type="checkbox"/>
+          <div class="w-10 h-6 bg-outline-variant rounded-full shadow-inner transition-colors"></div>
+          <div class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform"></div>
+        </div>
+      </label>
+    </div>
+  </div>
+
+  <!-- Account Actions Card -->
+  <div class="bg-surface-container-lowest border border-outline-variant rounded-round-eight p-lg shadow-sm hover:shadow-md transition-shadow duration-300">
+    <div class="mb-4 border-b border-outline-variant/50 pb-2">
+      <h3 class="font-title-lg text-title-lg text-on-surface">Account Actions</h3>
+    </div>
+    <div class="flex flex-col gap-3">
+      <a href="login.html" class="w-full flex justify-center items-center gap-2 bg-surface text-on-surface border border-outline-variant px-4 py-2 rounded font-label-md text-label-md font-semibold hover:bg-surface-container-high transition-colors">
+        <span class="material-symbols-outlined text-sm">logout</span> Logout
+      </a>
+      <button class="w-full flex justify-center items-center gap-2 bg-error-container text-on-error-container border border-error/20 px-4 py-2 rounded font-label-md text-label-md font-semibold hover:bg-error-container/80 transition-colors">
+        <span class="material-symbols-outlined text-sm">delete_forever</span> Delete Account
+      </button>
+    </div>
+  </div>
+
+</div>
+</div>
+</div>
+</main>
+</body>
+</html>

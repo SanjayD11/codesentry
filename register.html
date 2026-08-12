@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Create your account — Aegis Nexus</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,400..500&family=Geist:wght@100..900&family=Inter:wght@100..900&family=Plus+Jakarta+Sans:wght@400..800&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+        darkMode: "class",
+        theme: {
+            extend: {
+                "colors": {
+                    "surface-container-low": "#f0f3ff",
+                    "outline": "#727785",
+                    "primary-container": "#2170e4",
+                    "surface-dim": "#cfdaf2",
+                    "inverse-on-surface": "#ecf1ff",
+                    "surface-container-highest": "#d8e3fb",
+                    "background": "#f9f9ff",
+                    "on-tertiary-fixed": "#002113",
+                    "secondary-container": "#d0e1fb",
+                    "primary": "#0058be",
+                    "tertiary-fixed": "#6ffbbe",
+                    "primary-fixed": "#d8e2ff",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary": "#ffffff",
+                    "on-primary-container": "#fefcff",
+                    "tertiary-fixed-dim": "#4edea3",
+                    "inverse-surface": "#263143",
+                    "surface-container-high": "#dee8ff",
+                    "surface-bright": "#f9f9ff",
+                    "on-tertiary-fixed-variant": "#005236",
+                    "tertiary-container": "#00855b",
+                    "tertiary": "#006947",
+                    "on-error": "#ffffff",
+                    "on-surface-variant": "#424754",
+                    "on-surface": "#111c2d",
+                    "surface-tint": "#005ac2",
+                    "on-primary-fixed": "#001a42",
+                    "on-secondary-fixed": "#0b1c30",
+                    "secondary": "#505f76",
+                    "on-secondary-container": "#54647a",
+                    "surface-variant": "#d8e3fb",
+                    "error": "#ba1a1a",
+                    "outline-variant": "#c2c6d6",
+                    "error-container": "#ffdad6",
+                    "on-primary": "#ffffff",
+                    "on-tertiary-container": "#f5fff6",
+                    "on-secondary": "#ffffff",
+                    "on-error-container": "#93000a",
+                    "on-background": "#111c2d",
+                    "surface-container": "#e7eeff",
+                    "secondary-fixed-dim": "#b7c8e1",
+                    "inverse-primary": "#adc6ff",
+                    "surface": "#f9f9ff",
+                    "secondary-fixed": "#d3e4fe",
+                    "on-secondary-fixed-variant": "#38485d",
+                    "primary-fixed-dim": "#adc6ff",
+                    "on-primary-fixed-variant": "#004395"
+                },
+                "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                "spacing": {
+                    "max-width": "1440px", "md": "16px", "xs": "4px", "margin-desktop": "32px",
+                    "lg": "24px", "2xl": "48px", "base": "8px", "3xl": "64px", "gutter": "24px",
+                    "sm": "8px", "xl": "32px", "margin-mobile": "16px"
+                },
+                "fontFamily": {
+                    "body-lg": ["Inter"], "display": ["Plus Jakarta Sans"], "label-md": ["Inter"],
+                    "code": ["Geist"], "headline-lg-mobile": ["Plus Jakarta Sans"],
+                    "headline-md": ["Plus Jakarta Sans"], "headline-lg": ["Plus Jakarta Sans"],
+                    "title-lg": ["Plus Jakarta Sans"], "body-md": ["Inter"],
+                    "serif-display": ["Fraunces"]
+                },
+                "fontSize": {
+                    "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                    "display": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                    "label-md": ["13px", { "lineHeight": "18px", "letterSpacing": "0.01em", "fontWeight": "500" }],
+                    "code": ["13px", { "lineHeight": "20px", "fontWeight": "400" }],
+                    "headline-lg-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                    "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                    "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.03em", "fontWeight": "800" }],
+                    "title-lg": ["18px", { "lineHeight": "28px", "fontWeight": "700" }],
+                    "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }]
+                }
+            }
+        }
+    }
+</script>
+<style>
+    * { box-sizing: border-box; }
+    body {
+        background-color: #f9f9ff;
+        color: #111c2d;
+        font-family: 'Inter', sans-serif;
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+    }
+    h1, h2, h3, h4, h5, h6 { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .font-mono-code { font-family: 'Geist', monospace; }
+    .font-serif-display { font-family: 'Fraunces', serif; }
+
+    .cta-magnetic { transition: transform 0.22s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.22s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.22s ease; }
+    .cta-magnetic:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(17, 28, 45, 0.08); }
+    .cta-magnetic:active { transform: translateY(0) scale(0.99); box-shadow: 0 1px 2px rgba(17, 28, 45, 0.06); }
+
+    /* ============ Left brand panel — static, typography-led ============ */
+    .brand-panel {
+        background:
+            radial-gradient(at 12% 8%, rgba(94, 169, 255, 0.14) 0px, transparent 50%),
+            radial-gradient(at 88% 92%, rgba(78, 222, 163, 0.10) 0px, transparent 50%),
+            #263143;
+    }
+    .brand-grid {
+        background-image:
+            linear-gradient(rgba(255,255,255,0.045) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.045) 1px, transparent 1px);
+        background-size: 40px 40px;
+        -webkit-mask-image: radial-gradient(ellipse 75% 65% at 8% 0%, black 0%, transparent 75%);
+        mask-image: radial-gradient(ellipse 75% 65% at 8% 0%, black 0%, transparent 75%);
+    }
+    .quote-mark {
+        font-family: 'Fraunces', serif;
+        font-weight: 400;
+        font-style: italic;
+        color: rgba(255,255,255,0.16);
+        line-height: 0.6;
+    }
+    .brand-divider { background: linear-gradient(90deg, rgba(255,255,255,0.18), rgba(255,255,255,0)); height: 1px; }
+    .feature-row { border-top: 1px solid rgba(255,255,255,0.09); }
+    .feature-row:last-child { border-bottom: 1px solid rgba(255,255,255,0.09); }
+    .feature-icon-chip {
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(255,255,255,0.12);
+    }
+    .stat-chip { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); }
+
+    /* ============ Floating-label inputs ============ */
+    .field-group { position: relative; }
+    .field-input {
+        width: 100%;
+        background: #ffffff;
+        border: 1.5px solid #c2c6d6;
+        border-radius: 0.625rem;
+        padding: 22px 16px 10px 16px;
+        font-size: 14.5px;
+        color: #111c2d;
+        transition: border-color 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
+    }
+    .field-input.has-toggle { padding-right: 44px; }
+    .field-input::placeholder { color: transparent; }
+    .field-input:focus {
+        outline: none;
+        border-color: #0058be;
+        box-shadow: 0 0 0 4px rgba(0, 88, 190, 0.1);
+        background: #ffffff;
+    }
+    .field-input.field-error { border-color: #ba1a1a; }
+    .field-input.field-error:focus { box-shadow: 0 0 0 4px rgba(186, 26, 26, 0.1); }
+
+    .field-label {
+        position: absolute;
+        left: 16px;
+        top: 22px;
+        transform: translateY(-50%);
+        font-size: 14.5px;
+        color: #424754;
+        pointer-events: none;
+        transition: top 0.16s cubic-bezier(0.4, 0, 0.2, 1), font-size 0.16s cubic-bezier(0.4, 0, 0.2, 1), color 0.16s ease;
+        background: transparent;
+    }
+    .field-input:focus + .field-label,
+    .field-input:not(:placeholder-shown) + .field-label {
+        top: 13px;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.01em;
+        color: #0058be;
+    }
+    .field-input.field-error:focus + .field-label,
+    .field-input.field-error:not(:placeholder-shown) + .field-label {
+        color: #ba1a1a;
+    }
+    .field-msg {
+        min-height: 18px;
+        transition: opacity 0.15s ease;
+    }
+    .field-msg:empty { opacity: 0; }
+    .field-msg:not(:empty) { opacity: 1; animation: msg-in 0.18s ease; }
+    @keyframes msg-in { from { opacity: 0; transform: translateY(-2px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Password strength meter */
+    .strength-track { background: #e2e6f0; border-radius: 999px; overflow: hidden; height: 4px; }
+    .strength-bar { height: 100%; width: 0%; border-radius: 999px; transition: width 0.25s cubic-bezier(0.4,0,0.2,1), background-color 0.25s ease; }
+    .strength-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+
+    /* Checkbox */
+    .neo-checkbox { width: 18px; height: 18px; border-radius: 5px; border: 1.5px solid #c2c6d6; appearance: none; cursor: pointer; position: relative; transition: all 0.15s ease; flex-shrink: 0; }
+    .neo-checkbox:hover { border-color: #0058be; }
+    .neo-checkbox:checked { background: #0058be; border-color: #0058be; }
+    .neo-checkbox:checked::after { content: '✓'; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px; font-weight: 700; }
+    .neo-checkbox.checkbox-error { border-color: #ba1a1a; }
+
+    .spinner { width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.4); border-top-color: white; border-radius: 50%; animation: spin 0.7s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .reveal { opacity: 0; transform: translateY(10px); transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1), transform 0.55s cubic-bezier(0.16, 1, 0.3, 1); }
+    .reveal.in-view { opacity: 1; transform: translateY(0); }
+
+    ::selection { background: rgba(0, 88, 190, 0.18); }
+
+    @media (prefers-reduced-motion: reduce) {
+        .reveal { transition: none !important; opacity: 1 !important; transform: none !important; }
+        .cta-magnetic { transition: none !important; }
+    }
+</style>
+</head>
+<body class="min-h-screen">
+
+<div class="min-h-screen grid lg:grid-cols-2">
+
+    <!-- ============ LEFT: BRAND / EDITORIAL PANEL (static, no motion) ============ -->
+    <div class="brand-panel relative hidden lg:flex flex-col justify-between p-3xl overflow-hidden">
+        <div class="brand-grid absolute inset-0"></div>
+
+        <a href="index.html" class="relative z-10 flex items-center gap-sm">
+            <div class="w-10 h-10 rounded-lg bg-primary-container flex items-center justify-center text-on-primary-container shadow-sm">
+                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">security</span>
+            </div>
+            <span class="font-headline-md text-[18px] font-extrabold tracking-tight text-white">Aegis Nexus</span>
+        </a>
+
+        <!-- Editorial centerpiece -->
+        <div class="relative z-10 max-w-[420px]">
+            <span class="quote-mark text-[96px] block -mb-6">“</span>
+            <h2 class="font-serif-display text-[34px] leading-[1.2] font-medium tracking-[-0.01em] text-white">
+                Free, unlimited scanning —
+                <span class="italic text-tertiary-fixed-dim">no credit card.</span>
+            </h2>
+            <p class="font-body-md text-body-md text-secondary-fixed mt-md leading-relaxed">
+                Create an account and Aegis starts reading your files, links, and diffs the way a
+                senior security engineer would — explained in plain language, every time.
+            </p>
+
+            <div class="mt-2xl">
+                <div class="feature-row flex items-start gap-md py-md">
+                    <div class="feature-icon-chip w-8 h-8 rounded-md flex items-center justify-center text-tertiary-fixed-dim shrink-0 mt-[1px]">
+                        <span class="material-symbols-outlined text-[16px]">bolt</span>
+                    </div>
+                    <p class="font-body-md text-body-md text-secondary-fixed pt-[3px]">Your first scan runs in under a minute, no setup required</p>
+                </div>
+                <div class="feature-row flex items-start gap-md py-md">
+                    <div class="feature-icon-chip w-8 h-8 rounded-md flex items-center justify-center text-tertiary-fixed-dim shrink-0 mt-[1px]">
+                        <span class="material-symbols-outlined text-[16px]">group</span>
+                    </div>
+                    <p class="font-body-md text-body-md text-secondary-fixed pt-[3px]">Invite your team later — every plan starts on the free tier</p>
+                </div>
+                <div class="feature-row flex items-start gap-md py-md">
+                    <div class="feature-icon-chip w-8 h-8 rounded-md flex items-center justify-center text-tertiary-fixed-dim shrink-0 mt-[1px]">
+                        <span class="material-symbols-outlined text-[16px]">lock</span>
+                    </div>
+                    <p class="font-body-md text-body-md text-secondary-fixed pt-[3px]">Your code is scanned in memory and never stored on our servers</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="relative z-10">
+            <div class="brand-divider mb-lg"></div>
+            <div class="flex items-center gap-lg">
+                <div class="stat-chip rounded-lg px-lg py-md">
+                    <p class="font-headline-md text-[22px] font-extrabold text-white leading-none">40k+</p>
+                    <p class="font-label-md text-[12px] text-secondary-fixed mt-xs">files scanned daily</p>
+                </div>
+                <div class="stat-chip rounded-lg px-lg py-md">
+                    <p class="font-headline-md text-[22px] font-extrabold text-white leading-none">2 min</p>
+                    <p class="font-label-md text-[12px] text-secondary-fixed mt-xs">average setup time</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ RIGHT: REGISTER FORM ============ -->
+    <div class="flex items-center justify-center p-margin-mobile md:p-2xl relative bg-surface">
+        <div class="absolute inset-0 lg:hidden" style="background-color:#f9f9ff; background-image: radial-gradient(at 100% 0%, rgba(33, 112, 228, 0.08) 0px, transparent 50%);"></div>
+
+        <div class="w-full max-w-[400px] relative reveal">
+
+            <!-- Mobile-only logo -->
+            <div class="flex lg:hidden items-center gap-sm mb-2xl">
+                <a href="index.html" class="flex items-center gap-sm">
+                    <div class="w-10 h-10 rounded-lg bg-primary-container flex items-center justify-center text-on-primary-container shadow-sm">
+                        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">security</span>
+                    </div>
+                    <span class="font-headline-md text-[18px] font-extrabold tracking-tight text-primary">Aegis Nexus</span>
+                </a>
+            </div>
+
+            <h1 class="font-headline-lg text-[28px] text-on-surface font-extrabold tracking-tight">Create your account</h1>
+            <p class="font-body-md text-body-md text-on-surface-variant mt-xs">Start scanning files, links, and code in minutes — free.</p>
+
+            <!-- Social sign-up -->
+            <div class="grid grid-cols-2 gap-sm mt-xl">
+                <button type="button" class="cta-magnetic flex items-center justify-center gap-sm border border-outline-variant bg-surface-container-lowest rounded-lg py-sm font-label-md text-label-md font-semibold text-on-surface hover:bg-surface-container-low">
+                    <svg width="16" height="16" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3c-1.6 4.7-6.1 8-11.3 8-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.5 6 29.5 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.7-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.5 16 18.9 13 24 13c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.5 6 29.5 4 24 4c-7.7 0-14.3 4.4-17.7 10.7z"/><path fill="#4CAF50" d="M24 44c5.4 0 10.3-1.8 14-5l-6.5-5.3C29.5 35.4 26.9 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.6 5.1C9.6 39.6 16.3 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.2 4.3-4.1 5.7l6.5 5.3C41.4 36 44 30.6 44 24c0-1.3-.1-2.7-.4-3.5z"/></svg>
+                    Google
+                </button>
+                <button type="button" class="cta-magnetic flex items-center justify-center gap-sm border border-outline-variant bg-surface-container-lowest rounded-lg py-sm font-label-md text-label-md font-semibold text-on-surface hover:bg-surface-container-low">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8a8 8 0 0 0 5.47 7.59c.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.5 7.5 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8 8 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+                    GitHub
+                </button>
+            </div>
+
+            <div class="flex items-center gap-md my-lg">
+                <div class="h-px bg-outline-variant flex-1"></div>
+                <span class="font-label-md text-label-md text-on-surface-variant">or continue with email</span>
+                <div class="h-px bg-outline-variant flex-1"></div>
+            </div>
+
+            <form id="register-form" novalidate>
+                <div class="field-group mb-md">
+                    <input type="text" id="full-name" name="full-name" placeholder=" " class="field-input" autocomplete="name"/>
+                    <label for="full-name" class="field-label">Full name</label>
+                    <p class="field-msg font-label-md text-[12px] text-error mt-xs" id="name-error"></p>
+                </div>
+
+                <div class="field-group mb-md">
+                    <input type="email" id="email" name="email" placeholder=" " class="field-input" autocomplete="email"/>
+                    <label for="email" class="field-label">Work email</label>
+                    <p class="field-msg font-label-md text-[12px] text-error mt-xs" id="email-error"></p>
+                </div>
+
+                <div class="field-group mb-xs">
+                    <input type="password" id="password" name="password" placeholder=" " class="field-input has-toggle" autocomplete="new-password"/>
+                    <label for="password" class="field-label">Password</label>
+                    <button type="button" id="toggle-password" class="absolute right-[14px] top-[22px] -translate-y-1/2 text-on-surface-variant hover:text-on-surface transition-colors" aria-label="Show password">
+                        <span class="material-symbols-outlined text-[18px]" id="toggle-password-icon">visibility</span>
+                    </button>
+                </div>
+
+                <!-- Strength meter -->
+                <div class="strength-row mb-xs" id="strength-row">
+                    <div class="strength-track"><div class="strength-bar" id="bar-1"></div></div>
+                    <div class="strength-track"><div class="strength-bar" id="bar-2"></div></div>
+                    <div class="strength-track"><div class="strength-bar" id="bar-3"></div></div>
+                    <div class="strength-track"><div class="strength-bar" id="bar-4"></div></div>
+                </div>
+                <div class="flex items-center justify-between mb-md">
+                    <p class="font-label-md text-[12px] text-on-surface-variant" id="strength-label">Use 8+ characters with a number and symbol</p>
+                </div>
+                <p class="field-msg font-label-md text-[12px] text-error -mt-sm mb-md" id="password-error"></p>
+
+                <label class="flex items-start gap-sm mb-xl cursor-pointer w-fit select-none" id="terms-label">
+                    <input type="checkbox" class="neo-checkbox mt-[2px]" id="agree-terms"/>
+                    <span class="font-body-md text-body-md text-on-surface-variant leading-snug">
+                        I agree to the <a href="#" class="text-primary font-semibold hover:underline">Terms of Service</a> and <a href="#" class="text-primary font-semibold hover:underline">Privacy Policy</a>
+                    </span>
+                </label>
+
+                <button type="submit" id="submit-btn" class="cta-magnetic w-full bg-primary text-on-primary py-md rounded-lg font-label-md text-label-md font-semibold tracking-[0.005em] shadow-[inset_0_1px_0_rgba(255,255,255,0.2),0_1px_2px_rgba(0,0,0,0.1)] hover:bg-primary-fixed-variant flex items-center justify-center gap-sm">
+                    <span id="submit-label">Create account</span>
+                </button>
+
+                <p id="form-success" class="hidden mt-md items-center gap-xs font-label-md text-label-md font-semibold text-tertiary-container bg-tertiary-container/10 border border-tertiary-container/30 rounded-lg px-md py-sm">
+                    <span class="material-symbols-outlined text-[16px]">check_circle</span>
+                    Account created — redirecting…
+                </p>
+            </form>
+
+            <p class="font-body-md text-body-md text-on-surface-variant text-center mt-xl">
+                Already have an account? <a href="login.html" class="text-primary font-semibold hover:underline">Sign in</a>
+            </p>
+
+            <p class="flex items-center justify-center gap-xs font-label-md text-[12px] text-on-surface-variant mt-lg">
+                <span class="material-symbols-outlined text-[14px] text-tertiary-container">lock</span>
+                Your credentials are encrypted end-to-end
+            </p>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Entrance reveal
+    requestAnimationFrame(() => {
+        document.querySelectorAll('.reveal').forEach(el => el.classList.add('in-view'));
+    });
+
+    // Password visibility toggle
+    const pwdInput = document.getElementById('password');
+    const toggleBtn = document.getElementById('toggle-password');
+    const toggleIcon = document.getElementById('toggle-password-icon');
+    toggleBtn.addEventListener('click', () => {
+        const isHidden = pwdInput.type === 'password';
+        pwdInput.type = isHidden ? 'text' : 'password';
+        toggleIcon.textContent = isHidden ? 'visibility_off' : 'visibility';
+        toggleBtn.setAttribute('aria-label', isHidden ? 'Hide password' : 'Show password');
+        pwdInput.focus({ preventScroll: true });
+    });
+
+    // Password strength meter
+    const bars = [1, 2, 3, 4].map(n => document.getElementById(`bar-${n}`));
+    const strengthLabel = document.getElementById('strength-label');
+    const strengthColors = ['#ba1a1a', '#c77a1f', '#0058be', '#00855b'];
+    const strengthText = [
+        'Weak — add a number, symbol, or more length',
+        'Fair — try adding a symbol or a few more characters',
+        'Good — this password is solid',
+        'Strong — great, this password is hard to guess'
+    ];
+
+    function scorePassword(value) {
+        if (!value) return -1;
+        let score = 0;
+        if (value.length >= 8) score++;
+        if (value.length >= 12) score++;
+        if (/[0-9]/.test(value)) score++;
+        if (/[^A-Za-z0-9]/.test(value)) score++;
+        if (/[a-z]/.test(value) && /[A-Z]/.test(value)) score++;
+        return Math.min(score, 4);
+    }
+
+    pwdInput.addEventListener('input', () => {
+        const score = scorePassword(pwdInput.value);
+        bars.forEach((bar, i) => {
+            if (score >= 1 && i < score) {
+                bar.style.width = '100%';
+                bar.style.backgroundColor = strengthColors[Math.min(score, 4) - 1];
+            } else {
+                bar.style.width = '0%';
+            }
+        });
+        if (score <= 0) {
+            strengthLabel.textContent = 'Use 8+ characters with a number and symbol';
+            strengthLabel.style.color = '#424754';
+        } else {
+            strengthLabel.textContent = strengthText[Math.min(score, 4) - 1];
+            strengthLabel.style.color = strengthColors[Math.min(score, 4) - 1];
+        }
+        if (pwdInput.classList.contains('field-error') && pwdInput.value.length >= 8) {
+            setFieldError(pwdInput, passwordError, '');
+        }
+    });
+
+    // Validation + fake submit state
+    const form = document.getElementById('register-form');
+    const nameInput = document.getElementById('full-name');
+    const nameError = document.getElementById('name-error');
+    const emailInput = document.getElementById('email');
+    const emailError = document.getElementById('email-error');
+    const passwordError = document.getElementById('password-error');
+    const termsCheckbox = document.getElementById('agree-terms');
+    const submitBtn = document.getElementById('submit-btn');
+    const submitLabel = document.getElementById('submit-label');
+    const formSuccess = document.getElementById('form-success');
+
+    function setFieldError(input, errorEl, message) {
+        if (message) {
+            input.classList.add('field-error');
+            errorEl.textContent = message;
+        } else {
+            input.classList.remove('field-error');
+            errorEl.textContent = '';
+        }
+    }
+
+    function isValidEmail(value) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+    }
+
+    nameInput.addEventListener('input', () => {
+        if (nameInput.classList.contains('field-error') && nameInput.value.trim().length > 1) {
+            setFieldError(nameInput, nameError, '');
+        }
+    });
+    emailInput.addEventListener('input', () => {
+        if (emailInput.classList.contains('field-error') && isValidEmail(emailInput.value)) {
+            setFieldError(emailInput, emailError, '');
+        }
+    });
+    termsCheckbox.addEventListener('change', () => {
+        if (termsCheckbox.checked) termsCheckbox.classList.remove('checkbox-error');
+    });
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        let valid = true;
+
+        if (!nameInput.value.trim() || nameInput.value.trim().length < 2) {
+            setFieldError(nameInput, nameError, 'Enter your full name');
+            valid = false;
+        } else {
+            setFieldError(nameInput, nameError, '');
+        }
+
+        if (!emailInput.value.trim()) {
+            setFieldError(emailInput, emailError, 'Enter your email address');
+            valid = false;
+        } else if (!isValidEmail(emailInput.value)) {
+            setFieldError(emailInput, emailError, 'Enter a valid email address');
+            valid = false;
+        } else {
+            setFieldError(emailInput, emailError, '');
+        }
+
+        if (!pwdInput.value || pwdInput.value.length < 8) {
+            setFieldError(pwdInput, passwordError, 'Use at least 8 characters');
+            valid = false;
+        } else {
+            setFieldError(pwdInput, passwordError, '');
+        }
+
+        if (!termsCheckbox.checked) {
+            termsCheckbox.classList.add('checkbox-error');
+            valid = false;
+        }
+
+        if (!valid) return;
+
+        submitBtn.disabled = true;
+        submitBtn.classList.add('opacity-80', 'cursor-not-allowed');
+        submitLabel.innerHTML = '';
+        const spinner = document.createElement('span');
+        spinner.className = 'spinner';
+        submitLabel.appendChild(spinner);
+
+        setTimeout(() => {
+            formSuccess.classList.remove('hidden');
+            formSuccess.classList.add('flex');
+            submitLabel.textContent = 'Create account';
+            submitBtn.disabled = false;
+            submitBtn.classList.remove('opacity-80', 'cursor-not-allowed');
+            window.location.href = "login.html";
+        }, 1200);
+    });
+</script>
+</body>
+</html>

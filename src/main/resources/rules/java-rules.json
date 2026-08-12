@@ -1,0 +1,375 @@
+[
+  {
+    "id": "JAVA-001",
+    "name": "OS Command Injection",
+    "description": "Usage of Runtime.exec() or ProcessBuilder with untrusted data can lead to OS command injection.",
+    "severity": "CRITICAL",
+    "confidence": 0.9,
+    "category": "Injection",
+    "regex": "(Runtime\\.getRuntime\\(\\)\\.exec\\s*\\(|new\\s+ProcessBuilder\\s*\\()",
+    "fixSuggestion": "Use parameterized APIs and validate input strictly. Avoid passing user input to OS shells.",
+    "cwe": "CWE-78",
+    "owasp": "A03:2021-Injection",
+    "language": "JAVA",
+    "ignorePatterns": [
+      ".*Runtime\\.getRuntime\\(\\)\\.exec\\s*\\(\\s*\"[^\"]+\"\\s*\\).*"
+    ],
+    "requirePatternsNearby": [],
+    "contextLines": 5
+  },
+  {
+    "id": "JAVA-002",
+    "name": "SQL Injection",
+    "description": "Potential SQL Injection via unparameterized query execution.",
+    "severity": "HIGH",
+    "confidence": 0.85,
+    "category": "Injection",
+    "regex": "(executeQuery\\s*\\(|executeUpdate\\s*\\(|execute\\s*\\()",
+    "fixSuggestion": "Always use PreparedStatement instead of Statement for parameterized SQL.",
+    "cwe": "CWE-89",
+    "owasp": "A03:2021-Injection",
+    "language": "JAVA",
+    "ignorePatterns": [
+      ".*execute(?:Query|Update)?\\s*\\(\\s*\"[^\"]+\"\\s*\\).*"
+    ],
+    "requirePatternsNearby": [
+      "\\+"
+    ],
+    "contextLines": 5
+  },
+  {
+    "id": "JAVA-003",
+    "name": "Insecure Deserialization",
+    "description": "Use of ObjectInputStream can lead to arbitrary code execution.",
+    "severity": "HIGH",
+    "confidence": 0.95,
+    "category": "Software and Data Integrity Failures",
+    "regex": "new\\s+ObjectInputStream\\s*\\(",
+    "fixSuggestion": "Avoid native Java serialization. Use secure formats like JSON.",
+    "cwe": "CWE-502",
+    "owasp": "A08:2021-Software and Data Integrity Failures",
+    "language": "JAVA"
+  },
+  {
+    "id": "JAVA-004",
+    "name": "Weak Cryptography",
+    "description": "Usage of weak hashing algorithm (MD5/SHA1) or encryption mode (DES/ECB).",
+    "severity": "MEDIUM",
+    "confidence": 1.0,
+    "category": "Cryptographic Failures",
+    "regex": "MessageDigest\\.getInstance\\s*\\(\\s*\"(MD5|SHA-1)\"\\s*\\)|Cipher\\.getInstance\\s*\\(\\s*\"(DES|AES/ECB/PKCS5Padding)\"\\s*\\)",
+    "fixSuggestion": "Use SHA-256/SHA-512 for crypto, bcrypt/Argon2 for passwords, and AES/GCM for encryption.",
+    "cwe": "CWE-327",
+    "owasp": "A02:2021-Cryptographic Failures",
+    "language": "JAVA"
+  },
+  {
+    "id": "JAVA-005",
+    "name": "Hardcoded Credentials",
+    "description": "Potential hardcoded password/secret detected.",
+    "severity": "HIGH",
+    "confidence": 0.7,
+    "category": "Identification and Authentication Failures",
+    "regex": "(?i)(password|passwd|pwd|secret|api_key|token)\\s*=\\s*\"[^\"]{3,}\"",
+    "fixSuggestion": "Use environment variables, HashiCorp Vault, or AWS Secrets Manager.",
+    "cwe": "CWE-798",
+    "owasp": "A07:2021-Identification and Authentication Failures",
+    "language": "JAVA"
+  },
+  {
+    "id": "JAVA-006",
+    "name": "Information Disclosure",
+    "description": "Calling printStackTrace() or printing sensitive info exposes internal application details.",
+    "severity": "LOW",
+    "confidence": 0.8,
+    "category": "Security Misconfiguration",
+    "regex": "\\.printStackTrace\\(\\s*\\)|System\\.out\\.print.*(?i)(password|secret|key|token|path|file|exception|error)",
+    "fixSuggestion": "Use a logging framework (e.g., SLF4J, Logback) and log at ERROR level instead.",
+    "cwe": "CWE-209",
+    "owasp": "A05:2021-Security Misconfiguration",
+    "language": "JAVA"
+  },
+  {
+    "id": "JAVA-007",
+    "name": "Weak Randomness",
+    "description": "java.util.Random produces predictable values.",
+    "severity": "LOW",
+    "confidence": 0.9,
+    "category": "Cryptographic Failures",
+    "regex": "new\\s+java\\.util\\.Random\\(\\s*\\)",
+    "fixSuggestion": "Use java.security.SecureRandom for cryptographic or security-sensitive RNG.",
+    "cwe": "CWE-330",
+    "owasp": "A02:2021-Cryptographic Failures",
+    "language": "JAVA"
+  },
+  {
+    "id": "JAVA-008",
+    "name": "XML External Entity (XXE)",
+    "description": "Insecure XML parser configuration can lead to XXE.",
+    "severity": "HIGH",
+    "confidence": 0.85,
+    "category": "Security Misconfiguration",
+    "regex": "DocumentBuilderFactory\\.newInstance\\(\\s*\\)|XMLReaderFactory\\.createXMLReader\\(\\s*\\)",
+    "fixSuggestion": "Disable DOCTYPE processing or disallow external entities on DocumentBuilderFactory.",
+    "cwe": "CWE-611",
+    "owasp": "A05:2021-Security Misconfiguration",
+    "language": "JAVA",
+    "ignorePatterns": [
+      "setFeature\\(.*disallow-doctype-decl.*true\\)"
+    ],
+    "contextLines": 10
+  },
+  {
+    "id": "JAVA-009",
+    "name": "Path Traversal",
+    "description": "Unvalidated input passed to File constructors may allow path traversal.",
+    "severity": "HIGH",
+    "confidence": 0.6,
+    "category": "Broken Access Control",
+    "regex": "new\\s+java\\.io\\.File\\s*\\(|Paths\\.get\\s*\\(",
+    "fixSuggestion": "Validate file paths, restrict to expected directories, or use Path.normalize().",
+    "cwe": "CWE-22",
+    "owasp": "A01:2021-Broken Access Control",
+    "language": "JAVA",
+    "ignorePatterns": [
+      "new\\s+java\\.io\\.File\\s*\\(\\s*\"[^\"]+\"\\s*\\)",
+      "Paths\\.get\\s*\\(\\s*\"[^\"]+\"\\s*\\)"
+    ]
+  },
+  {
+    "id": "JAVA-010",
+    "name": "Server-Side Request Forgery (SSRF)",
+    "description": "Constructing a URL with user input can lead to SSRF.",
+    "severity": "HIGH",
+    "confidence": 0.7,
+    "category": "Server-Side Request Forgery",
+    "regex": "new\\s+java\\.net\\.URL\\s*\\(|\\.openConnection\\(\\s*\\)",
+    "fixSuggestion": "Validate URLs against a strict allowlist. Do not allow users to specify arbitrary hosts.",
+    "cwe": "CWE-918",
+    "owasp": "A10:2021-Server-Side Request Forgery",
+    "language": "JAVA",
+    "ignorePatterns": [
+      "new\\s+java\\.net\\.URL\\s*\\(\\s*\"[^\"]+\"\\s*\\)"
+    ]
+  },
+  {
+    "id": "JAVA-011",
+    "name": "Missing Secure Cookie",
+    "description": "Cookie is created without setting the Secure flag.",
+    "severity": "MEDIUM",
+    "confidence": 0.8,
+    "category": "Security Misconfiguration",
+    "regex": "new\\s+Cookie\\s*\\(|\\.setSecure\\(false\\)",
+    "fixSuggestion": "Always set cookie.setSecure(true) and cookie.setHttpOnly(true).",
+    "cwe": "CWE-614",
+    "owasp": "A05:2021-Security Misconfiguration",
+    "language": "JAVA"
+  },
+  {
+    "id": "JAVA-012",
+    "name": "LDAP Injection",
+    "description": "Unsanitized input in LDAP search query can lead to LDAP Injection.",
+    "severity": "HIGH",
+    "confidence": 0.85,
+    "category": "Injection",
+    "regex": "\\.search\\(|\\.lookup\\(",
+    "fixSuggestion": "Use parameterized queries for LDAP or properly escape LDAP specific characters.",
+    "cwe": "CWE-90",
+    "owasp": "A03:2021-Injection",
+    "language": "JAVA",
+    "requirePatternsNearby": [
+      "DirContext|ctx\\.search"
+    ],
+    "contextLines": 3
+  },
+  {
+    "id": "JAVA-013",
+    "name": "Unsafe Reflection",
+    "description": "Instantiating classes by name via reflection can lead to RCE.",
+    "severity": "HIGH",
+    "confidence": 0.75,
+    "category": "Injection",
+    "regex": "Class\\.forName\\s*\\(",
+    "fixSuggestion": "Avoid reflection with user-supplied data or validate against a strict whitelist.",
+    "cwe": "CWE-470",
+    "owasp": "A03:2021-Injection",
+    "language": "JAVA"
+  },
+  {
+    "id": "JAVA-014",
+    "name": "Cross-Site Scripting (XSS)",
+    "description": "User-controlled data written directly to HTTP response without encoding leads to XSS.",
+    "severity": "HIGH",
+    "confidence": 0.8,
+    "category": "Injection",
+    "regex": "(?:getWriter|PrintWriter).*\\bprintln?\\s*\\(|return\\s+\"<[a-zA-Z].*\\+",
+    "fixSuggestion": "HTML-encode all user input before writing to response. Use OWASP Java Encoder or Thymeleaf th:text.",
+    "cwe": "CWE-79",
+    "owasp": "A03:2021-Injection",
+    "language": "JAVA",
+    "requirePatternsNearby": [
+      "\\+"
+    ]
+  },
+  {
+    "id": "JAVA-015",
+    "name": "Open Redirect",
+    "description": "Redirect destination built from user input enables phishing via unvalidated redirect.",
+    "severity": "MEDIUM",
+    "confidence": 0.75,
+    "category": "Broken Access Control",
+    "regex": "return\\s+\"redirect:\\s*\"\\s*\\+|sendRedirect\\s*\\(|new\\s+RedirectView\\s*\\(",
+    "fixSuggestion": "Use an allowlist of permitted redirect targets; never redirect to a user-supplied URL.",
+    "cwe": "CWE-601",
+    "owasp": "A01:2021-Broken Access Control",
+    "language": "JAVA",
+    "ignorePatterns": [
+      ".*sendRedirect\\s*\\(\\s*\"[^\"]+\"\\s*\\).*"
+    ]
+  },
+  {
+    "id": "JAVA-016",
+    "name": "Sensitive Data in Logs",
+    "description": "Logging sensitive fields (password, token, secret) exposes credentials in log files.",
+    "severity": "MEDIUM",
+    "confidence": 0.7,
+    "category": "Security Logging and Monitoring Failures",
+    "regex": "(?:log\\.|logger\\.|Logger\\.|System\\.out\\.|System\\.err\\.)(?:info|debug|warn|error|trace|println?)\\s*\\(",
+    "fixSuggestion": "Mask or redact sensitive values before logging. Never log passwords, tokens, or API keys.",
+    "cwe": "CWE-532",
+    "owasp": "A09:2021-Security Logging and Monitoring Failures",
+    "language": "JAVA",
+    "requirePatternsNearby": [
+      "(?i)\\b(?:password|passwd|secret|token|jwt|apikey|api_key|authorization|cookie|sessionid)\\b"
+    ],
+    "contextLines": 3
+  },
+  {
+    "id": "JAVA-017",
+    "name": "Weak JWT Secret",
+    "description": "Short or hardcoded JWT signing secret makes tokens trivially forgeable.",
+    "severity": "HIGH",
+    "confidence": 0.85,
+    "category": "Cryptographic Failures",
+    "regex": "(?i)(?:jwtSecret|jwt_secret|signingKey)\\s*=\\s*\"[^\"]{1,31}\"",
+    "fixSuggestion": "Use a cryptographically random secret of at least 256 bits stored in environment variables.",
+    "cwe": "CWE-330",
+    "owasp": "A02:2021-Cryptographic Failures",
+    "language": "JAVA"
+  },
+  {
+    "id": "JAVA-018",
+    "name": "Weak CORS Configuration",
+    "description": "Wildcard CORS origin (*) allows any external site to make cross-origin requests.",
+    "severity": "MEDIUM",
+    "confidence": 0.9,
+    "category": "Security Misconfiguration",
+    "regex": "\\.allowedOrigins\\s*\\(\\s*\"\\*\"\\s*\\)|AllowedOrigin\\s*\\(\\s*\"\\*\"\\s*\\)",
+    "fixSuggestion": "Replace wildcard origins with an explicit allowlist of trusted domains.",
+    "cwe": "CWE-942",
+    "owasp": "A05:2021-Security Misconfiguration",
+    "language": "JAVA"
+  },
+  {
+    "id": "JAVA-019",
+    "name": "Unsafe File Upload",
+    "description": "File saved using original client-supplied filename without normalization enables path traversal.",
+    "severity": "HIGH",
+    "confidence": 0.7,
+    "category": "Insecure Design",
+    "regex": "getOriginalFilename\\s*\\(\\s*\\)|transferTo\\s*\\(\\s*new\\s+(?:java\\.io\\.)?File",
+    "fixSuggestion": "Sanitize filenames, validate MIME type and extension, store under server-generated names.",
+    "cwe": "CWE-434",
+    "owasp": "A04:2021-Insecure Design",
+    "language": "JAVA",
+    "requirePatternsNearby": [
+      "new File|Paths\\.get|transferTo"
+    ],
+    "contextLines": 10
+  },
+  {
+    "id": "JAVA-020",
+    "name": "HTTP Response Splitting",
+    "description": "User-controlled values in HTTP response headers can inject additional headers or responses.",
+    "severity": "MEDIUM",
+    "confidence": 0.75,
+    "category": "Injection",
+    "regex": "response\\.(?:addHeader|setHeader)\\s*\\(",
+    "fixSuggestion": "Strip CR (\\r) and LF (\\n) from any user input placed into response headers.",
+    "cwe": "CWE-113",
+    "owasp": "A03:2021-Injection",
+    "language": "JAVA",
+    "ignorePatterns": [
+      ".*response\\.(?:addHeader|setHeader)\\s*\\(\\s*\"[^\"]+\"\\s*,\\s*\"[^\"]+\"\\s*\\).*"
+    ]
+  },
+  {
+    "id": "JAVA-021",
+    "name": "Debug Configuration Enabled",
+    "description": "Debug flag enabled in source code may expose internal details in production environments.",
+    "severity": "LOW",
+    "confidence": 0.65,
+    "category": "Security Misconfiguration",
+    "regex": "\\.setDebug\\s*\\(\\s*true\\s*\\)|System\\.setProperty\\s*\\([^)]*debug[^)]*true",
+    "fixSuggestion": "Remove debug flags before production. Use Spring profiles to isolate development configuration.",
+    "cwe": "CWE-489",
+    "owasp": "A05:2021-Security Misconfiguration",
+    "language": "JAVA"
+  },
+  {
+    "id": "PY-001",
+    "name": "OS Command Injection",
+    "description": "Usage of os.system() or subprocess with shell=True allows command injection.",
+    "severity": "CRITICAL",
+    "confidence": 0.95,
+    "category": "Injection",
+    "regex": "(os\\.system\\(|subprocess\\..*\\(.*?shell\\s*=\\s*True)",
+    "fixSuggestion": "Use subprocess.run() with a list of arguments and shell=False.",
+    "cwe": "CWE-78",
+    "owasp": "A03:2021-Injection",
+    "language": "PYTHON"
+  },
+  {
+    "id": "PY-002",
+    "name": "SQL Injection",
+    "description": "Potential SQL injection via string formatting or concatenation in execute().",
+    "severity": "HIGH",
+    "confidence": 0.85,
+    "category": "Injection",
+    "regex": "\\.execute\\s*\\(",
+    "fixSuggestion": "Always use parameterized queries (e.g. execute(\"SELECT * FROM users WHERE id=?\", (id,)))",
+    "cwe": "CWE-89",
+    "owasp": "A03:2021-Injection",
+    "language": "PYTHON",
+    "requirePatternsNearby": [
+      "%|\\.format|f\""
+    ],
+    "contextLines": 3
+  },
+  {
+    "id": "PY-003",
+    "name": "Insecure Deserialization",
+    "description": "pickle.load() is unsafe and can execute arbitrary code.",
+    "severity": "CRITICAL",
+    "confidence": 1.0,
+    "category": "Software and Data Integrity Failures",
+    "regex": "pickle\\.load\\s*\\(|pickle\\.loads\\s*\\(",
+    "fixSuggestion": "Use safe formats like JSON. Never unpickle untrusted data.",
+    "cwe": "CWE-502",
+    "owasp": "A08:2021-Software and Data Integrity Failures",
+    "language": "PYTHON"
+  },
+  {
+    "id": "JAVA-022",
+    "name": "Directory Traversal",
+    "description": "Unvalidated input used to access files can lead to Directory Traversal.",
+    "severity": "HIGH",
+    "confidence": 0.7,
+    "category": "Broken Access Control",
+    "regex": "\\.\\./|\\.\\.\\\\",
+    "fixSuggestion": "Validate file paths strictly and ensure they resolve within allowed directories.",
+    "cwe": "CWE-22",
+    "owasp": "A01:2021-Broken Access Control",
+    "language": "JAVA"
+  }
+]

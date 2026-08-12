@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- ================================================================
+         PARENT - Spring Boot 3.3.x BOM manages all compatible versions
+    ================================================================ -->
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.3.4</version>
+        <relativePath/>
+    </parent>
+
+    <!-- ================================================================
+         PROJECT COORDINATES
+    ================================================================ -->
+    <groupId>com.sanjay</groupId>
+    <artifactId>ai-security-platform</artifactId>
+    <version>1.0.0</version>
+    <packaging>jar</packaging>
+
+    <name>AI Security Analysis Platform</name>
+    <description>
+        Enterprise-grade AI-powered source code security analysis platform.
+        Detects vulnerabilities, generates AI explanations, and produces PDF reports.
+    </description>
+
+    <!-- ================================================================
+         JAVA VERSION
+    ================================================================ -->
+    <properties>
+        <java.version>17</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <!-- Dependency versions not managed by Spring Boot BOM or overridden for JDK 25 -->
+        <jjwt.version>0.11.5</jjwt.version>
+        <springdoc.version>2.6.0</springdoc.version>
+        <openpdf.version>1.3.30</openpdf.version>
+        <tika.version>2.9.2</tika.version>
+        <commons-io.version>2.16.1</commons-io.version>
+        <lombok.version>1.18.42</lombok.version>
+    </properties>
+
+    <!-- ================================================================
+         DEPENDENCIES
+    ================================================================ -->
+    <dependencies>
+
+        <!-- ============================================================
+             SPRING BOOT STARTERS
+        ============================================================ -->
+
+        <!--
+            Spring Web MVC: Provides the DispatcherServlet, REST controllers,
+            embedded Tomcat server, Jackson JSON serialization.
+            Used by: All controllers and REST endpoints.
+        -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <!--
+            Spring Security: Authentication, authorization, filter chain,
+            BCrypt password encoding, CSRF, CORS configuration.
+            Used by: Security config, JWT filters, role-based authorization.
+        -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+
+        <!--
+            Spring Data JPA + Hibernate ORM: Entity management, JPQL queries,
+            repository pattern, transactions, schema auto-generation.
+            Used by: All entity classes and repositories.
+        -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+
+        <!--
+            Bean Validation (Hibernate Validator): @NotBlank, @Email, @Size,
+            @NotNull annotation-driven input validation.
+            Used by: All DTOs and request objects.
+        -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+
+        <!--
+            Spring Mail: JavaMailSender for SMTP-based email notifications.
+            Used by: NotificationService for scan completion / critical alert emails.
+        -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+
+        <!--
+            Firebase Admin SDK: Server-side verification of Firebase ID tokens.
+            Used exclusively to verify Google/GitHub OAuth tokens received from
+            the React frontend. After verification, the backend issues its own JWT.
+        -->
+        <dependency>
+            <groupId>com.google.firebase</groupId>
+            <artifactId>firebase-admin</artifactId>
+            <version>9.4.3</version>
+        </dependency>
+
+        <!--
+            Spring WebFlux WebClient: Non-blocking HTTP client for calling
+            external AI APIs (Gemini, future OpenAI/Claude).
+            Used by: ai.client package (GeminiClient, etc.)
+        -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
+        </dependency>
+
+        <!--
+            DevTools: Automatic restart on class change, fast restart,
+            live reload support during development.
+            Scope: runtime only, excluded from production jars.
+        -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <scope>runtime</scope>
+            <optional>true</optional>
+        </dependency>
+
+        <!--
+            Configuration Processor: Generates metadata for custom
+            @ConfigurationProperties classes, enabling IDE auto-completion.
+            Used by: AppProperties, JwtProperties, GeminiProperties.
+        -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- ============================================================
+             DATABASE
+        ============================================================ -->
+
+        <!--
+            MySQL Connector/J: JDBC driver for connecting to MySQL 8.x.
+            Required by: Spring Data JPA datasource configuration.
+        -->
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- ============================================================
+             LOMBOK
+        ============================================================ -->
+
+        <!--
+            Lombok: Compile-time code generation for getters, setters,
+            constructors, builders, logging annotations.
+            Used by: All entity, DTO, and service classes.
+        -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- ============================================================
+             JWT (JSON Web Token) - io.jsonwebtoken
+        ============================================================ -->
+
+        <!--
+            JJWT API: Core interfaces for JWT building and parsing.
+            Used by: JwtService to generate and validate access tokens.
+        -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+            <version>${jjwt.version}</version>
+        </dependency>
+
+        <!--
+            JJWT Implementation: Runtime implementation of the JJWT API.
+            Provides signing algorithms (HS256, HS512).
+        -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <version>${jjwt.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!--
+            JJWT Jackson: Integrates Jackson JSON parser for JWT claim
+            serialization and deserialization.
+        -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId>
+            <version>${jjwt.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- ============================================================
+             API DOCUMENTATION
+        ============================================================ -->
+
+        <!--
+            Springdoc OpenAPI (Swagger UI): Auto-generates OpenAPI 3.0
+            documentation from Spring MVC annotations.
+            Accessible at: /swagger-ui.html
+        -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>${springdoc.version}</version>
+        </dependency>
+
+        <!-- ============================================================
+             FILE PROCESSING
+        ============================================================ -->
+
+        <!--
+            Apache Tika: Content-based MIME type detection.
+            Validates uploaded file types beyond file extension checking.
+            Used by: FileValidator in the upload module.
+        -->
+        <dependency>
+            <groupId>org.apache.tika</groupId>
+            <artifactId>tika-core</artifactId>
+            <version>${tika.version}</version>
+        </dependency>
+
+        <!--
+            Apache Commons IO: File I/O utilities (copy, delete, size, move).
+            Used by: FileStorageService, ZipExtractor.
+        -->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${commons-io.version}</version>
+        </dependency>
+
+        <!-- ============================================================
+             PDF GENERATION
+        ============================================================ -->
+
+        <!--
+            OpenPDF: Open-source PDF generation library (iText fork).
+            Generates professional PDF security reports.
+            Used by: PdfGeneratorService in the report module.
+        -->
+        <dependency>
+            <groupId>com.github.librepdf</groupId>
+            <artifactId>openpdf</artifactId>
+            <version>${openpdf.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.pdfbox</groupId>
+            <artifactId>pdfbox</artifactId>
+            <version>2.0.30</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>5.2.3</version>
+        </dependency>
+
+        <!-- ============================================================
+             TESTING
+        ============================================================ -->
+
+        <!--
+            Spring Boot Test: JUnit 5, Mockito, MockMvc, Spring test context.
+            Used in future test phases.
+        -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!--
+            Spring Security Test: Provides @WithMockUser and other test
+            security helpers for testing secured endpoints.
+        -->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
+    <!-- ================================================================
+         BUILD PLUGINS
+    ================================================================ -->
+    <build>
+        <plugins>
+
+            <!--
+                Spring Boot Maven Plugin: Packages the application as an
+                executable fat jar. Excludes Lombok from the final artifact.
+            -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+
+            <!--
+                Maven Compiler Plugin: Enforces Java 17 source/target
+                compliance and configures Lombok annotation processor.
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <release>${java.version}</release>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
+
+</project>

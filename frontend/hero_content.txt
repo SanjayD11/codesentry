@@ -1,0 +1,129 @@
+--- Dashboard.jsx ---
+      <style>{`
+        .stats-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+        .dash-bottom-grid-v2 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; align-items: stretch; }
+        .dash-kpi-num { font-size: 28px; }
+        .dash-table-wrap { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        .dash-table-inner { min-width: 580px; }
+        .hero-actions { display: flex; gap: 10px; }
+        @media (max-width: 1024px) {
+          .stats-grid-4 { grid-template-columns: repeat(2, 1fr) !important; }
+          .dash-bottom-grid-v2 { grid-template-columns: 1fr !important; }
+        }
+        @media (max-width: 640px) {
+          .stats-grid-4 { grid-template-columns: repeat(1, 1fr) !important; }
+          .hero-actions { flex-direction: column; }
+          .dash-kpi-num  { font-size: 22px !important; }
+        }
+      `}</style>
+...
+      <section style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 20, flexWrap: 'wrap' }}>
+          <div style={{ minWidth: 0, flex: 1 }}>
+            <p style={{ margin: '0 0 4px', fontSize: 11.5, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#0058be' }}>
+              Security Dashboard
+            </p>
+            <h1 className="text-responsive-h1" style={{ margin: 0, fontWeight: 800, letterSpacing: '-0.025em', color: '#0f172a', fontFamily: "'Plus Jakarta Sans', 'Manrope', sans-serif" }}>
+              Good {new Date().getHours() < 12 ? 'morning' : new Date().getHours() < 18 ? 'afternoon' : 'evening'}, {firstName}.
+            </h1>
+            <p style={{ margin: '5px 0 0', fontSize: 13, color: '#475569', lineHeight: 1.5, fontWeight: 500, maxWidth: 480 }}>
+              {data.totalScans > 0
+                ? `${data.totalScans} scan${da
+...
+        /* Mobile */
+        @media (max-width: 640px) {
+          .stats-grid-4 { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
+          .dash-kpi-num { font-size: 24px !important; }
+          .dash-hero-mobile { border: none !important; box-shadow: none !important; background: transparent !important; padding: 0 !important; margin-bottom: 4px !important; }
+          .dash-hero-title { font-size: 28px !important; line-height: 1.15 !important; }
+          .dash-hero-subtitle { font-size: 13px !important; }
+          .dash-hero-btns { flex-direction: row !important; gap: 10px !important; width: 100% !important; }
+          .dash-hero-btns a { flex: 1 !important; justify-content: center !important; }
+          .dash-overview-header { display: flex !important; }
+          .kpi-card-mobile { border: none !important; background: #f5f8ff !important; box-shadow: none !important; padding: 14px !important; border-radius: 14px !important; }
+        }
+...
+      {/* ── Hero Section ── */}
+      <section className="dash-hero-mobile" style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 14, padding: '20px', boxShadow: '0 1px 3px rgba(15,23,42,0.04)' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <div>
+            <p style={{ margin: '0 0 4px', fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#0058be' }}>
+              Security Dashboard
+            </p>
+            <h1 className="dash-hero-title" style={{ margin: 0, fontSize: 'clamp(22px, 4vw, 26px)', fontWeight: 800, letterSpacing: '-0.025em', color: '#0f172a', fontFamily: "'Plus Jakarta Sans', 'Manrope', sans-serif", lineHeight: 1.2 }}>
+              Good {new Date().getHours() < 12 ? 'morning' : new Date().getHours() < 18 ? 'afternoon' : 'evening'}, {firstName} 👋
+            </h1>
+            <p className="dash-hero-subtitle" style={{ margin: '6px 0 0', fontSize: 13, color: '#64748b
+...
+--- Reports.jsx ---
+      {/* ── Compact Page Header ── */}
+      <div className="hero-card" style={{ marginBottom: 24 }}>
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 14, minWidth: 0, flex: 1 }}>
+            <div style={{ width: 40, height: 40, borderRadius: 10, background: '#eff6ff', border: '1px solid #bfdbfe', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <span className="material-symbols-outlined" style={{ fontSize: 20, color: '#2563eb', fontVariationSettings: "'FILL' 1" }}>folder_special</span>
+            </div>
+            <div style={{ minWidth: 0 }}>
+              <p style={{ margin: '0 0 1px', fontSize: 11, fontWeight: 700, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Documentation</p>
+              <h1 style={{ margin: 0, fontSize: 'clamp(18px, 4vw, 22px)', fontWeight
+...
+        /* Desktop */
+        .rp-stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; }
+        /* Tablet */
+        @media (max-width: 1024px) {
+          .rp-stats-grid { grid-template-columns: repeat(2, 1fr) !important; }
+        }
+        /* Mobile */
+        @media (max-width: 640px) {
+          .rp-stats-grid { grid-template-columns: 1fr !important; gap: 10px !important; }
+          .rp-hero-mobile { border: none !important; box-shadow: none !important; background: transparent !important; padding: 0 !important; margin-bottom: 24px !important; }
+          .rp-hero-icon { display: none !important; }
+...
+      {/* ── Compact Page Header ── */}
+      <div className="hero-card rp-hero-mobile" style={{ marginBottom: 24 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+            <div className="rp-hero-icon" style={{ width: 40, height: 40, borderRadius: 10, background: '#eff6ff', border: '1px solid #bfdbfe', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <span className="material-symbols-outlined" style={{ fontSize: 20, color: '#2563eb', fontVariationSettings: "'FILL' 1" }}>folder_special</span>
+            </div>
+            <div>
+              <p style={{ margin: '0 0 4px', fontSize: 11, fontWeight: 700, color: '#0058be', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Documentation</p>
+              <h1 className="rp-hero-title" style={{ margin: 0, fontSize: 'clamp(22px, 4vw, 26px)', fontWeight: 800, color: '#0f172a', letterSp
+...
+--- ScanHistory.jsx ---
+      {/* ── Header ── */}
+      <div className="hero-card" style={{ marginBottom: 24 }}>
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 14, minWidth: 0, flex: 1 }}>
+            <div style={{ width: 40, height: 40, borderRadius: 10, background: '#eff6ff', border: '1px solid #bfdbfe', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <span className="material-symbols-outlined" style={{ fontSize: 20, color: '#2563eb', fontVariationSettings: "'FILL' 1" }}>manage_history</span>
+            </div>
+            <div style={{ minWidth: 0 }}>
+              <p style={{ margin: '0 0 1px', fontSize: 11, fontWeight: 700, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Operations</p>
+              <h1 style={{ margin: 0, fontSize: 'clamp(18px, 4vw, 22px)', fontWeight: 700, color: '#
+...
+        /* Desktop */
+        .sh-stats-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 24px; }
+        .sh-kpi-num { font-size: 28px; }
+        /* Tablet */
+        @media (min-width: 768px) and (max-width: 1279px) { .sh-stats-grid { grid-template-columns: repeat(3, 1fr) !important; } }
+        /* Mobile */
+        @media (max-width: 640px) {
+          .sh-stats-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
+          .sh-kpi-num { font-size: 24px !important; }
+          .sh-stat-card { border-radius: 12px !important; padding: 14px 16px !important; border-color: #f1f5f9 !important; box-shadow: 0 1px 2px rgba(15,23,42,0.03) !important; }
+          .sh-stat-card.sh-stat-last { grid-column: span 2; display: flex; flex-direction: row; justify-content: space-between; align-items: center; }
+          .sh-stat-card.sh-stat-last .sh-stat-left { margin-bottom: 0 !important; gap: 12px !important; }
+          .sh-stat-card.
+...
+      {/* ── Header ── */}
+      <div className="hero-card sh-hero-mobile" style={{ marginBottom: 24 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+            <div className="sh-hero-icon" style={{ width: 40, height: 40, borderRadius: 10, background: '#eff6ff', border: '1px solid #bfdbfe', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <span className="material-symbols-outlined" style={{ fontSize: 20, color: '#2563eb', fontVariationSettings: "'FILL' 1" }}>manage_history</span>
+            </div>
+            <div>
+              <p style={{ margin: '0 0 4px', fontSize: 11, fontWeight: 700, color: '#0058be', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Operations</p>
+              <h1 className="sh-hero-title" style={{ margin: 0, fontSize: 'clamp(22px, 4vw, 26px)', fontWeight: 800, color: '#0f172a', letterSpacing: '-0.025em
+...

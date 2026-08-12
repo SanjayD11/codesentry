@@ -1,0 +1,110 @@
+{
+  "java/vulnerable/sql_injection.java": {
+    "expected": ["SQL Injection"],
+    "severities": {
+      "SQL Injection": "HIGH"
+    },
+    "confidence_threshold": 0.85
+  },
+  "java/safe/sql_injection_safe.java": {
+    "expected": [],
+    "severities": {},
+    "confidence_threshold": 0
+  },
+  "java/vulnerable/command_injection.java": {
+    "expected": ["OS Command Injection"],
+    "severities": {
+      "OS Command Injection": "CRITICAL"
+    },
+    "confidence_threshold": 0.90
+  },
+  "java/safe/command_injection_safe.java": {
+    "expected": [],
+    "severities": {},
+    "confidence_threshold": 0
+  },
+  "java/vulnerable/xxe.java": {
+    "expected": ["XML External Entity (XXE)"],
+    "severities": {
+      "XML External Entity (XXE)": "HIGH"
+    },
+    "confidence_threshold": 0.85
+  },
+  "java/safe/xxe_safe.java": {
+    "expected": [],
+    "severities": {},
+    "confidence_threshold": 0
+  },
+  "python/vulnerable/command_injection.py": {
+    "expected": ["OS Command Injection"],
+    "severities": {
+      "OS Command Injection": "CRITICAL"
+    },
+    "confidence_threshold": 0.95
+  },
+  "python/safe/command_injection_safe.py": {
+    "expected": [],
+    "severities": {},
+    "confidence_threshold": 0
+  },
+  "python/vulnerable/sql_injection.py": {
+    "expected": ["SQL Injection"],
+    "severities": {
+      "SQL Injection": "HIGH"
+    },
+    "confidence_threshold": 0.85
+  },
+  "python/safe/sql_injection_safe.py": {
+    "expected": [],
+    "severities": {},
+    "confidence_threshold": 0
+  },
+  "javascript/vulnerable/command_injection.js": {
+    "expected": ["OS Command Injection"],
+    "severities": {
+      "OS Command Injection": "CRITICAL"
+    },
+    "confidence_threshold": 0.90
+  },
+  "javascript/safe/command_injection_safe.js": {
+    "expected": [],
+    "severities": {},
+    "confidence_threshold": 0
+  },
+  "php/vulnerable/xss.php": {
+    "expected": ["Cross-Site Scripting (XSS)"],
+    "severities": {
+      "Cross-Site Scripting (XSS)": "HIGH"
+    },
+    "confidence_threshold": 0.80
+  },
+  "php/safe/xss_safe.php": {
+    "expected": [],
+    "severities": {},
+    "confidence_threshold": 0
+  },
+  "csharp/vulnerable/sql_injection.cs": {
+    "expected": ["SQL Injection"],
+    "severities": {
+      "SQL Injection": "HIGH"
+    },
+    "confidence_threshold": 0.85
+  },
+  "csharp/safe/sql_injection_safe.cs": {
+    "expected": [],
+    "severities": {},
+    "confidence_threshold": 0
+  },
+  "go/vulnerable/command_injection.go": {
+    "expected": ["OS Command Injection"],
+    "severities": {
+      "OS Command Injection": "CRITICAL"
+    },
+    "confidence_threshold": 0.90
+  },
+  "go/safe/command_injection_safe.go": {
+    "expected": [],
+    "severities": {},
+    "confidence_threshold": 0
+  }
+}

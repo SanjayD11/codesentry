@@ -1,0 +1,125 @@
+# ==============================================================================
+# AI Security Analysis Platform - Development Profile Configuration
+# ==============================================================================
+# Activated when: spring.profiles.active=dev
+# Points to the Aiven MySQL cloud database (same instance for dev + prod).
+#
+# Required environment variables (set in IDE run config or .env file):
+#   DB_USERNAME  — Aiven username (default: avnadmin)
+#   DB_PASSWORD  — Aiven password
+#
+# The truststore (aiven-truststore.jks) is bundled in src/main/resources and
+# resolved from the classpath at runtime.
+# ==============================================================================
+
+spring:
+
+  # ----------------------------------------------------------------------------
+  # AIVEN MYSQL DATASOURCE — SSL required
+  # ----------------------------------------------------------------------------
+  datasource:
+    # Full JDBC URL with all SSL and charset parameters inline.
+    # DB_URL env var overrides the entire URL when set (e.g. in CI/CD).
+    # url: ${DB_URL:jdbc:mysql://mysql-39e8dc98-ai-security-analysis-platform-a9ad.l.aivencloud.com:14746/defaultdb?sslMode=REQUIRED&serverTimezone=UTC&characterEncoding=UTF-8&useUnicode=true&allowReconnect=true&connectTimeout=30000&socketTimeout=60000&trustCertificateKeyStoreUrl=classpath:aiven-truststore.jks&trustCertificateKeyStorePassword=aivenssl123}
+    url: jdbc:mysql://localhost:3306/defaultdb?serverTimezone=UTC
+    username: root
+    password: 1234
+    hikari:
+      # Aiven free-tier caps connections — keep pool small for dev
+      minimum-idle: 2
+      maximum-pool-size: 5
+      idle-timeout: 120000       # 2 min — Aiven drops idle connections faster than default
+      connection-timeout: 30000
+      max-lifetime: 600000       # 10 min — shorter than Aiven's server-side timeout
+      connection-test-query: SELECT 1
+      pool-name: AiSecurityDevPool
+
+  # ----------------------------------------------------------------------------
+  # JPA / HIBERNATE — developer-friendly settings
+  # ----------------------------------------------------------------------------
+  jpa:
+    hibernate:
+      # 'update' creates missing tables / columns automatically on startup
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        # MySQL 8 dialect — compatible with Aiven MySQL 8.4.x
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        jdbc:
+          time_zone: UTC
+
+  # ----------------------------------------------------------------------------
+  # MAIL — Gmail SMTP (set MAIL_USERNAME and MAIL_PASSWORD as env vars or below)
+  # MAIL_PASSWORD must be a Gmail App Password (NOT your Gmail login password)
+  # Generate one at: https://myaccount.google.com/apppasswords
+  # ----------------------------------------------------------------------------
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
+    properties:
+      mail:
+        debug: true
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+
+# ==============================================================================
+# LOGGING — verbose for development
+# ==============================================================================
+logging:
+  level:
+    root: INFO
+    com.sanjay.aisecurity: DEBUG
+    org.springframework.security: DEBUG
+    org.springframework.web: INFO
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    com.zaxxer.hikari: DEBUG     # show HikariCP pool lifecycle events
+  pattern:
+    console: "%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(%5p) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n%wEx"
+
+# ==============================================================================
+# UPLOAD DIRECTORY — relative to project root during development
+# ==============================================================================
+app:
+  upload:
+    base-dir: uploads
+  mail:
+    from-address: ${MAIL_USERNAME:sanjiog321@gmail.com}
+    from-name: CodeSentry Support
+  frontend:
+    base-url: ${FRONTEND_URL:http://localhost:5173}
+  # ── DEV-ONLY SECRET FALLBACKS ───────────────────────────────────────────────
+  # These are safe placeholder values for local development ONLY.
+  # They are NOT the production secrets.
+  # For real AI features in dev, set GROQ_API_KEY as an environment variable.
+  jwt:
+    secret: ${JWT_SECRET:dev-local-jwt-secret-replace-in-production-min-32chars}
+
+# ==============================================================================
+# SERVER - Custom port configuration to match Vite Proxy
+# ==============================================================================
+server:
+  port: 8081
+
+ai:
+  retry:
+    max-attempts: 3
+    delay: 5000
+    exponential-backoff: true
+  # Dev-only Groq API key fallback — empty means AI enrichment returns a
+  # "unavailable" message gracefully instead of throwing an exception.
+  groq:
+    api-key: ${GROQ_API_KEY:}
+
+cors:
+  allowed-origins: http://localhost:5173

@@ -1,0 +1,168 @@
+# ==============================================================================
+# AI Security Analysis Platform - Default Application Configuration
+# ==============================================================================
+# This file contains settings common to ALL environments.
+# Environment-specific overrides are placed in:
+#   application-dev.yml  (local development)
+#   application-prod.yml (production deployment)
+# ==============================================================================
+
+spring:
+
+  # Active profile — switch to 'prod' for production deployments
+  profiles:
+    active: dev
+
+  application:
+    name: AI Security Analysis Platform
+
+  # ----------------------------------------------------------------------------
+  # DATASOURCE — connection parameters overridden per profile
+  # driver-class-name is auto-detected from mysql-connector-j on the classpath
+  # ----------------------------------------------------------------------------
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      pool-name: AiSecurityHikariPool
+      minimum-idle: 2
+      maximum-pool-size: 10
+      idle-timeout: 120000          # 2 minutes — conservative for cloud DBs
+      connection-timeout: 30000     # 30 seconds
+      max-lifetime: 600000          # 10 minutes
+      connection-test-query: SELECT 1
+      auto-commit: true
+
+  # ----------------------------------------------------------------------------
+  # JPA / HIBERNATE
+  # dialect is NOT set here — Spring Boot 3 + Hibernate 6 auto-detects MySQL
+  # ddl-auto is overridden per profile (update=dev, validate=prod)
+  # ----------------------------------------------------------------------------
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false             # disable OSIV to prevent lazy loading issues
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+        jdbc:
+          time_zone: UTC
+        # Batch inserts — useful for future bulk operations
+        order_inserts: true
+        order_updates: true
+        jdbc.batch_size: 20
+
+  # ----------------------------------------------------------------------------
+  # MULTIPART FILE UPLOAD
+  # ----------------------------------------------------------------------------
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 20MB
+      max-request-size: 100MB
+      file-size-threshold: 2KB     # buffer threshold before writing to disk
+
+  # ----------------------------------------------------------------------------
+  # JACKSON - JSON serialization
+  # ----------------------------------------------------------------------------
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+      indent-output: false
+    deserialization:
+      fail-on-unknown-properties: false
+    default-property-inclusion: NON_NULL
+    time-zone: UTC
+
+  # ----------------------------------------------------------------------------
+  # MAIL — overridden per profile
+  # ----------------------------------------------------------------------------
+  mail:
+    default-encoding: UTF-8
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+# ==============================================================================
+# SERVER
+# ==============================================================================
+server:
+  port: 8080
+  servlet:
+    context-path: /
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+  error:
+    include-message: never         # never expose internal messages to clients
+    include-stacktrace: never
+
+# ==============================================================================
+# SPRINGDOC / SWAGGER UI
+# ==============================================================================
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: method
+    tags-sorter: alpha
+    try-it-out-enabled: true
+    display-request-duration: true
+  show-actuator: false
+
+# ==============================================================================
+# APPLICATION CUSTOM PROPERTIES
+# ==============================================================================
+app:
+
+  # JWT configuration
+  jwt:
+    # REQUIRED: Set JWT_SECRET env var to a strong random secret (min 32 chars).
+    # Never commit a real secret here. Use: export JWT_SECRET=$(openssl rand -base64 48)
+    secret: ${JWT_SECRET:}
+    expiration: 86400000           # 24 hours in milliseconds
+    token-prefix: Bearer
+    header-name: Authorization
+    
+  # Auth configuration
+  auth:
+    password-reset:
+      expiry-hours: 24
+
+  # File upload storage configuration
+  upload:
+    directory: uploads
+    allowed-extensions: ".java,.kt,.py,.js,.ts,.jsx,.tsx,.xml,.yml,.yaml,.properties,.json,.sql,.html,.css,.md,.txt,.log,.zip"
+    blocked-extensions: ".exe,.bat,.cmd,.sh,.jar,.class"
+    max-zip-entries: 500
+
+  # AI Provider configuration
+  ai:
+    provider: groq
+    groq:
+      # REQUIRED: Set GROQ_API_KEY env var to your Groq API key.
+      # Never commit a real API key here. Obtain from: https://console.groq.com
+      api-key: ${GROQ_API_KEY:}
+      model:
+        primary: qwen/qwen3.6-27b
+        fallback: llama-3.3-70b-versatile
+        fallback2: openai/gpt-oss-120b
+      base-url: https://api.groq.com/openai/v1
+      timeout-seconds: 30
+      max-tokens: 2048
+      temperature: 0.2
+    rate-limit:
+      max-requests: 10
+      window-seconds: 60
+
+  # Security score configuration
+  security-score:
+    critical-weight: 10.0
+    high-weight: 5.0
+    medium-weight: 2.0
+    low-weight: 0.5
