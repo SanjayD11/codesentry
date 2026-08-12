@@ -60,7 +60,7 @@ public class ReportServiceImpl implements ReportService {
     private final VulnerabilityRepository vulnerabilityRepository;
     private final ReportRepository reportRepository;
 
-    @Value("${app.upload.directory:uploads}")
+    @Value("${REPORT_DIR:reports}")
     private String baseDir;
     
     private final java.util.concurrent.ConcurrentMap<Long, java.util.concurrent.locks.ReentrantLock> reportGenerationLocks = new java.util.concurrent.ConcurrentHashMap<>();
@@ -80,7 +80,7 @@ public class ReportServiceImpl implements ReportService {
 
             List<Vulnerability> vulnerabilities = vulnerabilityRepository.findByScanHistoryId(scanId);
             // Create directory
-            Path reportDir = Paths.get(baseDir, "reports",
+            Path reportDir = Paths.get(baseDir,
                     String.valueOf(project.getUser().getId()),
                     String.valueOf(project.getId()));
             Files.createDirectories(reportDir);

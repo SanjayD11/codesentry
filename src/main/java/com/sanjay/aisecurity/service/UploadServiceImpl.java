@@ -63,7 +63,7 @@ public class UploadServiceImpl implements UploadService {
     private final ProjectRepository projectRepository;
     private final UserRepository userRepository;
 
-    @Value("${app.upload.directory}")
+    @Value("${UPLOAD_DIR:uploads}")
     private String baseUploadDirectory;
 
     @Value("${app.upload.allowed-extensions}")
