@@ -163,14 +163,12 @@ export default function SecurityChat() {
 
     try {
       const payload = {
-        conversationId: activeId,
         message: displayMessage || (currentFile ? `[Uploaded file: ${currentFile.name}]` : ''),
-        attachedText: extractedTextToPass,
-        attachedFileName: currentFile ? currentFile.name : null,
-        scanHistoryId: selectedScanId ? Number(selectedScanId) : null
+        conversationId: activeId,
+        scanId: selectedScanId ? Number(selectedScanId) : null
       }
 
-      const res = await sendChat(payload)
+      const res = await sendChat(payload, currentFile)
       const data = res.data.data
       if (data && data.conversationId) setActiveId(data.conversationId)
 
