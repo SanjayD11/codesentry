@@ -42,7 +42,18 @@ public class FirebaseConfig {
         }
 
         try {
-            InputStream serviceAccount = new ClassPathResource(credentialsPath).getInputStream();
+            InputStream serviceAccount;
+            String envJson = System.getenv("FIREBASE_CREDENTIALS_JSON");
+
+            if (envJson != null && !envJson.isBlank()) {
+                // Load securely from Render environment variable
+                serviceAccount = new java.io.ByteArrayInputStream(envJson.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+                log.info("[Firebase] Loading credentials from FIREBASE_CREDENTIALS_JSON environment variable.");
+            } else {
+                // Fallback to local file for development
+                serviceAccount = new ClassPathResource(credentialsPath).getInputStream();
+                log.info("[Firebase] Loading credentials from local file: {}", credentialsPath);
+            }
 
             FirebaseOptions options = FirebaseOptions.builder()
                     .setCredentials(GoogleCredentials.fromStream(serviceAccount))
@@ -51,8 +62,8 @@ public class FirebaseConfig {
             FirebaseApp.initializeApp(options);
             log.info("[Firebase] Admin SDK initialized successfully.");
         } catch (IOException e) {
-            log.warn("[Firebase] Service account file '{}' not found — Firebase OAuth login will be unavailable. "
-                   + "Place the file in src/main/resources/ to enable it.", credentialsPath);
+            log.warn("[Firebase] Service account credentials not found — Firebase OAuth login will be unavailable. "
+                   + "Set FIREBASE_CREDENTIALS_JSON in Render or place the file locally.");
         }
     }
 }
