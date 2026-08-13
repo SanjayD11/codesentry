@@ -136,7 +136,11 @@ public class AuthServiceImpl implements AuthService {
         emailVerificationTokenRepository.save(verificationToken);
         
         String verifyLink = frontendBaseUrl + "/verify-email?token=" + rawToken;
-        emailService.sendVerificationEmail(savedUser.getEmail(), verifyLink);
+        try {
+            emailService.sendVerificationEmail(savedUser.getEmail(), verifyLink);
+        } catch (Exception e) {
+            log.error("Failed to send verification email to {}: {}", savedUser.getEmail(), e.getMessage());
+        }
 
         // Do not log them in immediately if verification is required
         return AuthenticationResponse.builder()
