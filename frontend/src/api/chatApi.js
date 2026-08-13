@@ -1,4 +1,4 @@
-﻿import api from './axiosConfig'
+import api from './axiosConfig'
 
 export const sendChat = (data, file) => {
   if (file) {
@@ -7,11 +7,7 @@ export const sendChat = (data, file) => {
     if (data.conversationId) formData.append('conversationId', data.conversationId)
     if (data.scanId) formData.append('scanId', data.scanId)
     formData.append('file', file)
-    return api.post('/chat', formData, {
-      headers: {
-        'Content-Type': undefined
-      }
-    })
+    return api.postForm('/chat', formData)
   }
   return api.post('/chat', data)
 }

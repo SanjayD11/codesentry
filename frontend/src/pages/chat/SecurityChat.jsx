@@ -103,6 +103,14 @@ export default function SecurityChat() {
     }
   }
 
+  useEffect(() => {
+    if (activeId === null && conversations.length > 0 && messages.length === 0) {
+      // Automatically load the latest conversation on initial visit
+      loadConversation(conversations[0].id)
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [conversations])
+
   const handleNewChat = () => {
     setActiveId(null)
     setMessages([])
