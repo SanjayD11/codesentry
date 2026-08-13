@@ -83,6 +83,11 @@ public class ChatbotServiceImpl implements ChatbotService {
 
         log.info("Chatbot request from user {} in conversation {}", email, conversationId);
         String aiResponse = aiProvider.complete(fullPrompt);
+        
+        // Strip out chain-of-thought blocks from reasoning models (like DeepSeek)
+        if (aiResponse != null) {
+            aiResponse = aiResponse.replaceAll("(?s)<think>.*?</think>", "").trim();
+        }
 
         // Persist the exchange
         ChatHistory entry = ChatHistory.builder()
@@ -160,6 +165,11 @@ public class ChatbotServiceImpl implements ChatbotService {
         log.info("Chatbot request from user {} in conversation {} (PDF attached: {})",
                 email, conversationId, !pdfContext.isEmpty());
         String aiResponse = aiProvider.complete(fullPrompt);
+        
+        // Strip out chain-of-thought blocks from reasoning models (like DeepSeek)
+        if (aiResponse != null) {
+            aiResponse = aiResponse.replaceAll("(?s)<think>.*?</think>", "").trim();
+        }
 
         // Save the clean original message to DB, not the PDF-stuffed version
         ChatHistory entry = ChatHistory.builder()
