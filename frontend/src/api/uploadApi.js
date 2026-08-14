@@ -2,8 +2,10 @@ import api from './axiosConfig'
 import axios from 'axios'
 
 export const uploadFiles = (projectId, formData, overrideDuplicate = false) => {
-  return api.post(`/uploads/${projectId}?overrideDuplicate=${overrideDuplicate}`, formData, {
-    headers: { 'Content-Type': undefined }
+  const token = localStorage.getItem('token')
+  const baseURL = import.meta.env.VITE_API_BASE_URL || '/api/v1'
+  return axios.post(`${baseURL}/uploads/${projectId}?overrideDuplicate=${overrideDuplicate}`, formData, {
+    headers: { Authorization: `Bearer ${token}` }
   })
 }
 
