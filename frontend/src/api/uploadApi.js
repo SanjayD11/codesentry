@@ -2,7 +2,9 @@ import api from './axiosConfig'
 import axios from 'axios'
 
 export const uploadFiles = (projectId, formData, overrideDuplicate = false) => {
-  return api.postForm(`/uploads/${projectId}?overrideDuplicate=${overrideDuplicate}`, formData)
+  return api.post(`/uploads/${projectId}?overrideDuplicate=${overrideDuplicate}`, formData, {
+    headers: { 'Content-Type': undefined }
+  })
 }
 
 export const getProjectFiles = (projectId, params) =>
