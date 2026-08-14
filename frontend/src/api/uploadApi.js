@@ -1,11 +1,8 @@
-﻿import api from './axiosConfig'
+import api from './axiosConfig'
 import axios from 'axios'
 
 export const uploadFiles = (projectId, formData, overrideDuplicate = false) => {
-  const token = localStorage.getItem('token')
-  return axios.post(`/api/v1/uploads/${projectId}?overrideDuplicate=${overrideDuplicate}`, formData, {
-    headers: { Authorization: `Bearer ${token}` }
-  })
+  return api.postForm(`/uploads/${projectId}?overrideDuplicate=${overrideDuplicate}`, formData)
 }
 
 export const getProjectFiles = (projectId, params) =>
