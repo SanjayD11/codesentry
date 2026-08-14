@@ -1,6 +1,7 @@
 package com.sanjay.aisecurity.service;
 
 import com.sanjay.aisecurity.ai.AiProvider;
+import com.sanjay.aisecurity.ai.AiFeature;
 import com.sanjay.aisecurity.ai.PromptBuilder;
 import com.sanjay.aisecurity.ai.SimpleRateLimiter;
 import com.sanjay.aisecurity.dto.request.ChatRequest;
@@ -82,7 +83,7 @@ public class ChatbotServiceImpl implements ChatbotService {
         String fullPrompt = PromptBuilder.buildChatPrompt(request.getMessage(), scanContext, storedPdfContext, history);
 
         log.info("Chatbot request from user {} in conversation {}", email, conversationId);
-        String aiResponse = aiProvider.complete(fullPrompt);
+        String aiResponse = aiProvider.complete(fullPrompt, AiFeature.CHAT);
         
         // Strip out chain-of-thought blocks from reasoning models (like DeepSeek)
         if (aiResponse != null) {
@@ -164,7 +165,7 @@ public class ChatbotServiceImpl implements ChatbotService {
 
         log.info("Chatbot request from user {} in conversation {} (PDF attached: {})",
                 email, conversationId, !pdfContext.isEmpty());
-        String aiResponse = aiProvider.complete(fullPrompt);
+        String aiResponse = aiProvider.complete(fullPrompt, AiFeature.CHAT);
         
         // Strip out chain-of-thought blocks from reasoning models (like DeepSeek)
         if (aiResponse != null) {

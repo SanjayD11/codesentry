@@ -1,6 +1,7 @@
 package com.sanjay.aisecurity.service.ai;
 
 import com.sanjay.aisecurity.ai.AiProvider;
+import com.sanjay.aisecurity.ai.AiFeature;
 import com.sanjay.aisecurity.ai.PromptBuilder;
 import com.sanjay.aisecurity.dto.request.ScanConfigurationDto;
 import com.sanjay.aisecurity.entity.ScanHistory;
@@ -91,7 +92,7 @@ public class AiEnrichmentService {
             String prompt = PromptBuilder.buildProjectSummaryPrompt(
                     successfulScans, vulnerabilities.size(), crit, high, med, low, vulnerabilities);
             
-            String aiSummary = aiProvider.complete(prompt);
+            String aiSummary = aiProvider.complete(prompt, AiFeature.REPORT_GENERATION);
             
             scanHistory.setAiSummary(aiSummary);
             scanHistoryRepository.save(scanHistory);

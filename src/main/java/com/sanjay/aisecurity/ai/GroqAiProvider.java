@@ -42,6 +42,17 @@ public class GroqAiProvider implements AiProvider {
     private final String primaryModel;
     private final String fallbackModel;
     private final String fallback2Model;
+    
+    // Feature-specific models
+    private final String enrichmentModel;
+    private final String enrichmentFallbackModel;
+    private final String reportModel;
+    private final String reportFallbackModel;
+    private final String assistantModel;
+    private final String assistantFallbackModel;
+    private final String quickScanModel;
+    private final String quickScanFallbackModel;
+    
     private final int timeoutSeconds;
     private final int maxTokens;
     private final double temperature;
@@ -53,6 +64,14 @@ public class GroqAiProvider implements AiProvider {
             @Value("${app.ai.groq.model.primary:qwen/qwen3.6-27b}") String primaryModel,
             @Value("${app.ai.groq.model.fallback:llama-3.3-70b-versatile}") String fallbackModel,
             @Value("${app.ai.groq.model.fallback2:openai/gpt-oss-120b}") String fallback2Model,
+            @Value("${app.ai.groq.model.enrichment-model:llama-3.3-70b-versatile}") String enrichmentModel,
+            @Value("${app.ai.groq.model.enrichment-fallback-model:qwen/qwen3.6-27b}") String enrichmentFallbackModel,
+            @Value("${app.ai.groq.model.report-model:qwen/qwen3.6-27b}") String reportModel,
+            @Value("${app.ai.groq.model.report-fallback-model:llama-3.3-70b-versatile}") String reportFallbackModel,
+            @Value("${app.ai.groq.model.assistant-model:llama-3.1-8b-instant}") String assistantModel,
+            @Value("${app.ai.groq.model.assistant-fallback-model:qwen/qwen3.6-27b}") String assistantFallbackModel,
+            @Value("${app.ai.groq.model.quick-scan-model:llama-3.1-8b-instant}") String quickScanModel,
+            @Value("${app.ai.groq.model.quick-scan-fallback-model:qwen/qwen3.6-27b}") String quickScanFallbackModel,
             @Value("${app.ai.groq.timeout-seconds:30}") int timeoutSeconds,
             @Value("${app.ai.groq.max-tokens:2048}") int maxTokens,
             @Value("${app.ai.groq.temperature:0.2}") double temperature) {
@@ -61,6 +80,16 @@ public class GroqAiProvider implements AiProvider {
         this.primaryModel = primaryModel;
         this.fallbackModel = fallbackModel;
         this.fallback2Model = fallback2Model;
+        
+        this.enrichmentModel = enrichmentModel;
+        this.enrichmentFallbackModel = enrichmentFallbackModel;
+        this.reportModel = reportModel;
+        this.reportFallbackModel = reportFallbackModel;
+        this.assistantModel = assistantModel;
+        this.assistantFallbackModel = assistantFallbackModel;
+        this.quickScanModel = quickScanModel;
+        this.quickScanFallbackModel = quickScanFallbackModel;
+        
         this.timeoutSeconds = timeoutSeconds;
         this.maxTokens = maxTokens;
         this.temperature = temperature;
@@ -106,6 +135,61 @@ public class GroqAiProvider implements AiProvider {
             log.error("[AI] [{}] All three models failed. Last error ({}): {}",
                     requestId, fallback2Model, e.getMessage());
             return "AI enrichment unavailable: All AI models are currently unavailable. Please try again later.";
+        }
+    }
+
+    @Override
+    public String complete(String prompt, AiFeature feature) {
+        if (apiKey == null || apiKey.isBlank()) {
+            log.warn("Groq API key is not configured. Returning placeholder response.");
+            return "AI unavailable: API key not configured.";
+        }
+        
+        return switch (feature) {
+            case ENRICHMENT -> completeWithFallback(
+                prompt,
+                enrichmentModel,
+                enrichmentFallbackModel
+            );
+            case REPORT_GENERATION -> completeWithFallback(
+                prompt,
+                reportModel,
+                reportFallbackModel
+            );
+            case QUICK_SCAN -> completeWithFallback(
+                prompt,
+                quickScanModel,
+                quickScanFallbackModel
+            );
+            case CHAT -> completeWithFallback(
+                prompt,
+                assistantModel,
+                assistantFallbackModel
+            );
+        };
+    }
+
+    private String completeWithFallback(
+            String prompt,
+            String primaryModel,
+            String fallbackModel) {
+        String requestId = UUID.randomUUID().toString();
+        long startTime = System.currentTimeMillis();
+        
+        try {
+            log.info("[AI] [{}] Using primary model: {}", requestId, primaryModel);
+            return callGroq(requestId, primaryModel, prompt, startTime, 1);
+        } catch (Exception ex) {
+            log.warn("[AI] [{}] Primary model failed: {}, switching to {}",
+                     requestId, primaryModel, fallbackModel, ex);
+
+            try {
+                return callGroq(requestId, fallbackModel, prompt, startTime, 2);
+            } catch (Exception innerEx) {
+                log.error("[AI] [{}] Both models failed. Last error ({}): {}", 
+                          requestId, fallbackModel, innerEx.getMessage());
+                return "AI unavailable: All selected models failed.";
+            }
         }
     }
 

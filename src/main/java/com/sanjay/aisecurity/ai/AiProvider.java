@@ -23,4 +23,16 @@ public interface AiProvider {
      * @return provider identifier string
      */
     String getProviderName();
+    
+    /**
+     * Sends a prompt to the AI provider with a specific feature context.
+     * Defaults to the standard complete method if not overridden.
+     *
+     * @param prompt the full prompt text to send
+     * @param feature the feature context of this call
+     * @return the AI-generated text response
+     */
+    default String complete(String prompt, AiFeature feature) {
+        return complete(prompt);
+    }
 }

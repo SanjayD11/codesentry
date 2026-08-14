@@ -152,6 +152,19 @@ app:
         primary: qwen/qwen3.6-27b
         fallback: llama-3.3-70b-versatile
         fallback2: openai/gpt-oss-120b
+        
+        # Feature-aware routing models
+        enrichment-model: llama-3.3-70b-versatile
+        enrichment-fallback-model: qwen/qwen3.6-27b
+        
+        report-model: qwen/qwen3.6-27b
+        report-fallback-model: llama-3.3-70b-versatile
+        
+        assistant-model: llama-3.1-8b-instant
+        assistant-fallback-model: qwen/qwen3.6-27b
+        
+        quick-scan-model: llama-3.1-8b-instant
+        quick-scan-fallback-model: qwen/qwen3.6-27b
       base-url: https://api.groq.com/openai/v1
       timeout-seconds: 60
       max-tokens: 8000

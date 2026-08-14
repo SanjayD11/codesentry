@@ -3,6 +3,7 @@ package com.sanjay.aisecurity.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sanjay.aisecurity.ai.AiProvider;
+import com.sanjay.aisecurity.ai.AiFeature;
 import com.sanjay.aisecurity.ai.PromptBuilder;
 import com.sanjay.aisecurity.ai.SimpleRateLimiter;
 import com.sanjay.aisecurity.dto.request.ScanConfigurationDto;
@@ -175,7 +176,7 @@ public class AiEnrichmentServiceImpl implements AiEnrichmentService {
 
         while (attempt <= maxAttempts) {
             try {
-                return aiProvider.complete(prompt);
+                return aiProvider.complete(prompt, AiFeature.ENRICHMENT);
             } catch (Exception e) {
                 boolean isTransient = isTransientError(e);
                 if (!isTransient || attempt == maxAttempts) {
