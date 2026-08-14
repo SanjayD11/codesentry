@@ -97,4 +97,4 @@ ai:
 
 # Security overrides
 cors:
-  allowed-origins: ${APP_FRONTEND_URL}
+  allowed-origins: ${APP_FRONTEND_URL},http://localhost:5173
