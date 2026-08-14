@@ -9,6 +9,12 @@ import { enrichVulnerability, enrichScan as enrichAllVulnerabilities, retryVulne
 import { useToast } from '../../hooks/useToast'
 import LoadingSpinner from '../../components/ui/LoadingSpinner'
 import EmptyState from '../../components/ui/EmptyState'
+import ReactMarkdown from 'react-markdown'
+
+const cleanAiText = (text) => {
+  if (!text) return '';
+  return text.replace(/<think>[\s\S]*?<\/think>/g, '').trim();
+}
 
 const SEV_STYLE = {
   CRITICAL: 'bg-error text-on-error',
@@ -557,14 +563,18 @@ export default function ReportDetail() {
                       {/* Technical Explanation */}
                       <div>
                         <div className="text-slate-400 text-[10px] uppercase font-bold tracking-wider mb-1">Technical Explanation</div>
-                        <p className="leading-relaxed bg-[#1e1e1e] p-3 rounded-lg border border-[#333]">{selectedVuln.aiExplanation}</p>
+                        <div className="bg-[#1e1e1e] p-3 rounded-lg border border-[#333] markdown-body text-slate-300">
+                          <ReactMarkdown>{cleanAiText(selectedVuln.aiExplanation)}</ReactMarkdown>
+                        </div>
                       </div>
 
                       {/* Root Cause */}
                       {selectedVuln.rootCause && (
                         <div>
                           <div className="text-slate-400 text-[10px] uppercase font-bold tracking-wider mb-1">Root Cause</div>
-                          <p className="leading-relaxed bg-[#1e1e1e] p-3 rounded-lg border border-[#333]">{selectedVuln.rootCause}</p>
+                          <div className="bg-[#1e1e1e] p-3 rounded-lg border border-[#333] markdown-body text-slate-300">
+                            <ReactMarkdown>{cleanAiText(selectedVuln.rootCause)}</ReactMarkdown>
+                          </div>
                         </div>
                       )}
 
@@ -572,7 +582,9 @@ export default function ReportDetail() {
                       {selectedVuln.businessImpact && (
                         <div>
                           <div className="text-slate-400 text-[10px] uppercase font-bold tracking-wider mb-1">Business Impact</div>
-                          <p className="leading-relaxed bg-error-container/10 p-3 rounded-lg border border-error/20 text-[#ffb4a9]">{selectedVuln.businessImpact}</p>
+                          <div className="bg-error-container/10 p-3 rounded-lg border border-error/20 markdown-body text-[#ffb4a9]">
+                            <ReactMarkdown>{cleanAiText(selectedVuln.businessImpact)}</ReactMarkdown>
+                          </div>
                         </div>
                       )}
 
@@ -580,7 +592,9 @@ export default function ReportDetail() {
                       {selectedVuln.aiRecommendation && (
                         <div>
                           <div className="text-slate-400 text-[10px] uppercase font-bold tracking-wider mb-1">Remediation</div>
-                          <p className="leading-relaxed bg-[#1e1e1e] p-3 rounded-lg border border-[#333]">{selectedVuln.aiRecommendation}</p>
+                          <div className="bg-[#1e1e1e] p-3 rounded-lg border border-[#333] markdown-body text-slate-300">
+                            <ReactMarkdown>{cleanAiText(selectedVuln.aiRecommendation)}</ReactMarkdown>
+                          </div>
                         </div>
                       )}
 
