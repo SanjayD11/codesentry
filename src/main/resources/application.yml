@@ -153,8 +153,8 @@ app:
         fallback: llama-3.3-70b-versatile
         fallback2: openai/gpt-oss-120b
       base-url: https://api.groq.com/openai/v1
-      timeout-seconds: 30
-      max-tokens: 2048
+      timeout-seconds: 60
+      max-tokens: 8000
       temperature: 0.2
     rate-limit:
       max-requests: 10

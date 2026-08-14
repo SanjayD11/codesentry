@@ -154,14 +154,15 @@ public class GroqAiProvider implements AiProvider {
 
                 String content = choice.message().content();
                 
-                // Strip DeepSeek <think> reasoning tags
-                content = content.replaceAll("(?s)<think>.*?</think>", "").trim();
+                // Strip DeepSeek <think> reasoning tags (including truncated ones)
+                content = content.replaceAll("(?s)<think>.*?(?:</think>|$)", "").trim();
                 
-                // Strip markdown JSON wrappers if present
-                if (content.startsWith("```json")) {
-                    content = content.replaceFirst("(?s)^```json\\s*", "").replaceFirst("(?s)\\s*```$", "").trim();
-                } else if (content.startsWith("```")) {
-                    content = content.replaceFirst("(?s)^```\\s*", "").replaceFirst("(?s)\\s*```$", "").trim();
+                // Extremely robust JSON extraction: find first '{' and last '}'
+                int firstBrace = content.indexOf('{');
+                int lastBrace = content.lastIndexOf('}');
+                
+                if (firstBrace != -1 && lastBrace != -1 && lastBrace >= firstBrace) {
+                    content = content.substring(firstBrace, lastBrace + 1);
                 }
 
                 return content;
