@@ -31,7 +31,7 @@ spring:
   # ----------------------------------------------------------------------------
   jpa:
     hibernate:
-      ddl-auto: validate             # never auto-create tables in production
+      ddl-auto: update             # adds new columns; never drops existing data
     show-sql: false
     properties:
       hibernate:

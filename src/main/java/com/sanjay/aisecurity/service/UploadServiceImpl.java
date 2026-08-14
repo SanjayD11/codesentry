@@ -167,6 +167,7 @@ public class UploadServiceImpl implements UploadService {
                     .originalFileName(originalFilename)
                     .storedFileName(storedFileName)
                     .fileExtension(extension)
+                    .extension(extension)
                     .mimeType(mimeType)
                     .fileSize(file.getSize())
                     .storagePath(targetLocation.toString())

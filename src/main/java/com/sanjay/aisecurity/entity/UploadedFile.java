@@ -59,6 +59,10 @@ public class UploadedFile extends BaseEntity {
     @Column(name = "file_extension", nullable = false, length = 20)
     private String fileExtension;
 
+    @Size(max = 20, message = "Extension must be less than 20 characters")
+    @Column(name = "extension", nullable = true, length = 20)
+    private String extension;
+
     @NotBlank(message = "MIME type is required")
     @Size(max = 100, message = "MIME type must be less than 100 characters")
     @Column(name = "mime_type", nullable = false, length = 100)
