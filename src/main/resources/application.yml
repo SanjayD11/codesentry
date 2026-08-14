@@ -167,7 +167,7 @@ app:
         quick-scan-fallback-model: qwen/qwen3.6-27b
       base-url: https://api.groq.com/openai/v1
       timeout-seconds: 60
-      max-tokens: 8000
+      max-tokens: 4096
       temperature: 0.2
     rate-limit:
       max-requests: 10

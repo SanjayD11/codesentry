@@ -108,7 +108,7 @@ public class GroqAiProvider implements AiProvider {
         // ── Tier 1: Primary model ─────────────────────────────────────────────
         log.info("[AI] [{}] Primary model selected: {}", requestId, primaryModel);
         try {
-            String result = callGroq(requestId, primaryModel, prompt, startTime, 1);
+            String result = callGroq(requestId, primaryModel, prompt, startTime, 1, null);
             log.info("[AI] [{}] Primary model ({}) responded successfully.", requestId, primaryModel);
             return result;
         } catch (Exception e) {
@@ -118,7 +118,7 @@ public class GroqAiProvider implements AiProvider {
 
         // ── Tier 2: First fallback ────────────────────────────────────────────
         try {
-            String result = callGroq(requestId, fallbackModel, prompt, startTime, 2);
+            String result = callGroq(requestId, fallbackModel, prompt, startTime, 2, null);
             log.info("[AI] [{}] Fallback 1 ({}) responded successfully.", requestId, fallbackModel);
             return result;
         } catch (Exception e) {
@@ -128,7 +128,7 @@ public class GroqAiProvider implements AiProvider {
 
         // ── Tier 3: Second fallback ───────────────────────────────────────────
         try {
-            String result = callGroq(requestId, fallback2Model, prompt, startTime, 3);
+            String result = callGroq(requestId, fallback2Model, prompt, startTime, 3, null);
             log.info("[AI] [{}] Fallback 2 ({}) responded successfully.", requestId, fallback2Model);
             return result;
         } catch (Exception e) {
@@ -149,22 +149,26 @@ public class GroqAiProvider implements AiProvider {
             case ENRICHMENT -> completeWithFallback(
                 prompt,
                 enrichmentModel,
-                enrichmentFallbackModel
+                enrichmentFallbackModel,
+                feature
             );
             case REPORT_GENERATION -> completeWithFallback(
                 prompt,
                 reportModel,
-                reportFallbackModel
+                reportFallbackModel,
+                feature
             );
             case QUICK_SCAN -> completeWithFallback(
                 prompt,
                 quickScanModel,
-                quickScanFallbackModel
+                quickScanFallbackModel,
+                feature
             );
             case CHAT -> completeWithFallback(
                 prompt,
                 assistantModel,
-                assistantFallbackModel
+                assistantFallbackModel,
+                feature
             );
         };
     }
@@ -172,19 +176,20 @@ public class GroqAiProvider implements AiProvider {
     private String completeWithFallback(
             String prompt,
             String primaryModel,
-            String fallbackModel) {
+            String fallbackModel,
+            AiFeature feature) {
         String requestId = UUID.randomUUID().toString();
         long startTime = System.currentTimeMillis();
         
         try {
             log.info("[AI] [{}] Using primary model: {}", requestId, primaryModel);
-            return callGroq(requestId, primaryModel, prompt, startTime, 1);
+            return callGroq(requestId, primaryModel, prompt, startTime, 1, feature);
         } catch (Exception ex) {
             log.warn("[AI] [{}] Primary model failed: {}, switching to {}",
                      requestId, primaryModel, fallbackModel, ex);
 
             try {
-                return callGroq(requestId, fallbackModel, prompt, startTime, 2);
+                return callGroq(requestId, fallbackModel, prompt, startTime, 2, feature);
             } catch (Exception innerEx) {
                 log.error("[AI] [{}] Both models failed. Last error ({}): {}", 
                           requestId, fallbackModel, innerEx.getMessage());
@@ -197,7 +202,7 @@ public class GroqAiProvider implements AiProvider {
     // INTERNAL CALL
     // =========================================================================
 
-    private String callGroq(String requestId, String model, String prompt, long startTime, int tier) {
+    private String callGroq(String requestId, String model, String prompt, long startTime, int tier, AiFeature feature) {
         GroqRequest request = new GroqRequest(
                 model,
                 List.of(new Message("user", prompt)),
@@ -219,7 +224,7 @@ public class GroqAiProvider implements AiProvider {
         } catch (WebClientResponseException e) {
             // HTTP 4xx/5xx — always propagate so the failover logic can catch it
             throw new RuntimeException(
-                    String.format("HTTP %d from Groq (model=%s): %s", e.getStatusCode().value(), model, e.getMessage()), e);
+                    String.format("HTTP %d from Groq (model=%s): %s", e.getStatusCode().value(), model, e.getResponseBodyAsString()), e);
         }
 
         long duration = System.currentTimeMillis() - startTime;
@@ -241,12 +246,17 @@ public class GroqAiProvider implements AiProvider {
                 // Strip DeepSeek <think> reasoning tags (including truncated ones)
                 content = content.replaceAll("(?s)<think>.*?(?:</think>|$)", "").trim();
                 
-                // Extremely robust JSON extraction: find first '{' and last '}'
-                int firstBrace = content.indexOf('{');
-                int lastBrace = content.lastIndexOf('}');
+                // Only extract JSON if feature requires it
+                boolean requiresJson = (feature == null || feature == AiFeature.ENRICHMENT || feature == AiFeature.QUICK_SCAN);
                 
-                if (firstBrace != -1 && lastBrace != -1 && lastBrace >= firstBrace) {
-                    content = content.substring(firstBrace, lastBrace + 1);
+                if (requiresJson) {
+                    // Extremely robust JSON extraction: find first '{' and last '}'
+                    int firstBrace = content.indexOf('{');
+                    int lastBrace = content.lastIndexOf('}');
+                    
+                    if (firstBrace != -1 && lastBrace != -1 && lastBrace >= firstBrace) {
+                        content = content.substring(firstBrace, lastBrace + 1);
+                    }
                 }
 
                 return content;
