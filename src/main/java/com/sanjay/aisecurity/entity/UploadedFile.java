@@ -72,6 +72,11 @@ public class UploadedFile extends BaseEntity {
     @Column(name = "storage_path", nullable = false, length = 500)
     private String storagePath;
 
+    @NotBlank(message = "Absolute path is required")
+    @Size(max = 500, message = "Absolute path must be less than 500 characters")
+    @Column(name = "absolute_path", nullable = false, length = 500)
+    private String absolutePath;
+
     @NotBlank(message = "SHA-256 hash is required")
     @Size(min = 64, max = 64, message = "SHA-256 hash must be exactly 64 characters")
     @Column(name = "checksum_sha256", nullable = false, length = 64)
