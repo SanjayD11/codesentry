@@ -533,14 +533,21 @@ pre, code, div[class*="language-"] {
   font-size: 13.5px;
 }
 .markdown-body h1, .markdown-body h2, .markdown-body h3, .markdown-body h4 {
-  color: #fff;
-  margin-top: 1em;
-  margin-bottom: 0.5em;
-  font-weight: 600;
+  margin-top: 1.2em;
+  margin-bottom: 0.6em;
+  font-weight: 700;
+  letter-spacing: 0.02em;
 }
-.markdown-body h1 { font-size: 16px; }
-.markdown-body h2 { font-size: 14.5px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 4px; }
-.markdown-body h3 { font-size: 13.5px; }
+.markdown-body h1 { font-size: 16px; color: #60a5fa; } /* Blue */
+.markdown-body h2 { 
+  font-size: 14.5px; 
+  color: #34d399; /* Emerald */
+  border-bottom: 1px solid rgba(52, 211, 153, 0.2); 
+  padding-bottom: 6px; 
+}
+.markdown-body h3 { font-size: 13.5px; color: #a78bfa; } /* Violet */
+.markdown-body h4 { font-size: 13px; color: #f472b6; } /* Pink */
+.markdown-body strong { color: #fcd34d; font-weight: 700; } /* Amber for bold text */
 .markdown-body p {
   margin-bottom: 0.8em;
   line-height: 1.6;

@@ -13,7 +13,9 @@ import ReactMarkdown from 'react-markdown'
 
 const cleanAiText = (text) => {
   if (!text) return '';
-  return text.replace(/<think>[\s\S]*?<\/think>/g, '').trim();
+  // Strip DeepSeek think tags even if they are truncated (missing closing tag)
+  let cleaned = text.replace(/<think>[\s\S]*?(?:<\/think>|$)/gi, '');
+  return cleaned.trim();
 }
 
 const SEV_STYLE = {
