@@ -25,5 +25,8 @@ COPY --from=build /app/target/*.jar app.jar
 # Expose standard Spring Boot port
 EXPOSE 8080
 
+# Create upload directories (temp for multipart + permanent storage)
+RUN mkdir -p /tmp/uploads /app/uploads
+
 # Run the application
 ENTRYPOINT ["java", "-jar", "app.jar"]

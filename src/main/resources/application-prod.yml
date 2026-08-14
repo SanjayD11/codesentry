@@ -46,6 +46,17 @@ spring:
     username: ${MAIL_USERNAME}
     password: ${MAIL_PASSWORD}
 
+  # ----------------------------------------------------------------------------
+  # MULTIPART — production overrides for Render
+  # ----------------------------------------------------------------------------
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 20MB
+      max-request-size: 100MB
+      file-size-threshold: 2KB
+      location: /tmp/uploads
+
 # ==============================================================================
 # SERVER — production hardening
 # ==============================================================================

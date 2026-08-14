@@ -57,13 +57,24 @@ public class UploadController {
                     "unless overrideDuplicate=true, in which case the file is re-uploaded and treated as a fresh entry.")
     public ResponseEntity<ApiResponse<List<UploadFileResponse>>> uploadFiles(
             @PathVariable Long projectId,
-            @RequestParam("files") MultipartFile[] files,
+            @RequestParam(value = "files", required = false) MultipartFile[] files,
             @RequestParam(value = "overrideDuplicate", defaultValue = "false") boolean overrideDuplicate) {
-        log.info("Received request to upload {} file(s) to project {} (overrideDuplicate={})",
-                files.length, projectId, overrideDuplicate);
-        List<UploadFileResponse> responses = uploadService.uploadFiles(projectId, files, overrideDuplicate);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.created("Files processed", responses));
+        try {
+            if (files == null || files.length == 0) {
+                log.warn("Upload request to project {} contained no files", projectId);
+                return ResponseEntity.badRequest()
+                        .body(ApiResponse.badRequest("No files provided. Please select at least one file to upload."));
+            }
+            log.info("Received request to upload {} file(s) to project {} (overrideDuplicate={})",
+                    files.length, projectId, overrideDuplicate);
+            List<UploadFileResponse> responses = uploadService.uploadFiles(projectId, files, overrideDuplicate);
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(ApiResponse.created("Files processed", responses));
+        } catch (Exception e) {
+            log.error("Upload failed for project {}: {}", projectId, e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(ApiResponse.internalError("Upload failed: " + e.getMessage()));
+        }
     }
 
     @GetMapping("/project/{projectId}")

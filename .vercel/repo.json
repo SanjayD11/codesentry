@@ -1,0 +1,11 @@
+{
+  "remoteName": "origin",
+  "projects": [
+    {
+      "id": "prj_uSsF9HrWKAB87ZlNfC0OeG0eG5Ll",
+      "name": "codesentry",
+      "directory": "frontend",
+      "orgId": "team_y6bvP47Eaho6rBZH8dPCoMHc"
+    }
+  ]
+}

@@ -251,6 +251,48 @@ public class GlobalExceptionHandler {
         return buildResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
+    /**
+     * Handles missing multipart request parts (e.g. no 'files' field in upload).
+     *
+     * @param ex the missing part exception
+     * @return 400 Bad Request
+     */
+    @ExceptionHandler(org.springframework.web.multipart.support.MissingServletRequestPartException.class)
+    public ResponseEntity<ErrorResponse> handleMissingPart(
+            org.springframework.web.multipart.support.MissingServletRequestPartException ex) {
+        log.warn("Missing multipart request part: {}", ex.getMessage());
+        return buildResponse(HttpStatus.BAD_REQUEST,
+                "File upload failed: required part '" + ex.getRequestPartName() + "' is missing. Please select a file.");
+    }
+
+    /**
+     * Handles generic multipart parsing errors (corrupted upload, connection reset, etc.).
+     *
+     * @param ex the multipart exception
+     * @return 400 Bad Request
+     */
+    @ExceptionHandler(org.springframework.web.multipart.MultipartException.class)
+    public ResponseEntity<ErrorResponse> handleMultipartError(
+            org.springframework.web.multipart.MultipartException ex) {
+        log.warn("Multipart request error: {}", ex.getMessage());
+        return buildResponse(HttpStatus.BAD_REQUEST,
+                "File upload failed: the file could not be processed. Please try again.");
+    }
+
+    /**
+     * Handles unsupported Content-Type headers.
+     *
+     * @param ex the media type exception
+     * @return 415 Unsupported Media Type
+     */
+    @ExceptionHandler(org.springframework.web.HttpMediaTypeNotSupportedException.class)
+    public ResponseEntity<ErrorResponse> handleUnsupportedMediaType(
+            org.springframework.web.HttpMediaTypeNotSupportedException ex) {
+        log.warn("Unsupported media type: {}", ex.getMessage());
+        return buildResponse(HttpStatus.UNSUPPORTED_MEDIA_TYPE,
+                "Unsupported content type. File uploads require multipart/form-data.");
+    }
+
     // =========================================================================
     // CATCH-ALL FALLBACK
     // =========================================================================
