@@ -152,7 +152,19 @@ public class GroqAiProvider implements AiProvider {
                 log.info("[AI] [{}] Tier {} | Model: {} | Time: {}ms | Tokens [prompt={} completion={} total={}]",
                         requestId, tier, model, duration, promptTokens, completionTokens, totalTokens);
 
-                return choice.message().content();
+                String content = choice.message().content();
+                
+                // Strip DeepSeek <think> reasoning tags
+                content = content.replaceAll("(?s)<think>.*?</think>", "").trim();
+                
+                // Strip markdown JSON wrappers if present
+                if (content.startsWith("```json")) {
+                    content = content.replaceFirst("(?s)^```json\\s*", "").replaceFirst("(?s)\\s*```$", "").trim();
+                } else if (content.startsWith("```")) {
+                    content = content.replaceFirst("(?s)^```\\s*", "").replaceFirst("(?s)\\s*```$", "").trim();
+                }
+
+                return content;
             }
         }
 
