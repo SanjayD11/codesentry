@@ -172,6 +172,7 @@ public class UploadServiceImpl implements UploadService {
                     .fileSize(file.getSize())
                     .storagePath(targetLocation.toString())
                     .absolutePath(targetLocation.toAbsolutePath().toString())
+                    .relativePath(targetLocation.getFileName().toString())
                     .checksumSHA256(checksum)
                     .uploadStatus(UploadStatus.VALIDATED)
                     .scanStatus(ScanStatus.NOT_SCANNED)
