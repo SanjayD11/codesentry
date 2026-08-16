@@ -49,7 +49,21 @@
   --color-on-secondary-fixed-variant: #38485d;
   --color-primary-fixed-dim: #adc6ff;
   --color-on-primary-fixed-variant: #004395;
+}
 
+:root {
+  /* Legacy/SNT variables for SecurityChat */
+  --snt-surface: #ffffff;
+  --snt-surface-2: #f0f3ff;
+  --snt-text-1: #111c2d;
+  --snt-text-2: #424754;
+  --snt-text-3: #727785;
+  --snt-text-4: #8890a0;
+  --snt-border: #e2e6f0;
+  --snt-border-2: #cfdaf2;
+}
+
+@layer base {
   /* Spacing */
   --spacing-max-width: 1440px;
   --spacing-md: 16px;
@@ -322,6 +336,64 @@ select:disabled {
 }
 
 /* Fast Section/Page Transition */
+.section.fade-enter {
+  animation: fadeIn 300ms ease-out forwards;
+}
+
+/* ── Markdown Prose Styling ── */
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 16px;
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+.prose th, .prose td {
+  border: 1px solid var(--color-outline-variant, #c2c6d6);
+  padding: 8px 12px;
+  text-align: left;
+}
+.prose th {
+  background-color: var(--color-surface-container-low, #f0f3ff);
+  font-weight: 600;
+  color: var(--color-on-surface, #111c2d);
+}
+.prose tr:nth-child(even) {
+  background-color: var(--color-surface-bright, #f9f9ff);
+}
+.prose p {
+  margin-bottom: 12px;
+}
+.prose pre {
+  background-color: #111c2d;
+  color: #fff;
+  padding: 12px;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 12px 0;
+}
+.prose code {
+  font-family: 'Geist', monospace;
+  background-color: rgba(0,0,0,0.05);
+  padding: 2px 4px;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+.prose pre code {
+  background-color: transparent;
+  padding: 0;
+  color: inherit;
+}
+.prose ul, .prose ol {
+  padding-left: 20px;
+  margin-bottom: 12px;
+}
+.prose h1, .prose h2, .prose h3, .prose h4 {
+  margin-top: 24px;
+  margin-bottom: 12px;
+  font-weight: 700;
+}
+
 .section-enter {
   animation: sectionEnter 140ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
   will-change: transform, opacity;

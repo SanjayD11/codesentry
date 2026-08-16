@@ -211,12 +211,22 @@ public class OpenRouterAiProvider implements AiProvider {
     // INTERNAL CALL
     // =========================================================================
 
+    private String resolveModelName(String configuredModel) {
+        if (configuredModel == null) return "google/gemini-2.0-flash-lite-preview-02-05:free";
+        if (configuredModel.contains("gpt-oss-120b")) return "google/gemini-2.0-flash-lite-preview-02-05:free";
+        if (configuredModel.contains("qwen3.6-27b")) return "meta-llama/llama-3-8b-instruct:free";
+        if (configuredModel.contains("gpt-oss-20b")) return "mistralai/mistral-7b-instruct:free";
+        return configuredModel;
+    }
+
     private String callGroq(String requestId, String model, String prompt, long startTime, int tier, AiFeature feature) {
         // Use feature-specific max_tokens to avoid context-window overflow (e.g. when PDF is in the prompt)
         int tokens = resolveMaxTokens(feature);
 
+        String actualModel = resolveModelName(model);
+
         GroqRequest request = new GroqRequest(
-                model,
+                actualModel,
                 List.of(new Message("user", prompt)),
                 temperature,
                 tokens

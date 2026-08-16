@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useMemo } from 'react'
 import { createPortal } from 'react-dom'
 import { useNavigate } from 'react-router-dom'
 import { getAllUserScans, triggerScan, deleteScan } from '../../api/scanApi'
-import { generateReport } from '../../api/reportApi'
+import { generateReport, downloadReport } from '../../api/reportApi'
 import { useToast } from '../../hooks/useToast'
 import LoadingSpinner from '../../components/ui/LoadingSpinner'
 import ConfirmDialog from '../../components/ui/ConfirmDialog'
@@ -148,11 +148,25 @@ export default function ScanHistory() {
   const handleGenReport = async (scan) => {
     setGenPdf(scan.scanId)
     try {
+      // 1. Ensure report is generated (now idempotent on backend)
       const res = await generateReport(scan.scanId)
       const reportId = res.data.data?.id
-      addToast('Report generated!','success'); setDetail(null)
-      if (reportId) navigate(`/reports/${reportId}`); else navigate('/reports')
-    } catch { addToast('Failed to generate report','error') }
+      if (!reportId) throw new Error("No report ID returned")
+      
+      addToast('Downloading PDF...', 'success'); setDetail(null)
+
+      // 2. Download it directly!
+      const dlRes = await downloadReport(reportId)
+      const url = window.URL.createObjectURL(new Blob([dlRes.data], { type:'application/pdf' }))
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `report-scan-${scan.scanId}.pdf`
+      document.body.appendChild(a); a.click()
+      document.body.removeChild(a)
+      window.URL.revokeObjectURL(url)
+    } catch { 
+      addToast('Failed to download PDF', 'error') 
+    }
     finally { setGenPdf(null) }
   }
 

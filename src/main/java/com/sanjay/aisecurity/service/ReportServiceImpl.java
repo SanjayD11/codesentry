@@ -78,6 +78,13 @@ public class ReportServiceImpl implements ReportService {
             ScanHistory scan = resolveOwnedScan(scanId, email);
             Project project = scan.getProject();
 
+            // Idempotent generation: check if report already exists for this scan
+            Optional<Report> existingReport = reportRepository.findFirstByScanHistoryId(scanId);
+            if (existingReport.isPresent()) {
+                log.info("Report already exists for scan {}. Returning existing report.", scanId);
+                return toResponse(existingReport.get(), project);
+            }
+
             List<Vulnerability> vulnerabilities = vulnerabilityRepository.findByScanHistoryId(scanId);
             // Create directory
             Path reportDir = Paths.get(baseDir,

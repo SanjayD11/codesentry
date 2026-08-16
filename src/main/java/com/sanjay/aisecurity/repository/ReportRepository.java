@@ -46,4 +46,12 @@ public interface ReportRepository extends JpaRepository<Report, Long> {
      * @return list of reports
      */
     List<Report> findByProjectId(Long projectId);
+
+    /**
+     * Finds the first report associated with a scan history ID.
+     *
+     * @param scanHistoryId the scan history ID
+     * @return an {@link Optional} containing the report if found
+     */
+    Optional<Report> findFirstByScanHistoryId(Long scanHistoryId);
 }

@@ -211,12 +211,22 @@ public class GroqAiProvider implements AiProvider {
     // INTERNAL CALL
     // =========================================================================
 
+    private String resolveModelName(String configuredModel) {
+        if (configuredModel == null) return "llama-3.3-70b-versatile";
+        if (configuredModel.contains("gpt-oss-120b")) return "llama-3.3-70b-versatile";
+        if (configuredModel.contains("qwen3.6-27b")) return "llama3-8b-8192";
+        if (configuredModel.contains("gpt-oss-20b")) return "mixtral-8x7b-32768";
+        return configuredModel;
+    }
+
     private String callGroq(String requestId, String model, String prompt, long startTime, int tier, AiFeature feature) {
         // Use feature-specific max_tokens to avoid context-window overflow (e.g. when PDF is in the prompt)
         int tokens = resolveMaxTokens(feature);
 
+        String actualModel = resolveModelName(model);
+
         GroqRequest request = new GroqRequest(
-                model,
+                actualModel,
                 List.of(new Message("user", prompt)),
                 temperature,
                 tokens
