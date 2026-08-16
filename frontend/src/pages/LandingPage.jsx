@@ -1,10 +1,15 @@
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function LandingPage() {
+  const navigate = useNavigate();
   useEffect(() => {
-    // Redirect to the vanilla HTML landing page
-    window.location.replace('/landing.html');
-  }, []);
+    if (localStorage.getItem('token')) {
+      navigate('/dashboard', { replace: true });
+    } else {
+      window.location.replace('/landing.html');
+    }
+  }, [navigate]);
 
   return null;
 }

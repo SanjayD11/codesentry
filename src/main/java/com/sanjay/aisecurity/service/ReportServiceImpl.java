@@ -80,10 +80,16 @@ public class ReportServiceImpl implements ReportService {
             Project project = scan.getProject();
 
             // Idempotent generation: check if report already exists for this scan
-            Optional<Report> existingReport = reportRepository.findFirstByScanHistoryId(scanId);
-            if (existingReport.isPresent()) {
-                log.info("Report already exists for scan {}. Returning existing report.", scanId);
-                return toResponse(existingReport.get(), project);
+            Optional<Report> existingReportOpt = reportRepository.findFirstByScanHistoryId(scanId);
+            if (existingReportOpt.isPresent()) {
+                Report existingReport = existingReportOpt.get();
+                if (java.nio.file.Files.exists(Paths.get(existingReport.getFilePath()))) {
+                    log.info("Report already exists for scan {}. Returning existing report.", scanId);
+                    return toResponse(existingReport, project);
+                } else {
+                    log.warn("Report record exists but file is missing for scan {}. Regenerating...", scanId);
+                    reportRepository.delete(existingReport);
+                }
             }
 
             List<Vulnerability> vulnerabilities = vulnerabilityRepository.findByScanHistoryId(scanId);
