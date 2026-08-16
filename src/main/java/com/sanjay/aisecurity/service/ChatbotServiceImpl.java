@@ -47,8 +47,8 @@ public class ChatbotServiceImpl implements ChatbotService {
     private final SimpleRateLimiter rateLimiter;
     private final PdfContextStore pdfContextStore;
 
-    /** Injected from app.ai.groq.model.primary — avoids hardcoding model names in business logic. */
-    @org.springframework.beans.factory.annotation.Value("${app.ai.groq.model.primary:qwen/qwen3.6-27b}")
+    /** Injected from app.ai.groq.model.assistant-model — used for display in chat history records only. */
+    @org.springframework.beans.factory.annotation.Value("${app.ai.groq.model.assistant-model:openai/gpt-oss-20b}")
     private String primaryModelName;
 
     @Override

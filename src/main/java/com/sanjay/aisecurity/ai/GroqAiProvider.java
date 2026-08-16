@@ -16,21 +16,21 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Groq AI Provider — Multi-model with automatic 3-tier failover.
+ * Groq AI Provider — Multi-model with automatic failover.
  *
- * <p>Model priority (configured in application.yml):
- * <ol>
- *   <li>Primary  : qwen/qwen3.6-27b</li>
- *   <li>Fallback1: llama-3.3-70b-versatile</li>
- *   <li>Fallback2: openai/gpt-oss-120b</li>
- * </ol>
+ * <p>Feature-aware model routing (configured in application.yml):
+ * <ul>
+ *   <li>ENRICHMENT / REPORT : openai/gpt-oss-120b → qwen/qwen3.6-27b</li>
+ *   <li>CHAT / QUICK_SCAN   : openai/gpt-oss-20b  → qwen/qwen3.6-27b</li>
+ * </ul>
  *
- * <p>Automatic failover is triggered on:
- * HTTP 429, 500, 502, 503, 504, timeout, network failure, empty/invalid response.
+ * <p>The legacy {@code complete(String)} path uses the same chain as ENRICHMENT.
+ * Automatic failover is triggered on:
+ * HTTP 4xx (model errors), 5xx, timeout, network failure, empty/invalid response.
  * The frontend never learns which model responded.
  *
  * @author Sanjay
- * @version 2.0.0
+ * @version 3.0.0
  */
 @Slf4j
 @Component
@@ -61,19 +61,19 @@ public class GroqAiProvider implements AiProvider {
             WebClient.Builder webClientBuilder,
             @Value("${app.ai.groq.base-url:https://api.groq.com/openai/v1}") String baseUrl,
             @Value("${app.ai.groq.api-key:}") String apiKey,
-            @Value("${app.ai.groq.model.primary:qwen/qwen3.6-27b}") String primaryModel,
-            @Value("${app.ai.groq.model.fallback:llama-3.3-70b-versatile}") String fallbackModel,
-            @Value("${app.ai.groq.model.fallback2:openai/gpt-oss-120b}") String fallback2Model,
-            @Value("${app.ai.groq.model.enrichment-model:llama-3.3-70b-versatile}") String enrichmentModel,
+            @Value("${app.ai.groq.model.primary:openai/gpt-oss-120b}") String primaryModel,
+            @Value("${app.ai.groq.model.fallback:qwen/qwen3.6-27b}") String fallbackModel,
+            @Value("${app.ai.groq.model.fallback2:openai/gpt-oss-20b}") String fallback2Model,
+            @Value("${app.ai.groq.model.enrichment-model:openai/gpt-oss-120b}") String enrichmentModel,
             @Value("${app.ai.groq.model.enrichment-fallback-model:qwen/qwen3.6-27b}") String enrichmentFallbackModel,
-            @Value("${app.ai.groq.model.report-model:qwen/qwen3.6-27b}") String reportModel,
-            @Value("${app.ai.groq.model.report-fallback-model:llama-3.3-70b-versatile}") String reportFallbackModel,
-            @Value("${app.ai.groq.model.assistant-model:llama-3.1-8b-instant}") String assistantModel,
+            @Value("${app.ai.groq.model.report-model:openai/gpt-oss-120b}") String reportModel,
+            @Value("${app.ai.groq.model.report-fallback-model:qwen/qwen3.6-27b}") String reportFallbackModel,
+            @Value("${app.ai.groq.model.assistant-model:openai/gpt-oss-20b}") String assistantModel,
             @Value("${app.ai.groq.model.assistant-fallback-model:qwen/qwen3.6-27b}") String assistantFallbackModel,
-            @Value("${app.ai.groq.model.quick-scan-model:llama-3.1-8b-instant}") String quickScanModel,
+            @Value("${app.ai.groq.model.quick-scan-model:openai/gpt-oss-20b}") String quickScanModel,
             @Value("${app.ai.groq.model.quick-scan-fallback-model:qwen/qwen3.6-27b}") String quickScanFallbackModel,
-            @Value("${app.ai.groq.timeout-seconds:30}") int timeoutSeconds,
-            @Value("${app.ai.groq.max-tokens:2048}") int maxTokens,
+            @Value("${app.ai.groq.timeout-seconds:90}") int timeoutSeconds,
+            @Value("${app.ai.groq.max-tokens:4096}") int maxTokens,
             @Value("${app.ai.groq.temperature:0.2}") double temperature) {
         this.webClient = webClientBuilder.baseUrl(baseUrl).build();
         this.apiKey = apiKey;
@@ -180,19 +180,20 @@ public class GroqAiProvider implements AiProvider {
             AiFeature feature) {
         String requestId = UUID.randomUUID().toString();
         long startTime = System.currentTimeMillis();
-        
+
         try {
-            log.info("[AI] [{}] Using primary model: {}", requestId, primaryModel);
+            log.info("[AI] [{}] Feature={} | Using primary model: {}", requestId, feature, primaryModel);
             return callGroq(requestId, primaryModel, prompt, startTime, 1, feature);
         } catch (Exception ex) {
-            log.warn("[AI] [{}] Primary model failed: {}, switching to {}",
-                     requestId, primaryModel, fallbackModel, ex);
-
+            log.warn("[AI] [{}] Feature={} | Primary model {} failed: {} | Switching to fallback: {}",
+                     requestId, feature, primaryModel, summarize(ex), fallbackModel);
             try {
-                return callGroq(requestId, fallbackModel, prompt, startTime, 2, feature);
+                String result = callGroq(requestId, fallbackModel, prompt, startTime, 2, feature);
+                log.info("[AI] [{}] Feature={} | Fallback model {} succeeded.", requestId, feature, fallbackModel);
+                return result;
             } catch (Exception innerEx) {
-                log.error("[AI] [{}] Both models failed. Last error ({}): {}", 
-                          requestId, fallbackModel, innerEx.getMessage());
+                log.error("[AI] [{}] Feature={} | Both models failed. Primary={} Fallback={} | Last error: {}",
+                          requestId, feature, primaryModel, fallbackModel, summarize(innerEx));
                 return "AI unavailable: All selected models failed.";
             }
         }

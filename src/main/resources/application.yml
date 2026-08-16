@@ -149,24 +149,25 @@ app:
       # Never commit a real API key here. Obtain from: https://console.groq.com
       api-key: ${GROQ_API_KEY:}
       model:
-        primary: qwen/qwen3.6-27b
-        fallback: llama-3.3-70b-versatile
-        fallback2: openai/gpt-oss-120b
-        
-        # Feature-aware routing models
-        enrichment-model: llama-3.3-70b-versatile
+        # Legacy 3-tier fallback chain (used by the default complete(prompt) path)
+        primary: openai/gpt-oss-120b
+        fallback: qwen/qwen3.6-27b
+        fallback2: openai/gpt-oss-20b
+
+        # Feature-aware routing models (used by complete(prompt, AiFeature) path)
+        enrichment-model: openai/gpt-oss-120b
         enrichment-fallback-model: qwen/qwen3.6-27b
-        
-        report-model: qwen/qwen3.6-27b
-        report-fallback-model: llama-3.3-70b-versatile
-        
-        assistant-model: llama-3.1-8b-instant
+
+        report-model: openai/gpt-oss-120b
+        report-fallback-model: qwen/qwen3.6-27b
+
+        assistant-model: openai/gpt-oss-20b
         assistant-fallback-model: qwen/qwen3.6-27b
-        
-        quick-scan-model: llama-3.1-8b-instant
+
+        quick-scan-model: openai/gpt-oss-20b
         quick-scan-fallback-model: qwen/qwen3.6-27b
       base-url: https://api.groq.com/openai/v1
-      timeout-seconds: 60
+      timeout-seconds: 90
       max-tokens: 4096
       temperature: 0.2
     rate-limit:
