@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { createUserWithEmailAndPassword } from 'firebase/auth'
 import { auth } from '../../config/firebase'
@@ -77,7 +77,7 @@ export default function Register() {
         password
       })
       // useAuth.register now stores the JWT — navigate directly to dashboard
-      navigate('/')
+      navigate('/dashboard')
     } catch (err) {
       console.error('Registration failed:', err)
       addToast('Registration failed. Email might be in use.', 'error')
@@ -186,7 +186,7 @@ export default function Register() {
               type="button"
               onClick={async () => {
                 setLoading(true);
-                try { await loginWithGoogle(); navigate('/'); }
+                try { await loginWithGoogle(); navigate('/dashboard'); }
                 catch { addToast('Google registration failed', 'error'); }
                 finally { setLoading(false); }
               }}
@@ -198,7 +198,7 @@ export default function Register() {
               type="button"
               onClick={async () => {
                 setLoading(true);
-                try { await loginWithGithub(); navigate('/'); }
+                try { await loginWithGithub(); navigate('/dashboard'); }
                 catch { addToast('GitHub registration failed', 'error'); }
                 finally { setLoading(false); }
               }}

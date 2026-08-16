@@ -19,7 +19,7 @@ export default function MainLayout() {
   }, [addToast])
 
   if (!isAuthenticated) {
-    return <Navigate to="/login" replace />
+    return <Navigate to="/" replace />
   }
 
   return (

@@ -36,11 +36,23 @@ export default function SecurityChat() {
   const [scans, setScans] = useState([])
   const [selectedScanId, setSelectedScanId] = useState('')
   const [isQuickScanOpen, setIsQuickScanOpen] = useState(false)
+  const [scanMenuOpen, setScanMenuOpen] = useState(false)
   const [sidebarOpen, setSidebarOpen] = useState(() => typeof window !== 'undefined' && window.innerWidth >= 1024)
   const [deleteTarget, setDeleteTarget] = useState(null)
   const bottomRef = useRef(null)
   const inputRef = useRef(null)
   const fileInputRef = useRef(null)
+  const scanMenuRef = useRef(null)
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (scanMenuRef.current && !scanMenuRef.current.contains(e.target)) {
+        setScanMenuOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
 
   const handleFileChange = (e) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -632,24 +644,60 @@ export default function SecurityChat() {
 
               {/* Input row */}
               <div style={{ display: 'flex', gap: 10, alignItems: 'flex-end' }}>
-                <div style={{ position:'relative' }} className="chat-select-container">
-                  <select 
-                    value={selectedScanId} 
-                    onChange={e => setSelectedScanId(e.target.value)}
+                <div style={{ position:'relative' }} className="chat-select-container" ref={scanMenuRef}>
+                  <button
+                    onClick={() => setScanMenuOpen(!scanMenuOpen)}
                     style={{
-                      appearance:'none', width:48, height:48, background:'var(--snt-surface-2)', color:'transparent', border:'1.5px solid #e2e6f0', borderRadius:12, 
-                      cursor:'pointer', paddingLeft:14, fontSize:14, transition: 'border-color 0.15s'
+                      height:48, width:48, background:'var(--snt-surface-2)', color:'var(--snt-text-2)', border:'1.5px solid #e2e6f0', borderRadius:12, 
+                      cursor:'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'border-color 0.15s, background 0.15s'
                     }}
-                    onMouseEnter={e => e.currentTarget.style.borderColor = '#0058be'}
-                    onMouseLeave={e => e.currentTarget.style.borderColor = '#e2e6f0'}
+                    onMouseEnter={e => { e.currentTarget.style.borderColor = '#0058be'; e.currentTarget.style.background = '#f0f3ff'; e.currentTarget.style.color = '#0058be'; }}
+                    onMouseLeave={e => { e.currentTarget.style.borderColor = '#e2e6f0'; e.currentTarget.style.background = 'var(--snt-surface-2)'; e.currentTarget.style.color = 'var(--snt-text-2)'; }}
                     title="Select Source Context"
                   >
-                    <option value="" disabled style={{ color: 'var(--snt-text-1)' }}>Select Context (Project / Scan)</option>
-                    {scans.map(s => <option key={s.scanId} value={s.scanId} style={{ color: 'var(--snt-text-1)' }}>
-                      {s.scanType === 'QUICK_SCAN' ? `Quick Scan` : `Project`} #{s.scanId} (Score: {Math.round(s.securityScore||0)})
-                    </option>)}
-                  </select>
-                  <span className="material-symbols-outlined" style={{ position:'absolute', top:14, left:14, pointerEvents:'none', color:'var(--snt-text-2)', fontSize:20 }}>data_object</span>
+                    <span className="material-symbols-outlined" style={{ fontSize:20 }}>data_object</span>
+                  </button>
+                  
+                  {scanMenuOpen && (
+                    <div style={{
+                      position: 'absolute', bottom: 56, left: 0, width: 300, maxHeight: 300, overflowY: 'auto',
+                      background: 'var(--snt-surface)', border: '1px solid #e2e6f0', borderRadius: 12,
+                      boxShadow: '0 -4px 24px rgba(17,28,45,0.08), 0 2px 8px rgba(17,28,45,0.04)',
+                      zIndex: 100, display: 'flex', flexDirection: 'column', padding: 8
+                    }}>
+                      <div style={{ padding: '8px 12px', fontSize: 11, fontWeight: 700, color: '#8890a0', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                        Select Context (Project / Scan)
+                      </div>
+                      <button
+                        onClick={() => { setSelectedScanId(''); setScanMenuOpen(false); }}
+                        style={{
+                          textAlign: 'left', padding: '10px 12px', background: !selectedScanId ? '#f0f3ff' : 'transparent', border: 'none',
+                          borderRadius: 8, fontSize: 13.5, color: !selectedScanId ? '#0058be' : 'var(--snt-text-1)', cursor: 'pointer',
+                          fontWeight: !selectedScanId ? 600 : 500
+                        }}
+                        onMouseEnter={e => !selectedScanId ? null : e.currentTarget.style.background = 'var(--snt-surface-2)'}
+                        onMouseLeave={e => !selectedScanId ? null : e.currentTarget.style.background = 'transparent'}
+                      >
+                        None
+                      </button>
+                      {scans.map(s => (
+                        <button
+                          key={s.scanId}
+                          onClick={() => { setSelectedScanId(s.scanId); setScanMenuOpen(false); }}
+                          style={{
+                            textAlign: 'left', padding: '10px 12px', background: selectedScanId === s.scanId ? '#f0f3ff' : 'transparent', border: 'none',
+                            borderRadius: 8, fontSize: 13.5, color: selectedScanId === s.scanId ? '#0058be' : 'var(--snt-text-1)', cursor: 'pointer',
+                            fontWeight: selectedScanId === s.scanId ? 600 : 500, display: 'flex', flexDirection: 'column'
+                          }}
+                          onMouseEnter={e => selectedScanId === s.scanId ? null : e.currentTarget.style.background = 'var(--snt-surface-2)'}
+                          onMouseLeave={e => selectedScanId === s.scanId ? null : e.currentTarget.style.background = 'transparent'}
+                        >
+                          <span>{s.scanType === 'QUICK_SCAN' ? 'Quick Scan' : 'Project'} #{s.scanId}</span>
+                          <span style={{ fontSize: 11, color: selectedScanId === s.scanId ? '#004395' : '#8890a0' }}>Score: {Math.round(s.securityScore||0)}</span>
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
                 <input type="file" accept=".pdf" ref={fileInputRef} onChange={handleFileChange} style={{ display: 'none' }} />
                 <button

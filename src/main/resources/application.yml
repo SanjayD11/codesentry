@@ -147,6 +147,31 @@ app:
     groq:
       # REQUIRED: Set GROQ_API_KEY env var to your Groq API key.
       # Never commit a real API key here. Obtain from: https://console.groq.com
+    openrouter:
+      api-key: ${OPENROUTER_API_KEY:}
+      model:
+        primary: openai/gpt-oss-120b
+        fallback: qwen/qwen3.6-27b
+        fallback2: openai/gpt-oss-20b
+
+        enrichment-model: openai/gpt-oss-120b
+        enrichment-fallback-model: qwen/qwen3.6-27b
+
+        report-model: openai/gpt-oss-120b
+        report-fallback-model: qwen/qwen3.6-27b
+
+        assistant-model: openai/gpt-oss-20b
+        assistant-fallback-model: qwen/qwen3.6-27b
+
+        quick-scan-model: openai/gpt-oss-20b
+        quick-scan-fallback-model: qwen/qwen3.6-27b
+      base-url: https://openrouter.ai/api/v1
+      timeout-seconds: 90
+      max-tokens: 4096
+      chat-max-tokens: 2500
+      enrichment-max-tokens: 4096
+      temperature: 0.2
+    groq:
       api-key: ${GROQ_API_KEY:}
       model:
         # Legacy 3-tier fallback chain (used by the default complete(prompt) path)
@@ -161,17 +186,16 @@ app:
         report-model: openai/gpt-oss-120b
         report-fallback-model: qwen/qwen3.6-27b
 
-        # qwen is faster for chat/quick-scan (lower latency)
-        assistant-model: qwen/qwen3.6-27b
-        assistant-fallback-model: openai/gpt-oss-20b
+        assistant-model: openai/gpt-oss-20b
+        assistant-fallback-model: qwen/qwen3.6-27b
 
-        quick-scan-model: qwen/qwen3.6-27b
-        quick-scan-fallback-model: openai/gpt-oss-20b
+        quick-scan-model: openai/gpt-oss-20b
+        quick-scan-fallback-model: qwen/qwen3.6-27b
       base-url: https://api.groq.com/openai/v1
       timeout-seconds: 90
       max-tokens: 4096
       # Per-feature token limits (chat needs smaller limit to leave room for large PDF context)
-      chat-max-tokens: 1500
+      chat-max-tokens: 2500
       enrichment-max-tokens: 4096
       temperature: 0.2
     rate-limit:

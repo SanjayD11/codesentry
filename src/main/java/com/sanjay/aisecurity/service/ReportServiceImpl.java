@@ -317,17 +317,17 @@ public class ReportServiceImpl implements ReportService {
                     doc.add(rec);
 
                     if (v.getAiExplanation() != null) {
-                        Paragraph exp = new Paragraph("AI Analysis (Explanation):\n" + v.getAiExplanation().replace("## ", ""), smallFont);
+                        Paragraph exp = new Paragraph("AI Analysis (Explanation):\n" + cleanAiText(v.getAiExplanation()), smallFont);
                         exp.setSpacingAfter(8f);
                         doc.add(exp);
                     }
                     if (v.getAiRecommendation() != null) {
-                        Paragraph aiRec = new Paragraph("AI Analysis (Root Cause & Fix):\n" + v.getAiRecommendation().replace("## ", ""), smallFont);
+                        Paragraph aiRec = new Paragraph("AI Analysis (Root Cause & Fix):\n" + cleanAiText(v.getAiRecommendation()), smallFont);
                         aiRec.setSpacingAfter(8f);
                         doc.add(aiRec);
                     }
                     if (v.getBusinessImpact() != null) {
-                        Paragraph biz = new Paragraph("AI Analysis (Business Impact):\n" + v.getBusinessImpact().replace("## ", ""), smallFont);
+                        Paragraph biz = new Paragraph("AI Analysis (Business Impact):\n" + cleanAiText(v.getBusinessImpact()), smallFont);
                         biz.setSpacingAfter(8f);
                         doc.add(biz);
                     }
@@ -337,7 +337,7 @@ public class ReportServiceImpl implements ReportService {
                         fixTable.setWidthPercentage(100);
                         fixTable.setSpacingBefore(8f);
                         fixTable.setSpacingAfter(15f);
-                        PdfPCell fixCell = new PdfPCell(new Phrase("Secure Fix:\n" + v.getSecureCodeExample(), codeFont));
+                        PdfPCell fixCell = new PdfPCell(new Phrase("Secure Fix:\n" + cleanAiText(v.getSecureCodeExample()), codeFont));
                         fixCell.setBackgroundColor(new Color(240, 255, 240));
                         fixCell.setPadding(10f);
                         fixCell.setBorder(Rectangle.BOX);
@@ -392,6 +392,30 @@ public class ReportServiceImpl implements ReportService {
             case LOW -> new Color(60, 130, 60);
             case INFORMATIONAL -> new Color(100, 149, 237); // Cornflower blue
         };
+    }
+
+    /**
+     * Cleans AI-generated text for inclusion in the PDF report.
+     * Removes chain-of-thought blocks, JSON/markdown fences, internal
+     * instruction text, and normalises excessive whitespace.
+     * Does NOT strip legitimate security content.
+     */
+    private String cleanAiText(String raw) {
+        if (raw == null) return "";
+        String s = raw;
+        // 1. Strip <think>...</think> reasoning blocks (including truncated)
+        s = s.replaceAll("(?si)<think>.*?(?:</think>|$)", "");
+        // 2. Strip ```json ... ``` or ``` ... ``` fences
+        s = s.replaceAll("(?s)```(?:json|java|xml|yaml|bash|python|javascript|typescript)?\\s*", "").replace("```", "");
+        // 3. Remove known internal instruction leakage
+        s = s.replaceAll("(?i)CRITICAL INSTRUCTION \\d+:.*?(\\n|$)", "");
+        // 4. Remove raw JSON curly-brace wrappers that leaked out
+        s = s.replaceAll("^\\s*\\{\\s*\"|\"\\s*\\}\\s*$", "");
+        // 5. Replace markdown ## headings with plain uppercase labels for PDF readability
+        s = s.replaceAll("(?m)^##+ ", "");
+        // 6. Collapse 3+ blank lines to 2
+        s = s.replaceAll("\\n{3,}", "\n\n");
+        return s.trim();
     }
 
     private String format(LocalDateTime dt) {

@@ -171,47 +171,14 @@ public class AiEnrichmentServiceImpl implements AiEnrichmentService {
     // =========================================================================
     
     private String callAiWithRetry(String prompt, Long contextId) {
-        int attempt = 1;
-        long currentDelay = retryDelay;
-
-        while (attempt <= maxAttempts) {
-            try {
-                return aiProvider.complete(prompt, AiFeature.ENRICHMENT);
-            } catch (Exception e) {
-                boolean isTransient = isTransientError(e);
-                if (!isTransient || attempt == maxAttempts) {
-                    log.error("[AI Retry] Permanent failure or max attempts reached for ID {}. Error: {}", contextId, e.getMessage());
-                    throw new RuntimeException("AI Provider failed: " + e.getMessage(), e);
-                }
-
-                log.warn("[AI Retry] Transient error for ID {} (Attempt {}/{}). Retrying in {}ms...", contextId, attempt, maxAttempts, currentDelay);
-                try {
-                    Thread.sleep(currentDelay);
-                } catch (InterruptedException ie) {
-                    Thread.currentThread().interrupt();
-                    throw new RuntimeException("AI retry interrupted", ie);
-                }
-
-                attempt++;
-                if (exponentialBackoff) {
-                    currentDelay *= 2;
-                }
-            }
+        // Retry logic is now strictly delegated to the AiProvider's bounded fallback chain
+        // to prevent combinatorial explosion of HTTP requests.
+        try {
+            return aiProvider.complete(prompt, AiFeature.ENRICHMENT);
+        } catch (Exception e) {
+            log.error("[AI Enrichment] Failed for ID {}. Error: {}", contextId, e.getMessage());
+            throw new RuntimeException("AI Provider failed: " + e.getMessage(), e);
         }
-        throw new RuntimeException("AI Provider failed after retries.");
-    }
-
-    private boolean isTransientError(Exception e) {
-        String msg = e.getMessage() != null ? e.getMessage().toLowerCase() : "";
-        // Simple heuristic to identify transient networking or rate limit errors vs hard failures
-        return msg.contains("timeout") 
-            || msg.contains("502") 
-            || msg.contains("503") 
-            || msg.contains("504") 
-            || msg.contains("429")
-            || msg.contains("connection")
-            || msg.contains("reset")
-            || msg.contains("socket");
     }
 
     private Vulnerability resolveOwnedVulnerability(Long vulnId, String email) {

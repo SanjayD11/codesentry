@@ -76,8 +76,11 @@ public class ChatbotServiceImpl implements ChatbotService {
             scanContext = buildScanContext(request.getScanId(), email);
         }
 
+        // Create a securely scoped key to prevent IDOR (cross-user PDF context leakage)
+        String secureContextKey = email + ":" + conversationId;
+
         // Re-inject persisted PDF context for this conversation (if any)
-        String storedPdfContext = pdfContextStore.get(conversationId);
+        String storedPdfContext = pdfContextStore.get(secureContextKey);
 
         // Build the prompt using PromptBuilder — include PDF context for every turn
         String fullPrompt = PromptBuilder.buildChatPrompt(request.getMessage(), scanContext, storedPdfContext, history);
@@ -123,6 +126,8 @@ public class ChatbotServiceImpl implements ChatbotService {
                 ? request.getConversationId()
                 : UUID.randomUUID().toString();
 
+        String secureContextKey = email + ":" + conversationId;
+
         List<ChatHistory> history = chatHistoryRepository
                 .findByConversationIdAndUserEmailOrderByCreatedAtAsc(conversationId, email);
 
@@ -157,7 +162,13 @@ public class ChatbotServiceImpl implements ChatbotService {
 
         // Persist PDF context so every follow-up message in this conversation can use it
         if (!pdfContext.isEmpty()) {
-            pdfContextStore.save(conversationId, pdfContext);
+            pdfContextStore.save(secureContextKey, pdfContext);
+        } else {
+            // Retrieve from store for follow-up questions
+            String storedContext = pdfContextStore.get(secureContextKey);
+            if (storedContext != null) {
+                pdfContext = storedContext;
+            }
         }
 
         // Build prompt — pdfContext is injected inside buildChatPrompt (do NOT also append it to the message)

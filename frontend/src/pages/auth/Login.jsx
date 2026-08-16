@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
 import { useToast } from '../../hooks/useToast'
@@ -14,6 +14,7 @@ export default function Login() {
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
   
   const { login, loginWithGoogle, loginWithGithub } = useAuth()
   const addToast = useToast()
@@ -30,17 +31,19 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     if (!email.trim() || !password) return
-    
+    setError('')
     setLoading(true)
     try {
       const loggedUser = await login(email, password)
       if (loggedUser?.role === 'ADMIN') {
         navigate('/admin/dashboard')
       } else {
-        navigate('/')
+        navigate('/dashboard')
       }
     } catch (err) {
-      addToast(err.response?.data?.message || 'Login failed', 'error')
+      const msg = err.response?.data?.message || 'Invalid email or password.'
+      setError(msg)
+      addToast(msg, 'error')
     } finally {
       setLoading(false)
     }
@@ -145,7 +148,7 @@ export default function Login() {
                 try {
                   const loggedUser = await loginWithGoogle();
                   if (loggedUser?.role === 'ADMIN') navigate('/admin/dashboard');
-                  else navigate('/');
+                  else navigate('/dashboard');
                 }
                 catch { addToast('Google login failed', 'error'); }
                 finally { setLoading(false); }
@@ -161,7 +164,7 @@ export default function Login() {
                 try {
                   const loggedUser = await loginWithGithub();
                   if (loggedUser?.role === 'ADMIN') navigate('/admin/dashboard');
-                  else navigate('/');
+                  else navigate('/dashboard');
                 }
                 catch { addToast('GitHub login failed', 'error'); }
                 finally { setLoading(false); }
@@ -179,6 +182,16 @@ export default function Login() {
           </div>
 
           <form onSubmit={handleSubmit} noValidate>
+            {/* Inline error banner */}
+            {error && (
+              <div style={{
+                background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: 10,
+                padding: '10px 14px', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8
+              }}>
+                <span className="material-symbols-outlined" style={{ color: '#ef4444', fontSize: 18, flexShrink: 0 }}>error</span>
+                <span style={{ fontSize: 13.5, color: '#b91c1c', fontWeight: 500 }}>{error}</span>
+              </div>
+            )}
             <div className="field-group mb-3">
               <input
                 type="email"

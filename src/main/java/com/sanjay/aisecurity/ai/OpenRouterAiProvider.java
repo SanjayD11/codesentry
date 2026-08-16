@@ -16,12 +16,12 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Groq AI Provider — Multi-model with automatic failover.
+ * Groq AI Provider â€” Multi-model with automatic failover.
  *
  * <p>Feature-aware model routing (configured in application.yml):
  * <ul>
- *   <li>ENRICHMENT / REPORT : openai/gpt-oss-120b → qwen/qwen3.6-27b</li>
- *   <li>CHAT / QUICK_SCAN   : openai/gpt-oss-20b  → qwen/qwen3.6-27b</li>
+ *   <li>ENRICHMENT / REPORT : openai/gpt-oss-120b â†’ qwen/qwen3.6-27b</li>
+ *   <li>CHAT / QUICK_SCAN   : openai/gpt-oss-20b  â†’ qwen/qwen3.6-27b</li>
  * </ul>
  *
  * <p>The legacy {@code complete(String)} path uses the same chain as ENRICHMENT.
@@ -34,7 +34,7 @@ import java.util.UUID;
  */
 @Slf4j
 @Component
-public class GroqAiProvider implements AiProvider {
+public class OpenRouterAiProvider implements AiProvider {
 
     private final WebClient webClient;
     private final String apiKey;
@@ -59,26 +59,26 @@ public class GroqAiProvider implements AiProvider {
     private final int enrichmentMaxTokens;
     private final double temperature;
 
-    public GroqAiProvider(
+    public OpenRouterAiProvider(
             WebClient.Builder webClientBuilder,
-            @Value("${app.ai.groq.base-url:https://api.groq.com/openai/v1}") String baseUrl,
-            @Value("${app.ai.groq.api-key:}") String apiKey,
-            @Value("${app.ai.groq.model.primary:openai/gpt-oss-120b}") String primaryModel,
-            @Value("${app.ai.groq.model.fallback:qwen/qwen3.6-27b}") String fallbackModel,
-            @Value("${app.ai.groq.model.fallback2:openai/gpt-oss-20b}") String fallback2Model,
-            @Value("${app.ai.groq.model.enrichment-model:openai/gpt-oss-120b}") String enrichmentModel,
-            @Value("${app.ai.groq.model.enrichment-fallback-model:qwen/qwen3.6-27b}") String enrichmentFallbackModel,
-            @Value("${app.ai.groq.model.report-model:openai/gpt-oss-120b}") String reportModel,
-            @Value("${app.ai.groq.model.report-fallback-model:qwen/qwen3.6-27b}") String reportFallbackModel,
-            @Value("${app.ai.groq.model.assistant-model:qwen/qwen3.6-27b}") String assistantModel,
-            @Value("${app.ai.groq.model.assistant-fallback-model:openai/gpt-oss-20b}") String assistantFallbackModel,
-            @Value("${app.ai.groq.model.quick-scan-model:qwen/qwen3.6-27b}") String quickScanModel,
-            @Value("${app.ai.groq.model.quick-scan-fallback-model:openai/gpt-oss-20b}") String quickScanFallbackModel,
-            @Value("${app.ai.groq.timeout-seconds:90}") int timeoutSeconds,
-            @Value("${app.ai.groq.max-tokens:4096}") int maxTokens,
-            @Value("${app.ai.groq.chat-max-tokens:1500}") int chatMaxTokens,
-            @Value("${app.ai.groq.enrichment-max-tokens:4096}") int enrichmentMaxTokens,
-            @Value("${app.ai.groq.temperature:0.2}") double temperature) {
+            @Value("${app.ai.openrouter.base-url:https://openrouter.ai/api/v1}") String baseUrl,
+            @Value("${app.ai.openrouter.api-key:}") String apiKey,
+            @Value("${app.ai.openrouter.model.primary:openai/gpt-oss-120b}") String primaryModel,
+            @Value("${app.ai.openrouter.model.fallback:qwen/qwen3.6-27b}") String fallbackModel,
+            @Value("${app.ai.openrouter.model.fallback2:openai/gpt-oss-20b}") String fallback2Model,
+            @Value("${app.ai.openrouter.model.enrichment-model:openai/gpt-oss-120b}") String enrichmentModel,
+            @Value("${app.ai.openrouter.model.enrichment-fallback-model:qwen/qwen3.6-27b}") String enrichmentFallbackModel,
+            @Value("${app.ai.openrouter.model.report-model:openai/gpt-oss-120b}") String reportModel,
+            @Value("${app.ai.openrouter.model.report-fallback-model:qwen/qwen3.6-27b}") String reportFallbackModel,
+            @Value("${app.ai.openrouter.model.assistant-model:openai/gpt-oss-20b}") String assistantModel,
+            @Value("${app.ai.openrouter.model.assistant-fallback-model:qwen/qwen3.6-27b}") String assistantFallbackModel,
+            @Value("${app.ai.openrouter.model.quick-scan-model:openai/gpt-oss-20b}") String quickScanModel,
+            @Value("${app.ai.openrouter.model.quick-scan-fallback-model:qwen/qwen3.6-27b}") String quickScanFallbackModel,
+            @Value("${app.ai.openrouter.timeout-seconds:90}") int timeoutSeconds,
+            @Value("${app.ai.openrouter.max-tokens:4096}") int maxTokens,
+            @Value("${app.ai.openrouter.chat-max-tokens:2500}") int chatMaxTokens,
+            @Value("${app.ai.openrouter.enrichment-max-tokens:4096}") int enrichmentMaxTokens,
+            @Value("${app.ai.openrouter.temperature:0.2}") double temperature) {
         this.webClient = webClientBuilder.baseUrl(baseUrl).build();
         this.apiKey = apiKey;
         this.primaryModel = primaryModel;
@@ -100,7 +100,7 @@ public class GroqAiProvider implements AiProvider {
         this.enrichmentMaxTokens = enrichmentMaxTokens;
         this.temperature = temperature;
 
-        log.info("[AI] GroqAiProvider ready | key={}  chat-max-tokens={}  enrichment-max-tokens={}",
+        log.info("[AI] OpenRouterAiProvider ready | key={}  chat-max-tokens={}  enrichment-max-tokens={}",
                 (apiKey != null && !apiKey.isBlank()) ? "SET" : "MISSING",
                 chatMaxTokens, enrichmentMaxTokens);
     }
@@ -108,14 +108,14 @@ public class GroqAiProvider implements AiProvider {
     @Override
     public String complete(String prompt) {
         if (apiKey == null || apiKey.isBlank()) {
-            log.warn("Groq API key is not configured. Returning placeholder response.");
-            return "AI enrichment unavailable: API key not configured.";
+            log.warn("OpenRouter API key is not configured.");
+            throw new RuntimeException("OpenRouter API key not configured");
         }
 
         String requestId = UUID.randomUUID().toString();
         long startTime = System.currentTimeMillis();
 
-        // ── Tier 1: Primary model ─────────────────────────────────────────────
+        // â”€â”€ Tier 1: Primary model â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         log.info("[AI] [{}] Primary model selected: {}", requestId, primaryModel);
         try {
             String result = callGroq(requestId, primaryModel, prompt, startTime, 1, null);
@@ -126,7 +126,7 @@ public class GroqAiProvider implements AiProvider {
                     requestId, primaryModel, summarize(e), fallbackModel);
         }
 
-        // ── Tier 2: First fallback ────────────────────────────────────────────
+        // â”€â”€ Tier 2: First fallback â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         try {
             String result = callGroq(requestId, fallbackModel, prompt, startTime, 2, null);
             log.info("[AI] [{}] Fallback 1 ({}) responded successfully.", requestId, fallbackModel);
@@ -136,7 +136,7 @@ public class GroqAiProvider implements AiProvider {
                     requestId, fallbackModel, summarize(e), fallback2Model);
         }
 
-        // ── Tier 3: Second fallback ───────────────────────────────────────────
+        // â”€â”€ Tier 3: Second fallback â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         try {
             String result = callGroq(requestId, fallback2Model, prompt, startTime, 3, null);
             log.info("[AI] [{}] Fallback 2 ({}) responded successfully.", requestId, fallback2Model);
@@ -151,8 +151,8 @@ public class GroqAiProvider implements AiProvider {
     @Override
     public String complete(String prompt, AiFeature feature) {
         if (apiKey == null || apiKey.isBlank()) {
-            log.warn("Groq API key is not configured. Returning placeholder response.");
-            return "AI unavailable: API key not configured.";
+            log.warn("OpenRouter API key is not configured.");
+            throw new RuntimeException("OpenRouter API key not configured");
         }
         
         return switch (feature) {
@@ -202,7 +202,7 @@ public class GroqAiProvider implements AiProvider {
             } catch (Exception innerEx) {
                 log.error("[AI] [{}] Feature={} | Both models failed. Primary={} Fallback={} | Last error: {}",
                           requestId, feature, primaryModel, fallbackModel, summarize(innerEx));
-                return "AI unavailable: All selected models failed.";
+                throw new RuntimeException("OpenRouter failed");
             }
         }
     }
@@ -234,7 +234,7 @@ public class GroqAiProvider implements AiProvider {
                     .timeout(Duration.ofSeconds(timeoutSeconds))
                     .block();
         } catch (WebClientResponseException e) {
-            // Always propagate so failover logic catches it — never expose API key in message
+            // Always propagate so failover logic catches it â€” never expose API key in message
             String body = e.getResponseBodyAsString();
             if (body != null && body.length() > 300) body = body.substring(0, 300) + "\u2026";
             throw new RuntimeException(
@@ -296,19 +296,19 @@ public class GroqAiProvider implements AiProvider {
         return maxTokens; // legacy / null path
     }
 
-    /** Short, log-safe exception summary — never leaks keys or full prompts. */
+    /** Short, log-safe exception summary â€” never leaks keys or full prompts. */
     private String summarize(Exception e) {
         if (e.getCause() != null && e.getCause().getClass().getSimpleName().contains("Timeout")) {
             return "timeout";
         }
         String msg = e.getMessage();
         if (msg == null) return e.getClass().getSimpleName();
-        return msg.length() > 120 ? msg.substring(0, 120) + "…" : msg;
+        return msg.length() > 120 ? msg.substring(0, 120) + "â€¦" : msg;
     }
 
     @Override
     public String getProviderName() {
-        return "Groq";
+        return "OpenRouter";
     }
 
     // =========================================================================

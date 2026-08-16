@@ -7,6 +7,7 @@ import MainLayout from './components/layout/MainLayout'
 import LoadingSpinner from './components/ui/LoadingSpinner'
 
 // Lazy load pages for performance
+const LandingPage    = lazy(() => import('./pages/LandingPage'))
 const Login          = lazy(() => import('./pages/auth/Login'))
 const Register       = lazy(() => import('./pages/auth/Register'))
 const ForgotPassword = lazy(() => import('./pages/auth/ForgotPassword'))
@@ -43,6 +44,7 @@ export default function App() {
             <Suspense fallback={<PageLoader />}>
               <Routes>
                 {/* Public Routes */}
+                <Route path="/"                element={<LandingPage />} />
                 <Route path="/login"           element={<Login />} />
                 <Route path="/register"        element={<Register />} />
                 <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -50,7 +52,7 @@ export default function App() {
 
                 {/* Protected Routes */}
                 <Route path="/" element={<MainLayout />}>
-                  <Route index element={<Dashboard />} />
+                  <Route path="dashboard" element={<Dashboard />} />
 
                   {/* Primary workflow */}
                   <Route path="projects"       element={<Projects />} />
