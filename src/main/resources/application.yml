@@ -144,9 +144,6 @@ app:
   # AI Provider configuration
   ai:
     provider: groq
-    groq:
-      # REQUIRED: Set GROQ_API_KEY env var to your Groq API key.
-      # Never commit a real API key here. Obtain from: https://console.groq.com
     openrouter:
       api-key: ${OPENROUTER_API_KEY:}
       model:
