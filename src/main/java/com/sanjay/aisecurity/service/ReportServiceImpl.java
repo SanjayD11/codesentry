@@ -83,7 +83,7 @@ public class ReportServiceImpl implements ReportService {
             Optional<Report> existingReportOpt = reportRepository.findFirstByScanHistoryId(scanId);
             if (existingReportOpt.isPresent()) {
                 Report existingReport = existingReportOpt.get();
-                if (java.nio.file.Files.exists(Paths.get(existingReport.getFilePath()))) {
+                if (java.nio.file.Files.exists(Paths.get(existingReport.getReportPath()))) {
                     log.info("Report already exists for scan {}. Returning existing report.", scanId);
                     return toResponse(existingReport, project);
                 } else {
