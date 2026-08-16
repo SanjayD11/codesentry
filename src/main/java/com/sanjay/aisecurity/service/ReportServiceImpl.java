@@ -24,6 +24,7 @@ import com.sanjay.aisecurity.repository.ReportRepository;
 import com.sanjay.aisecurity.repository.ScanHistoryRepository;
 import com.sanjay.aisecurity.repository.VulnerabilityRepository;
 import com.sanjay.aisecurity.util.SecurityUtils;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
