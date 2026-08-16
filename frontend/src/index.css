@@ -49,21 +49,7 @@
   --color-on-secondary-fixed-variant: #38485d;
   --color-primary-fixed-dim: #adc6ff;
   --color-on-primary-fixed-variant: #004395;
-}
 
-:root {
-  /* Legacy/SNT variables for SecurityChat */
-  --snt-surface: #ffffff;
-  --snt-surface-2: #f0f3ff;
-  --snt-text-1: #111c2d;
-  --snt-text-2: #424754;
-  --snt-text-3: #727785;
-  --snt-text-4: #8890a0;
-  --snt-border: #e2e6f0;
-  --snt-border-2: #cfdaf2;
-}
-
-@layer base {
   /* Spacing */
   --spacing-max-width: 1440px;
   --spacing-md: 16px;
@@ -94,6 +80,18 @@
   --font-title-lg: 'Plus Jakarta Sans';
   --font-body-md: 'Manrope';
   --font-serif-display: 'Plus Jakarta Sans';
+}
+
+:root {
+  /* Legacy/SNT variables for SecurityChat */
+  --snt-surface: #ffffff;
+  --snt-surface-2: #f0f3ff;
+  --snt-text-1: #111c2d;
+  --snt-text-2: #424754;
+  --snt-text-3: #727785;
+  --snt-text-4: #8890a0;
+  --snt-border: #e2e6f0;
+  --snt-border-2: #cfdaf2;
 }
 
 * { box-sizing: border-box; }
