@@ -58,21 +58,18 @@ public class CompositeAiProvider implements AiProvider {
 
     private boolean isTransientError(Exception e) {
         String msg = e.getMessage() != null ? e.getMessage().toLowerCase() : "";
-        // Do not fall back for malformed application requests, context length issues, authentication, etc.
-        if (msg.contains("400") || msg.contains("401") || msg.contains("403") || msg.contains("404")) {
+        
+        // 400 Bad Request and 404 Not Found mean the payload itself is invalid or model doesn't exist.
+        // It will fail on Groq too, so do not fallback.
+        if (msg.contains("400 ") || msg.contains("404 ")) {
             return false;
         }
-        // Fallback for transient provider errors
-        return msg.contains("timeout") 
-            || msg.contains("500")
-            || msg.contains("502") 
-            || msg.contains("503") 
-            || msg.contains("504") 
-            || msg.contains("408")
-            || msg.contains("429")
-            || msg.contains("connection")
-            || msg.contains("reset")
-            || msg.contains("socket")
-            || msg.contains("unavailable");
+        
+        // Always fallback for everything else:
+        // - "not configured" (missing API key)
+        // - "failed" (generic OpenRouter failed)
+        // - 401/403 (Invalid API key / Out of credits)
+        // - 5xx / timeouts / networking issues
+        return true;
     }
 }
