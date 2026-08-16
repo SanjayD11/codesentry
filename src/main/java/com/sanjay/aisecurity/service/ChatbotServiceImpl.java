@@ -106,8 +106,9 @@ public class ChatbotServiceImpl implements ChatbotService {
         return toResponse(entry);
     }
 
-    // Max characters of PDF text to include in prompt (approx 3000 tokens)
-    private static final int MAX_PDF_CHARS = 12000;
+    // Max chars of PDF to inject into the prompt (~1250 tokens at 4 chars/token).
+    // Must be conservative to leave room for completion + system prompt + history.
+    private static final int MAX_PDF_CHARS = 5000;
 
     @Override
     @Transactional
@@ -159,12 +160,11 @@ public class ChatbotServiceImpl implements ChatbotService {
             pdfContextStore.save(conversationId, pdfContext);
         }
 
-        // Build prompt with PDF context injected into this first message as well
-        String messageForPrompt = originalMessage + pdfContext;
-        String fullPrompt = PromptBuilder.buildChatPrompt(messageForPrompt, scanContext, pdfContext, history);
+        // Build prompt — pdfContext is injected inside buildChatPrompt (do NOT also append it to the message)
+        String fullPrompt = PromptBuilder.buildChatPrompt(originalMessage, scanContext, pdfContext, history);
 
-        log.info("Chatbot request from user {} in conversation {} (PDF attached: {})",
-                email, conversationId, !pdfContext.isEmpty());
+        log.info("Chatbot request from user {} in conversation {} (PDF attached: {} | promptChars: {})",
+                email, conversationId, !pdfContext.isEmpty(), fullPrompt.length());
         String aiResponse = aiProvider.complete(fullPrompt, AiFeature.CHAT);
         
         // Strip out chain-of-thought blocks from reasoning models (like DeepSeek)

@@ -42,7 +42,7 @@ public class GroqAiProvider implements AiProvider {
     private final String primaryModel;
     private final String fallbackModel;
     private final String fallback2Model;
-    
+
     // Feature-specific models
     private final String enrichmentModel;
     private final String enrichmentFallbackModel;
@@ -52,9 +52,12 @@ public class GroqAiProvider implements AiProvider {
     private final String assistantFallbackModel;
     private final String quickScanModel;
     private final String quickScanFallbackModel;
-    
+
     private final int timeoutSeconds;
     private final int maxTokens;
+    // Per-feature token limits to prevent context-window overflow
+    private final int chatMaxTokens;
+    private final int enrichmentMaxTokens;
     private final double temperature;
 
     public GroqAiProvider(
@@ -68,19 +71,21 @@ public class GroqAiProvider implements AiProvider {
             @Value("${app.ai.groq.model.enrichment-fallback-model:qwen/qwen3.6-27b}") String enrichmentFallbackModel,
             @Value("${app.ai.groq.model.report-model:openai/gpt-oss-120b}") String reportModel,
             @Value("${app.ai.groq.model.report-fallback-model:qwen/qwen3.6-27b}") String reportFallbackModel,
-            @Value("${app.ai.groq.model.assistant-model:openai/gpt-oss-20b}") String assistantModel,
-            @Value("${app.ai.groq.model.assistant-fallback-model:qwen/qwen3.6-27b}") String assistantFallbackModel,
-            @Value("${app.ai.groq.model.quick-scan-model:openai/gpt-oss-20b}") String quickScanModel,
-            @Value("${app.ai.groq.model.quick-scan-fallback-model:qwen/qwen3.6-27b}") String quickScanFallbackModel,
+            @Value("${app.ai.groq.model.assistant-model:qwen/qwen3.6-27b}") String assistantModel,
+            @Value("${app.ai.groq.model.assistant-fallback-model:openai/gpt-oss-20b}") String assistantFallbackModel,
+            @Value("${app.ai.groq.model.quick-scan-model:qwen/qwen3.6-27b}") String quickScanModel,
+            @Value("${app.ai.groq.model.quick-scan-fallback-model:openai/gpt-oss-20b}") String quickScanFallbackModel,
             @Value("${app.ai.groq.timeout-seconds:90}") int timeoutSeconds,
             @Value("${app.ai.groq.max-tokens:4096}") int maxTokens,
+            @Value("${app.ai.groq.chat-max-tokens:1500}") int chatMaxTokens,
+            @Value("${app.ai.groq.enrichment-max-tokens:4096}") int enrichmentMaxTokens,
             @Value("${app.ai.groq.temperature:0.2}") double temperature) {
         this.webClient = webClientBuilder.baseUrl(baseUrl).build();
         this.apiKey = apiKey;
         this.primaryModel = primaryModel;
         this.fallbackModel = fallbackModel;
         this.fallback2Model = fallback2Model;
-        
+
         this.enrichmentModel = enrichmentModel;
         this.enrichmentFallbackModel = enrichmentFallbackModel;
         this.reportModel = reportModel;
@@ -89,10 +94,16 @@ public class GroqAiProvider implements AiProvider {
         this.assistantFallbackModel = assistantFallbackModel;
         this.quickScanModel = quickScanModel;
         this.quickScanFallbackModel = quickScanFallbackModel;
-        
+
         this.timeoutSeconds = timeoutSeconds;
         this.maxTokens = maxTokens;
+        this.chatMaxTokens = chatMaxTokens;
+        this.enrichmentMaxTokens = enrichmentMaxTokens;
         this.temperature = temperature;
+
+        log.info("[AI] GroqAiProvider ready | key={}  chat-max-tokens={}  enrichment-max-tokens={}",
+                (apiKey != null && !apiKey.isBlank()) ? "SET" : "MISSING",
+                chatMaxTokens, enrichmentMaxTokens);
     }
 
     @Override
@@ -173,23 +184,21 @@ public class GroqAiProvider implements AiProvider {
         };
     }
 
-    private String completeWithFallback(
-            String prompt,
-            String primaryModel,
-            String fallbackModel,
-            AiFeature feature) {
+    private String completeWithFallback(String prompt, String primaryModel, String fallbackModel, AiFeature feature) {
         String requestId = UUID.randomUUID().toString();
         long startTime = System.currentTimeMillis();
 
+        log.info("[AI] [{}] Feature={} | Primary: {} | Prompt chars: {}", requestId, feature, primaryModel, prompt.length());
         try {
-            log.info("[AI] [{}] Feature={} | Using primary model: {}", requestId, feature, primaryModel);
-            return callGroq(requestId, primaryModel, prompt, startTime, 1, feature);
+            String result = callGroq(requestId, primaryModel, prompt, startTime, 1, feature);
+            log.info("[AI] [{}] Feature={} | Primary {} succeeded.", requestId, feature, primaryModel);
+            return result;
         } catch (Exception ex) {
-            log.warn("[AI] [{}] Feature={} | Primary model {} failed: {} | Switching to fallback: {}",
+            log.warn("[AI] [{}] Feature={} | Primary {} failed: {} | Trying fallback: {}",
                      requestId, feature, primaryModel, summarize(ex), fallbackModel);
             try {
                 String result = callGroq(requestId, fallbackModel, prompt, startTime, 2, feature);
-                log.info("[AI] [{}] Feature={} | Fallback model {} succeeded.", requestId, feature, fallbackModel);
+                log.info("[AI] [{}] Feature={} | Fallback {} succeeded.", requestId, feature, fallbackModel);
                 return result;
             } catch (Exception innerEx) {
                 log.error("[AI] [{}] Feature={} | Both models failed. Primary={} Fallback={} | Last error: {}",
@@ -204,11 +213,14 @@ public class GroqAiProvider implements AiProvider {
     // =========================================================================
 
     private String callGroq(String requestId, String model, String prompt, long startTime, int tier, AiFeature feature) {
+        // Use feature-specific max_tokens to avoid context-window overflow (e.g. when PDF is in the prompt)
+        int tokens = resolveMaxTokens(feature);
+
         GroqRequest request = new GroqRequest(
                 model,
                 List.of(new Message("user", prompt)),
                 temperature,
-                maxTokens
+                tokens
         );
 
         GroqResponse response;
@@ -223,9 +235,12 @@ public class GroqAiProvider implements AiProvider {
                     .timeout(Duration.ofSeconds(timeoutSeconds))
                     .block();
         } catch (WebClientResponseException e) {
-            // HTTP 4xx/5xx — always propagate so the failover logic can catch it
+            // Always propagate so failover logic catches it — never expose API key in message
+            String body = e.getResponseBodyAsString();
+            if (body != null && body.length() > 300) body = body.substring(0, 300) + "\u2026";
             throw new RuntimeException(
-                    String.format("HTTP %d from Groq (model=%s): %s", e.getStatusCode().value(), model, e.getResponseBodyAsString()), e);
+                    String.format("HTTP %d from Groq (model=%s tier=%d): %s",
+                            e.getStatusCode().value(), model, tier, body), e);
         }
 
         long duration = System.currentTimeMillis() - startTime;
@@ -267,7 +282,22 @@ public class GroqAiProvider implements AiProvider {
         throw new RuntimeException("Empty or invalid response from Groq API (model=" + model + ").");
     }
 
-    /** Extracts a short, log-safe summary of an exception without leaking prompts or keys. */
+    /**
+     * Selects max_tokens based on feature context.
+     * CHAT/QUICK_SCAN: lower limit to leave context-window space for PDF/scan context.
+     * ENRICHMENT/REPORT: full limit for deep structured output.
+     */
+    private int resolveMaxTokens(AiFeature feature) {
+        if (feature == AiFeature.CHAT || feature == AiFeature.QUICK_SCAN) {
+            return chatMaxTokens;
+        }
+        if (feature == AiFeature.ENRICHMENT || feature == AiFeature.REPORT_GENERATION) {
+            return enrichmentMaxTokens;
+        }
+        return maxTokens; // legacy / null path
+    }
+
+    /** Short, log-safe exception summary — never leaks keys or full prompts. */
     private String summarize(Exception e) {
         if (e.getCause() != null && e.getCause().getClass().getSimpleName().contains("Timeout")) {
             return "timeout";
