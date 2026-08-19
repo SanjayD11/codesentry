@@ -913,6 +913,13 @@ public class ScanServiceImpl implements ScanService {
             lang = "Mixed / Auto-detected";
         }
 
+        List<com.sanjay.aisecurity.dto.response.VulnerabilityResponse> vulns = null;
+        if (scan.getVulnerabilities() != null && !scan.getVulnerabilities().isEmpty()) {
+            vulns = scan.getVulnerabilities().stream()
+                    .map(this::toVulnerabilityResponse)
+                    .collect(Collectors.toList());
+        }
+
         return ScanSummaryResponse.builder()
                 .scanId(scan.getId())
                 .projectId(scan.getProject().getId())
@@ -934,6 +941,7 @@ public class ScanServiceImpl implements ScanService {
                 .ruleEngineVersion("v2.1.0-Hybrid")
                 .rulePackVersion("2026-07")
                 .aiModel("Primary-LLM-Groq")
+                .vulnerabilities(vulns)
                 .build();
     }
 
