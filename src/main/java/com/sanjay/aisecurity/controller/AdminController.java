@@ -36,6 +36,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * Admin REST Controller.
  *
@@ -46,6 +48,7 @@ import java.util.Map;
  * @author Sanjay
  * @version 1.0.0
  */
+@Slf4j
 @RestController
 @RequestMapping(ApiConstants.ADMIN_BASE)
 @RequiredArgsConstructor
@@ -274,30 +277,36 @@ public class AdminController {
             @RequestParam(required = false) String action,
             @RequestParam(required = false) String userEmail,
             @RequestParam(required = false) String resource,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fromDate,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime toDate,
+            @RequestParam(required = false) String fromDate,
+            @RequestParam(required = false) String toDate,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
             @RequestParam(defaultValue = "createdAt") String sortBy,
             @RequestParam(defaultValue = "desc") String direction) {
 
+        LocalDateTime from = parseFlexibleDateTime(fromDate);
+        LocalDateTime to = parseFlexibleDateTime(toDate);
+
         Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
         Pageable pageable = PageRequest.of(page, size, sort);
         return ResponseEntity.ok(ApiResponse.success(
                 "Audit logs fetched successfully",
-                adminService.getAllAuditLogs(action, userEmail, resource, fromDate, toDate, pageable)
+                adminService.getAllAuditLogs(action, userEmail, resource, from, to, pageable)
         ));
     }
 
-    @GetMapping("/audit-logs/export")
+    @RequestMapping(value = "/audit-logs/export", method = {RequestMethod.GET, RequestMethod.POST})
     @Operation(summary = "Export audit logs as CSV file")
     public ResponseEntity<byte[]> exportAuditLogs(
             @RequestParam(required = false) String action,
             @RequestParam(required = false) String userEmail,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fromDate,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime toDate) {
+            @RequestParam(required = false) String fromDate,
+            @RequestParam(required = false) String toDate) {
 
-        byte[] csv = adminService.exportAuditLogsCsv(action, userEmail, fromDate, toDate);
+        LocalDateTime from = parseFlexibleDateTime(fromDate);
+        LocalDateTime to = parseFlexibleDateTime(toDate);
+
+        byte[] csv = adminService.exportAuditLogsCsv(action, userEmail, from, to);
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"audit-logs.csv\"")
                 .header(HttpHeaders.CONTENT_TYPE, "text/csv; charset=UTF-8")
@@ -331,24 +340,68 @@ public class AdminController {
     // DATA EXPORT
     // =========================================================================
 
-    @PostMapping("/export")
-    @Operation(summary = "Export selected platform data")
+    @RequestMapping(value = "/export", method = {RequestMethod.GET, RequestMethod.POST})
+    @Operation(summary = "Export selected platform data in CSV, Excel, or PDF format")
     public ResponseEntity<byte[]> exportPlatformData(
-            @RequestBody com.sanjay.aisecurity.dto.ExportRequest request) throws Exception {
+            @RequestBody(required = false) com.sanjay.aisecurity.dto.ExportRequest requestBody,
+            @RequestParam(required = false) String format,
+            @RequestParam(required = false) List<String> datasets) throws Exception {
+
+        com.sanjay.aisecurity.dto.ExportRequest request = requestBody;
+        if (request == null) {
+            request = new com.sanjay.aisecurity.dto.ExportRequest();
+            request.setFormat(format != null ? format : "csv");
+            request.setDatasets(datasets != null ? datasets : List.of("users", "projects", "scans", "auditLogs", "reports"));
+        } else {
+            if (request.getFormat() == null && format != null) {
+                request.setFormat(format);
+            }
+            if ((request.getDatasets() == null || request.getDatasets().isEmpty()) && datasets != null) {
+                request.setDatasets(datasets);
+            }
+        }
 
         byte[] fileData = adminExportService.generateExport(request);
-        String format = request.getFormat() != null ? request.getFormat().toLowerCase() : "csv";
+        String fmt = request.getFormat() != null ? request.getFormat().toLowerCase() : "csv";
 
-        String extension = ("excel".equals(format) || "xlsx".equals(format)) ? "xlsx" :
-                          ("pdf".equals(format) ? "pdf" : "csv");
-        String contentType = ("excel".equals(format) || "xlsx".equals(format)) ?
+        String extension = ("excel".equals(fmt) || "xlsx".equals(fmt)) ? "xlsx" :
+                          ("pdf".equals(fmt) ? "pdf" : "csv");
+        String contentType = ("excel".equals(fmt) || "xlsx".equals(fmt)) ?
                              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" :
-                             ("pdf".equals(format) ? "application/pdf" : "text/csv; charset=UTF-8");
+                             ("pdf".equals(fmt) ? "application/pdf" : "text/csv; charset=UTF-8");
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"codesentry-export." + extension + "\"")
                 .header(HttpHeaders.CONTENT_TYPE, contentType)
                 .body(fileData);
+    }
+
+    // =========================================================================
+    // UTILITY HELPERS
+    // =========================================================================
+
+    private LocalDateTime parseFlexibleDateTime(String str) {
+        if (str == null || str.isBlank()) return null;
+        try {
+            str = str.trim();
+            if (str.endsWith("Z")) {
+                return java.time.Instant.parse(str).atZone(java.time.ZoneId.systemDefault()).toLocalDateTime();
+            }
+            if (str.contains("T")) {
+                try {
+                    return java.time.OffsetDateTime.parse(str).toLocalDateTime();
+                } catch (Exception ignored) {
+                    return LocalDateTime.parse(str);
+                }
+            }
+            if (str.length() == 10) {
+                return java.time.LocalDate.parse(str).atStartOfDay();
+            }
+            return LocalDateTime.parse(str);
+        } catch (Exception e) {
+            log.warn("Could not parse date string '{}': {}", str, e.getMessage());
+            return null;
+        }
     }
 
     // =========================================================================
