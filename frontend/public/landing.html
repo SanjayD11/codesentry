@@ -691,8 +691,9 @@ ReactDOM.createRoot(document.getElementById("scan-picker-root")).render(<ScanPic
     });
 
     // Fetch live stats in real-time
+    const BACKEND_API = 'https://codesentry-api-htph.onrender.com/api/v1';
     function fetchPublicStats() {
-        fetch('/api/v1/public/stats')
+        fetch(BACKEND_API + '/public/stats')
             .then(res => {
                 if (!res.ok) throw new Error('HTTP ' + res.status);
                 return res.json();

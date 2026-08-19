@@ -1,5 +1,7 @@
 import api from './axiosConfig'
 
+const API_BASE = import.meta.env.VITE_API_BASE_URL || '/api/v1'
+
 // ── Dashboard ─────────────────────────────────────────────────────────────────
 export const getAdminStats = () => api.get('/admin/stats').then(r => r.data.data)
 export const getSystemHealth = () => api.get('/admin/health').then(r => r.data.data)
@@ -31,7 +33,7 @@ export const exportAuditLogsCsv = async (params) => {
   const queryString = new URLSearchParams(Object.fromEntries(
     Object.entries(params || {}).filter(([, v]) => v != null && v !== '')
   )).toString()
-  const response = await fetch(`/api/v1/admin/audit-logs/export${queryString ? '?' + queryString : ''}`, {
+  const response = await fetch(`${API_BASE}/admin/audit-logs/export${queryString ? '?' + queryString : ''}`, {
     headers: { Authorization: `Bearer ${token}` }
   })
   if (!response.ok) throw new Error('Export failed')
@@ -45,7 +47,7 @@ export const updateSetting = (settingKey, value) => api.put(`/admin/settings/${s
 // ── Data Export ────────────────────────────────────────────────────────────────
 export const exportPlatformData = async (datasets, format) => {
   const token = localStorage.getItem('token')
-  const response = await fetch('/api/v1/admin/export', {
+  const response = await fetch(`${API_BASE}/admin/export`, {
     method: 'POST',
     headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({ datasets, format })
@@ -53,3 +55,4 @@ export const exportPlatformData = async (datasets, format) => {
   if (!response.ok) throw new Error('Export failed')
   return response
 }
+
