@@ -212,18 +212,21 @@ public class GroqAiProvider implements AiProvider {
     // =========================================================================
 
     /**
-     * Maps logical/OpenRouter-style model aliases to real Groq model IDs.
-     * Always keep this up-to-date with Groq's current model catalog.
-     * Updated: 2025 — removed deprecated mixtral-8x7b-32768.
+     * Passes the configured model ID directly to Groq.
+     *
+     * Groq natively serves the following IDs used by this application:
+     *   openai/gpt-oss-120b  — large, high-quality (Enrichment, Reports)
+     *   openai/gpt-oss-20b   — fast, efficient (Chat, Quick Scan)
+     *   qwen/qwen3.6-27b     — mid-size fallback
+     *
+     * DO NOT add alias translations here. If a model ID is deprecated,
+     * update application.yml instead of adding translation logic.
+     * Verified against live Groq /models endpoint: 2026-08-19.
      */
     private String resolveModelName(String configuredModel) {
-        if (configuredModel == null) return "llama-3.3-70b-versatile";
-        // OpenRouter alias → real Groq model
-        if (configuredModel.contains("gpt-oss-120b"))  return "llama-3.3-70b-versatile";
-        if (configuredModel.contains("qwen3.6-27b"))   return "llama3-70b-8192";
-        if (configuredModel.contains("gpt-oss-20b"))   return "gemma2-9b-it";
-        // Direct Groq model IDs — pass through as-is
-        return configuredModel;
+        return (configuredModel != null && !configuredModel.isBlank())
+            ? configuredModel
+            : "openai/gpt-oss-120b";
     }
 
     private String callGroq(String requestId, String model, String prompt, long startTime, int tier, AiFeature feature) {
