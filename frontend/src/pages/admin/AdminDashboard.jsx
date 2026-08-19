@@ -124,7 +124,7 @@ export default function AdminDashboard() {
       const response = await exportPlatformData(activeDatasets, exportForm.format);
       
       const contentDisposition = response.headers.get('Content-Disposition');
-      let filename = `aegis-nexus-export.${exportForm.format === 'excel' ? 'xlsx' : exportForm.format}`;
+      let filename = `codesentry-export.${exportForm.format === 'excel' ? 'xlsx' : exportForm.format}`;
       if (contentDisposition && contentDisposition.indexOf('attachment') !== -1) {
         const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
         const matches = filenameRegex.exec(contentDisposition);

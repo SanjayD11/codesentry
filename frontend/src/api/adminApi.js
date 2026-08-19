@@ -1,4 +1,4 @@
-﻿import api from './axiosConfig'
+import api from './axiosConfig'
 
 // ── Dashboard ─────────────────────────────────────────────────────────────────
 export const getAdminStats = () => api.get('/admin/stats').then(r => r.data.data)
@@ -26,14 +26,16 @@ export const getAllScans = (params) => api.get('/admin/scans', { params }).then(
 
 // ── Audit Logs ─────────────────────────────────────────────────────────────────
 export const getAllAuditLogs = (params) => api.get('/admin/audit-logs', { params }).then(r => r.data.data)
-export const exportAuditLogsCsv = (params) => {
+export const exportAuditLogsCsv = async (params) => {
   const token = localStorage.getItem('token')
   const queryString = new URLSearchParams(Object.fromEntries(
     Object.entries(params || {}).filter(([, v]) => v != null && v !== '')
   )).toString()
-  return fetch(`/api/v1/admin/audit-logs/export${queryString ? '?' + queryString : ''}`, {
+  const response = await fetch(`/api/v1/admin/audit-logs/export${queryString ? '?' + queryString : ''}`, {
     headers: { Authorization: `Bearer ${token}` }
   })
+  if (!response.ok) throw new Error('Export failed')
+  return response
 }
 
 // ── Settings ───────────────────────────────────────────────────────────────────

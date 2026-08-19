@@ -55,6 +55,7 @@ public class AdminController {
 
     private final AdminService adminService;
     private final ApplicationSettingsService settingsService;
+    private final AdminExportService adminExportService;
 
     // =========================================================================
     // DASHBOARD
@@ -334,23 +335,17 @@ public class AdminController {
     public ResponseEntity<byte[]> exportPlatformData(
             @RequestBody com.sanjay.aisecurity.dto.ExportRequest request) throws Exception {
 
-        com.sanjay.aisecurity.service.AdminExportService exportService =
-            org.springframework.web.context.support.WebApplicationContextUtils
-                .getRequiredWebApplicationContext(
-                    ((org.springframework.web.context.request.ServletRequestAttributes)
-                    org.springframework.web.context.request.RequestContextHolder.getRequestAttributes())
-                    .getRequest().getServletContext()
-                ).getBean(com.sanjay.aisecurity.service.AdminExportService.class);
+        byte[] fileData = adminExportService.generateExport(request);
+        String format = request.getFormat() != null ? request.getFormat().toLowerCase() : "csv";
 
-        byte[] fileData = exportService.generateExport(request);
-        String extension = "excel".equalsIgnoreCase(request.getFormat()) ? "xlsx" :
-                          ("csv".equalsIgnoreCase(request.getFormat()) ? "csv" : "pdf");
-        String contentType = "excel".equalsIgnoreCase(request.getFormat()) ?
+        String extension = ("excel".equals(format) || "xlsx".equals(format)) ? "xlsx" :
+                          ("pdf".equals(format) ? "pdf" : "csv");
+        String contentType = ("excel".equals(format) || "xlsx".equals(format)) ?
                              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" :
-                             ("csv".equalsIgnoreCase(request.getFormat()) ? "text/csv" : "application/pdf");
+                             ("pdf".equals(format) ? "application/pdf" : "text/csv; charset=UTF-8");
 
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"aegis-nexus-export." + extension + "\"")
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"codesentry-export." + extension + "\"")
                 .header(HttpHeaders.CONTENT_TYPE, contentType)
                 .body(fileData);
     }

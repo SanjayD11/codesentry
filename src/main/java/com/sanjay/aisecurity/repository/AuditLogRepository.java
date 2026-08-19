@@ -36,8 +36,8 @@ public interface AuditLogRepository extends JpaRepository<AuditLog, Long> {
            "(:action IS NULL OR LOWER(a.action) LIKE LOWER(CONCAT('%', :action, '%'))) AND " +
            "(:userEmail IS NULL OR (u.email IS NOT NULL AND LOWER(u.email) LIKE LOWER(CONCAT('%', :userEmail, '%')))) AND " +
            "(:resource IS NULL OR LOWER(a.resource) LIKE LOWER(CONCAT('%', :resource, '%'))) AND " +
-           "(cast(:fromDate as timestamp) IS NULL OR a.createdAt >= :fromDate) AND " +
-           "(cast(:toDate as timestamp) IS NULL OR a.createdAt <= :toDate)")
+           "(:fromDate IS NULL OR a.createdAt >= :fromDate) AND " +
+           "(:toDate IS NULL OR a.createdAt <= :toDate)")
     Page<AuditLog> searchAuditLogs(
             @Param("action") String action,
             @Param("userEmail") String userEmail,
@@ -53,8 +53,8 @@ public interface AuditLogRepository extends JpaRepository<AuditLog, Long> {
     @Query("SELECT a FROM AuditLog a LEFT JOIN a.user u WHERE " +
            "(:action IS NULL OR LOWER(a.action) LIKE LOWER(CONCAT('%', :action, '%'))) AND " +
            "(:userEmail IS NULL OR (u.email IS NOT NULL AND LOWER(u.email) LIKE LOWER(CONCAT('%', :userEmail, '%')))) AND " +
-           "(cast(:fromDate as timestamp) IS NULL OR a.createdAt >= :fromDate) AND " +
-           "(cast(:toDate as timestamp) IS NULL OR a.createdAt <= :toDate) " +
+           "(:fromDate IS NULL OR a.createdAt >= :fromDate) AND " +
+           "(:toDate IS NULL OR a.createdAt <= :toDate) " +
            "ORDER BY a.createdAt DESC")
     List<AuditLog> findForExport(
             @Param("action") String action,
