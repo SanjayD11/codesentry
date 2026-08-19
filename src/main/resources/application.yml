@@ -172,22 +172,22 @@ app:
       api-key: ${GROQ_API_KEY:}
       model:
         # Legacy 3-tier fallback chain (used by the default complete(prompt) path)
-        primary: openai/gpt-oss-120b
-        fallback: qwen/qwen3.6-27b
-        fallback2: openai/gpt-oss-20b
+        primary: llama-3.3-70b-versatile
+        fallback: llama3-70b-8192
+        fallback2: gemma2-9b-it
 
         # Feature-aware routing models (used by complete(prompt, AiFeature) path)
-        enrichment-model: openai/gpt-oss-120b
-        enrichment-fallback-model: qwen/qwen3.6-27b
+        enrichment-model: llama-3.3-70b-versatile
+        enrichment-fallback-model: llama3-70b-8192
 
-        report-model: openai/gpt-oss-120b
-        report-fallback-model: qwen/qwen3.6-27b
+        report-model: llama-3.3-70b-versatile
+        report-fallback-model: llama3-70b-8192
 
-        assistant-model: openai/gpt-oss-20b
-        assistant-fallback-model: qwen/qwen3.6-27b
+        assistant-model: llama3-70b-8192
+        assistant-fallback-model: gemma2-9b-it
 
-        quick-scan-model: openai/gpt-oss-20b
-        quick-scan-fallback-model: qwen/qwen3.6-27b
+        quick-scan-model: llama3-70b-8192
+        quick-scan-fallback-model: gemma2-9b-it
       base-url: https://api.groq.com/openai/v1
       timeout-seconds: 90
       max-tokens: 4096

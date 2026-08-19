@@ -56,8 +56,11 @@ public class SecurityConfig {
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final UserDetailsService userDetailsService;
 
-    @org.springframework.beans.factory.annotation.Value("${cors.allowed-origins:http://localhost:3000}")
+    @org.springframework.beans.factory.annotation.Value("${cors.allowed-origins:http://localhost:3000,http://localhost:5173}")
     private List<String> allowedOrigins;
+
+    @org.springframework.beans.factory.annotation.Value("${cors.allowed-origin-patterns:https://*.vercel.app,https://*.onrender.com}")
+    private List<String> allowedOriginPatterns;
 
     // =========================================================================
     // SECURITY FILTER CHAIN
@@ -145,10 +148,16 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
+        // Exact origins (for localhost and known production URLs)
         configuration.setAllowedOrigins(allowedOrigins);
+        // Pattern origins — covers ALL Vercel preview/production URLs automatically
+        configuration.setAllowedOriginPatterns(allowedOriginPatterns);
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With", "Accept", "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers"));
-        configuration.setExposedHeaders(List.of("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials"));
+        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With",
+                "Accept", "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers",
+                "Content-Disposition"));
+        configuration.setExposedHeaders(List.of("Access-Control-Allow-Origin",
+                "Access-Control-Allow-Credentials", "Content-Disposition", "Content-Type"));
         configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L);
 

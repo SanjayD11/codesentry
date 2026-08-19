@@ -93,8 +93,15 @@ app:
     secret: ${JWT_SECRET}
     expiration: ${JWT_EXPIRATION:86400000}
   ai:
+    groq:
+      api-key: ${GROQ_API_KEY:}
+      timeout-seconds: 90
+      max-tokens: 4096
+      chat-max-tokens: 2500
+      enrichment-max-tokens: 4096
+      temperature: 0.2
     gemini:
-      api-key: ${GEMINI_API_KEY}
+      api-key: ${GEMINI_API_KEY:}
   mail:
     from-address: ${MAIL_FROM_ADDRESS}
     from-name: ${MAIL_FROM_NAME:CodeSentry Support}
@@ -106,6 +113,7 @@ ai:
     exponential-backoff: true
 
 
-# Security overrides
+# Security / CORS overrides
 cors:
-  allowed-origins: ${APP_FRONTEND_URL},http://localhost:5173
+  allowed-origins: ${APP_FRONTEND_URL:https://codesentry-wheat.vercel.app},http://localhost:5173
+  allowed-origin-patterns: https://*.vercel.app,https://*.onrender.com

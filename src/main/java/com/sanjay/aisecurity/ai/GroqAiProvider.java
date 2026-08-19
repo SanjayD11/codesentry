@@ -211,11 +211,18 @@ public class GroqAiProvider implements AiProvider {
     // INTERNAL CALL
     // =========================================================================
 
+    /**
+     * Maps logical/OpenRouter-style model aliases to real Groq model IDs.
+     * Always keep this up-to-date with Groq's current model catalog.
+     * Updated: 2025 — removed deprecated mixtral-8x7b-32768.
+     */
     private String resolveModelName(String configuredModel) {
         if (configuredModel == null) return "llama-3.3-70b-versatile";
-        if (configuredModel.contains("gpt-oss-120b")) return "llama-3.3-70b-versatile";
-        if (configuredModel.contains("qwen3.6-27b")) return "llama3-8b-8192";
-        if (configuredModel.contains("gpt-oss-20b")) return "mixtral-8x7b-32768";
+        // OpenRouter alias → real Groq model
+        if (configuredModel.contains("gpt-oss-120b"))  return "llama-3.3-70b-versatile";
+        if (configuredModel.contains("qwen3.6-27b"))   return "llama3-70b-8192";
+        if (configuredModel.contains("gpt-oss-20b"))   return "gemma2-9b-it";
+        // Direct Groq model IDs — pass through as-is
         return configuredModel;
     }
 
