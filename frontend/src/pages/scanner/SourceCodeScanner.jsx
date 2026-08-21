@@ -391,9 +391,12 @@ export default function SourceCodeScanner() {
       const scanId = res.data?.data?.scanId
       addToast('Analysis started! Please wait...', 'success')
       
-      // Poll for completion
+      // Poll for completion with safety timeout (max 60 attempts = 2 minutes)
       let isDone = false
-      while (!isDone) {
+      let attempts = 0
+      const maxAttempts = 60
+      while (!isDone && attempts < maxAttempts) {
+        attempts++
         await new Promise(r => setTimeout(r, 2000))
         try {
           const statusRes = await getScan(scanId)
@@ -407,9 +410,12 @@ export default function SourceCodeScanner() {
               addToast('Analysis failed.', 'error')
             }
           }
-        } catch (e) {
+        } catch {
           // ignore transient polling errors
         }
+      }
+      if (!isDone) {
+        addToast('Scan is processing in background. Check Scan History for results.', 'info')
       }
     } catch (err) {
       addToast(err?.response?.data?.message || 'Failed to trigger scan', 'error')
@@ -576,14 +582,14 @@ export default function SourceCodeScanner() {
               style={{
                 position: 'relative',
                 borderRadius: 20,
-                padding: '48px 24px',
+                padding: '44px 24px',
                 textAlign: 'center',
                 background: '#F8FAFF',
                 border: '1px solid #E2E8F0',
                 cursor: 'pointer',
                 overflow: 'hidden',
-                boxShadow: '0 4px 20px -2px rgba(15,23,42,0.04)',
-                transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+                boxShadow: '0 4px 16px -2px rgba(15,23,42,0.04)',
+                transition: 'background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease',
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
@@ -591,66 +597,64 @@ export default function SourceCodeScanner() {
               }}
             >
               <style>{`
-                /* ── Continuous Horizontal Scanning Laser Beam (Matches Terminal Scanner) ── */
-                @keyframes continuousLaserSweep {
+                /* ── Smooth Continuous Laser Scanning Beam (GPU accelerated, linear seamless loop) ── */
+                @keyframes smoothLaserScan {
                   0% {
-                    top: -40px;
+                    transform: translateY(-30px);
                     opacity: 0;
                   }
-                  10% {
-                    opacity: 1;
+                  6% {
+                    opacity: 0.9;
                   }
-                  90% {
-                    opacity: 1;
+                  94% {
+                    opacity: 0.9;
                   }
                   100% {
-                    top: calc(100% + 10px);
+                    transform: translateY(310px);
                     opacity: 0;
                   }
                 }
 
                 .laser-scan-line {
                   position: absolute;
+                  top: 0;
                   left: 0;
                   right: 0;
-                  height: 36px;
+                  height: 24px;
                   pointer-events: none;
                   background: linear-gradient(
                     180deg,
                     transparent 0%,
-                    rgba(37, 99, 235, 0.08) 30%,
-                    rgba(59, 130, 246, 0.25) 48%,
-                    rgba(96, 165, 250, 0.75) 50%,
-                    rgba(59, 130, 246, 0.25) 52%,
-                    rgba(37, 99, 235, 0.08) 70%,
+                    rgba(37, 99, 235, 0.05) 30%,
+                    rgba(59, 130, 246, 0.18) 48%,
+                    rgba(96, 165, 250, 0.45) 50%,
+                    rgba(59, 130, 246, 0.18) 52%,
+                    rgba(37, 99, 235, 0.05) 70%,
                     transparent 100%
                   );
-                  box-shadow: 0 0 16px rgba(37, 99, 235, 0.25);
-                  animation: continuousLaserSweep 3.2s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+                  box-shadow: 0 0 12px rgba(37, 99, 235, 0.15);
+                  animation: smoothLaserScan 3.4s linear infinite;
                   z-index: 1;
+                  will-change: transform;
                 }
 
-                /* Subtle center laser glowing thread */
+                /* Fine laser hair-line */
                 .laser-scan-line::after {
                   content: '';
                   position: absolute;
                   top: 50%;
-                  left: 5%;
-                  right: 5%;
-                  height: 1.5px;
-                  background: linear-gradient(90deg, transparent, #60a5fa 20%, #ffffff 50%, #60a5fa 80%, transparent);
-                  box-shadow: 0 0 10px #3b82f6, 0 0 4px #ffffff;
+                  left: 8%;
+                  right: 8%;
+                  height: 1px;
+                  background: linear-gradient(90deg, transparent, #60a5fa 25%, #ffffff 50%, #60a5fa 75%, transparent);
+                  box-shadow: 0 0 6px rgba(59, 130, 246, 0.8);
                 }
 
+                /* Clean subtle hover — NO jumping or scale zooming */
                 .scanner-laser-card:hover {
-                  background: #F0F6FF !important;
+                  background: #F4F8FF !important;
                   border-color: #93C5FD !important;
-                  transform: translateY(-2px);
-                  box-shadow: 0 12px 32px -4px rgba(37,99,235,0.12), 0 0 0 1px rgba(37,99,235,0.15) !important;
-                }
-
-                .scanner-laser-card:hover .laser-scan-line {
-                  animation-duration: 2.2s;
+                  box-shadow: 0 6px 24px -4px rgba(37,99,235,0.1) !important;
                 }
               `}</style>
 
@@ -667,30 +671,28 @@ export default function SourceCodeScanner() {
               {/* ── Background: Soft Center Radial Glow ── */}
               <div style={{
                 position: 'absolute', inset: 0, pointerEvents: 'none',
-                background: 'radial-gradient(circle at 50% 40%, rgba(37,99,235,0.06) 0%, transparent 60%)',
+                background: 'radial-gradient(circle at 50% 40%, rgba(37,99,235,0.05) 0%, transparent 60%)',
               }} />
 
-              {/* ── Clean Static Frosted Shield Icon (No Multiple Spinners) ── */}
+              {/* ── CodeSentry Brand Logo in Frosted Circular Container ── */}
               <div style={{
                 position: 'relative',
-                width: 64, height: 64,
+                width: 60, height: 60,
                 borderRadius: '50%',
                 background: '#ffffff',
                 border: '1px solid #dbeafe',
-                boxShadow: '0 4px 16px rgba(37,99,235,0.1), 0 1px 2px rgba(15,23,42,0.04)',
+                boxShadow: '0 4px 14px rgba(37,99,235,0.08), 0 1px 2px rgba(15,23,42,0.03)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                marginBottom: 18,
+                marginBottom: 16,
                 zIndex: 2,
               }}>
-                <span className="material-symbols-outlined" style={{ fontSize: 30, color: '#2563eb', fontVariationSettings: "'FILL' 1" }}>
-                  security
-                </span>
+                <img src="/logo.png" alt="CodeSentry" style={{ width: 34, height: 34, objectFit: 'contain' }} />
               </div>
 
               {/* ── Text Details ── */}
-              <div style={{ zIndex: 2, maxWidth: 520, marginBottom: 22 }}>
+              <div style={{ zIndex: 2, maxWidth: 520, marginBottom: 20 }}>
                 <h3 style={{
-                  margin: '0 0 8px', fontSize: 19, fontWeight: 700, color: '#0f172a',
+                  margin: '0 0 8px', fontSize: 18.5, fontWeight: 700, color: '#0f172a',
                   letterSpacing: '-0.02em', fontFamily: "'Plus Jakarta Sans', sans-serif"
                 }}>
                   Source Code Security Scan
@@ -708,12 +710,12 @@ export default function SourceCodeScanner() {
                 <button
                   type="button"
                   style={{
-                    height: 44,
-                    padding: '0 26px',
+                    height: 42,
+                    padding: '0 24px',
                     background: 'linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)',
                     color: '#ffffff',
                     border: 'none',
-                    borderRadius: 14,
+                    borderRadius: 12,
                     fontSize: 13.5,
                     fontWeight: 600,
                     cursor: 'pointer',
@@ -721,11 +723,11 @@ export default function SourceCodeScanner() {
                     alignItems: 'center',
                     justifyContent: 'center',
                     gap: 8,
-                    boxShadow: '0 4px 14px rgba(37,99,235,0.28)',
-                    transition: 'all 0.15s ease',
+                    boxShadow: '0 4px 14px rgba(37,99,235,0.25)',
+                    transition: 'box-shadow 0.15s ease',
                   }}
-                  onMouseEnter={e => e.currentTarget.style.boxShadow = '0 6px 20px rgba(37,99,235,0.4)'}
-                  onMouseLeave={e => e.currentTarget.style.boxShadow = '0 4px 14px rgba(37,99,235,0.28)'}
+                  onMouseEnter={e => e.currentTarget.style.boxShadow = '0 6px 20px rgba(37,99,235,0.38)'}
+                  onMouseLeave={e => e.currentTarget.style.boxShadow = '0 4px 14px rgba(37,99,235,0.25)'}
                 >
                   <span className="material-symbols-outlined" style={{ fontSize: 18 }}>upload_file</span>
                   <span>Upload Project</span>
