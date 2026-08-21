@@ -560,7 +560,7 @@ export default function SourceCodeScanner() {
               </div>
             </div>
           ) : (
-            /* ── Futuristic AI Continuous Security Scanning Upload Card ── */
+            /* ── Clean & Futuristic Continuous AI Laser Scanning Upload Card ── */
             <div
               onClick={handleUploadClick}
               onDragOver={e => { e.preventDefault(); e.stopPropagation(); }}
@@ -572,18 +572,18 @@ export default function SourceCodeScanner() {
                   handleFileChange(syntheticEvent);
                 }
               }}
-              className="scanner-dropzone-card"
+              className="scanner-laser-card"
               style={{
                 position: 'relative',
-                borderRadius: 24,
+                borderRadius: 20,
                 padding: '48px 24px',
                 textAlign: 'center',
                 background: '#F8FAFF',
-                border: '1px solid #E5EEF9',
+                border: '1px solid #E2E8F0',
                 cursor: 'pointer',
                 overflow: 'hidden',
-                boxShadow: '0 8px 30px rgba(37,99,235,0.04), 0 1px 3px rgba(15,23,42,0.03)',
-                transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+                boxShadow: '0 4px 20px -2px rgba(15,23,42,0.04)',
+                transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
@@ -591,145 +591,106 @@ export default function SourceCodeScanner() {
               }}
             >
               <style>{`
-                @keyframes scanBorderRotate {
-                  0%   { stroke-dashoffset: 1200; }
-                  100% { stroke-dashoffset: 0; }
-                }
-                @keyframes iconShieldPulse {
-                  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(37,99,235,0.25)); }
-                  50%      { transform: scale(1.05); filter: drop-shadow(0 0 20px rgba(37,99,235,0.45)); }
-                }
-                @keyframes scanRingSpin {
-                  from { transform: rotate(0deg); }
-                  to   { transform: rotate(360deg); }
-                }
-                @keyframes gridPan {
-                  0%   { background-position: 0 0; }
-                  100% { background-position: 28px 28px; }
-                }
-                @keyframes particleFloat1 {
-                  0%   { transform: translateY(0) scale(0.8); opacity: 0; }
-                  50%  { opacity: 0.6; }
-                  100% { transform: translateY(-40px) scale(1.2); opacity: 0; }
-                }
-                @keyframes particleFloat2 {
-                  0%   { transform: translateY(0) scale(1); opacity: 0; }
-                  50%  { opacity: 0.7; }
-                  100% { transform: translateY(-55px) scale(0.7); opacity: 0; }
-                }
-                @keyframes beamSweep {
-                  0%   { transform: translateX(-100%) rotate(35deg); opacity: 0; }
-                  20%  { opacity: 0.45; }
-                  80%  { opacity: 0.45; }
-                  100% { transform: translateX(200%) rotate(35deg); opacity: 0; }
+                /* ── Continuous Horizontal Scanning Laser Beam (Matches Terminal Scanner) ── */
+                @keyframes continuousLaserSweep {
+                  0% {
+                    top: -40px;
+                    opacity: 0;
+                  }
+                  10% {
+                    opacity: 1;
+                  }
+                  90% {
+                    opacity: 1;
+                  }
+                  100% {
+                    top: calc(100% + 10px);
+                    opacity: 0;
+                  }
                 }
 
-                .scanner-dropzone-card:hover {
-                  background: #EFF6FF !important;
-                  border-color: #BFDBFE !important;
-                  transform: scale(1.01);
-                  box-shadow: 0 16px 40px -8px rgba(37,99,235,0.18), 0 0 0 1px rgba(37,99,235,0.15) !important;
+                .laser-scan-line {
+                  position: absolute;
+                  left: 0;
+                  right: 0;
+                  height: 36px;
+                  pointer-events: none;
+                  background: linear-gradient(
+                    180deg,
+                    transparent 0%,
+                    rgba(37, 99, 235, 0.08) 30%,
+                    rgba(59, 130, 246, 0.25) 48%,
+                    rgba(96, 165, 250, 0.75) 50%,
+                    rgba(59, 130, 246, 0.25) 52%,
+                    rgba(37, 99, 235, 0.08) 70%,
+                    transparent 100%
+                  );
+                  box-shadow: 0 0 16px rgba(37, 99, 235, 0.25);
+                  animation: continuousLaserSweep 3.2s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+                  z-index: 1;
                 }
-                .scanner-dropzone-card:hover .diagonal-beam {
-                  animation: beamSweep 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+
+                /* Subtle center laser glowing thread */
+                .laser-scan-line::after {
+                  content: '';
+                  position: absolute;
+                  top: 50%;
+                  left: 5%;
+                  right: 5%;
+                  height: 1.5px;
+                  background: linear-gradient(90deg, transparent, #60a5fa 20%, #ffffff 50%, #60a5fa 80%, transparent);
+                  box-shadow: 0 0 10px #3b82f6, 0 0 4px #ffffff;
                 }
-                .scanner-dropzone-card:hover .scan-svg-rect {
-                  stroke: #2563eb;
-                  filter: drop-shadow(0 0 8px rgba(37,99,235,0.7));
-                }
-                .scanner-dropzone-card:hover .scan-upload-btn {
+
+                .scanner-laser-card:hover {
+                  background: #F0F6FF !important;
+                  border-color: #93C5FD !important;
                   transform: translateY(-2px);
-                  box-shadow: 0 8px 24px rgba(37,99,235,0.38) !important;
+                  box-shadow: 0 12px 32px -4px rgba(37,99,235,0.12), 0 0 0 1px rgba(37,99,235,0.15) !important;
+                }
+
+                .scanner-laser-card:hover .laser-scan-line {
+                  animation-duration: 2.2s;
                 }
               `}</style>
 
-              {/* ── Background: 5% Animated Grid Pattern ── */}
+              {/* ── Continuous Scanning Laser Beam ── */}
+              <div className="laser-scan-line" />
+
+              {/* ── Background: Clean subtle security grid pattern ── */}
               <div style={{
                 position: 'absolute', inset: 0, pointerEvents: 'none',
-                backgroundImage: 'linear-gradient(rgba(37,99,235,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(37,99,235,0.05) 1px, transparent 1px)',
-                backgroundSize: '28px 28px',
-                animation: 'gridPan 18s linear infinite',
+                backgroundImage: 'linear-gradient(rgba(37,99,235,0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(37,99,235,0.035) 1px, transparent 1px)',
+                backgroundSize: '24px 24px',
               }} />
 
-              {/* ── Background: Soft Radial Blue Glow from Center ── */}
+              {/* ── Background: Soft Center Radial Glow ── */}
               <div style={{
                 position: 'absolute', inset: 0, pointerEvents: 'none',
-                background: 'radial-gradient(circle at 50% 45%, rgba(37,99,235,0.09) 0%, transparent 65%)',
+                background: 'radial-gradient(circle at 50% 40%, rgba(37,99,235,0.06) 0%, transparent 60%)',
               }} />
 
-              {/* ── Background: Floating Micro Particles ── */}
-              <div style={{ position:'absolute', left:'25%', top:'60%', width:4, height:4, borderRadius:'50%', background:'#60a5fa', animation:'particleFloat1 3.5s ease-in-out infinite', pointerEvents:'none' }} />
-              <div style={{ position:'absolute', right:'28%', top:'65%', width:5, height:5, borderRadius:'50%', background:'#3b82f6', animation:'particleFloat2 4.2s 1.2s ease-in-out infinite', pointerEvents:'none' }} />
-              <div style={{ position:'absolute', left:'42%', top:'75%', width:3, height:3, borderRadius:'50%', background:'#93c5fd', animation:'particleFloat1 3.8s 2s ease-in-out infinite', pointerEvents:'none' }} />
-
-              {/* ── Hover Diagonal Scanning Beam Sweep ── */}
-              <div className="diagonal-beam" style={{
-                position: 'absolute', top: -100, bottom: -100, width: 80,
-                background: 'linear-gradient(90deg, transparent, rgba(96,165,250,0.3), rgba(37,99,235,0.5), transparent)',
-                pointerEvents: 'none', opacity: 0,
-              }} />
-
-              {/* ── Continuous Neon-Blue Scanning Border Outline ── */}
-              <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none', borderRadius: 24 }}>
-                <defs>
-                  <linearGradient id="scannerNeonGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#2563EB" />
-                    <stop offset="50%" stopColor="#60A5FA" />
-                    <stop offset="100%" stopColor="rgba(37,99,235,0.05)" />
-                  </linearGradient>
-                </defs>
-                <rect
-                  className="scan-svg-rect"
-                  x="1.5" y="1.5"
-                  width="calc(100% - 3px)" height="calc(100% - 3px)"
-                  rx="23" ry="23"
-                  fill="none"
-                  stroke="url(#scannerNeonGrad)"
-                  strokeWidth="2"
-                  strokeDasharray="180 320"
-                  style={{
-                    animation: 'scanBorderRotate 3.6s linear infinite',
-                    filter: 'drop-shadow(0 0 5px rgba(37,99,235,0.45))',
-                    transition: 'stroke 0.3s ease, filter 0.3s ease',
-                  }}
-                />
-              </svg>
-
-              {/* ── Center Icon: Frosted Container + Rotating Ring + Pulsing Shield ── */}
-              <div style={{ position: 'relative', width: 84, height: 84, marginBottom: 20, display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 2 }}>
-                {/* Thin Rotating Scan Ring */}
-                <svg width="84" height="84" viewBox="0 0 84 84" style={{ position: 'absolute', inset: 0, animation: 'scanRingSpin 4s linear infinite', pointerEvents: 'none' }}>
-                  <defs>
-                    <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#2563eb" stopOpacity="1" />
-                      <stop offset="70%" stopColor="#60a5fa" stopOpacity="0.4" />
-                      <stop offset="100%" stopColor="#93c5fd" stopOpacity="0" />
-                    </linearGradient>
-                  </defs>
-                  <circle cx="42" cy="42" r="38" fill="none" stroke="url(#ringGrad)" strokeWidth="2.5" strokeLinecap="round" strokeDasharray="120 120" />
-                </svg>
-
-                {/* Frosted Circular Container */}
-                <div style={{
-                  width: 68, height: 68, borderRadius: '50%',
-                  background: 'rgba(255,255,255,0.92)',
-                  backdropFilter: 'blur(10px)',
-                  WebkitBackdropFilter: 'blur(10px)',
-                  border: '1px solid rgba(191,219,254,0.8)',
-                  boxShadow: '0 8px 24px -4px rgba(37,99,235,0.18), inset 0 1px 2px rgba(255,255,255,0.8)',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  animation: 'iconShieldPulse 2.2s ease-in-out infinite',
-                }}>
-                  <span className="material-symbols-outlined" style={{ fontSize: 32, color: '#2563eb', fontVariationSettings: "'FILL' 1" }}>
-                    security
-                  </span>
-                </div>
+              {/* ── Clean Static Frosted Shield Icon (No Multiple Spinners) ── */}
+              <div style={{
+                position: 'relative',
+                width: 64, height: 64,
+                borderRadius: '50%',
+                background: '#ffffff',
+                border: '1px solid #dbeafe',
+                boxShadow: '0 4px 16px rgba(37,99,235,0.1), 0 1px 2px rgba(15,23,42,0.04)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                marginBottom: 18,
+                zIndex: 2,
+              }}>
+                <span className="material-symbols-outlined" style={{ fontSize: 30, color: '#2563eb', fontVariationSettings: "'FILL' 1" }}>
+                  security
+                </span>
               </div>
 
               {/* ── Text Details ── */}
-              <div style={{ zIndex: 2, maxWidth: 540, marginBottom: 24 }}>
+              <div style={{ zIndex: 2, maxWidth: 520, marginBottom: 22 }}>
                 <h3 style={{
-                  margin: '0 0 8px', fontSize: 20, fontWeight: 700, color: '#0f172a',
+                  margin: '0 0 8px', fontSize: 19, fontWeight: 700, color: '#0f172a',
                   letterSpacing: '-0.02em', fontFamily: "'Plus Jakarta Sans', sans-serif"
                 }}>
                   Source Code Security Scan
@@ -742,30 +703,31 @@ export default function SourceCodeScanner() {
                 </p>
               </div>
 
-              {/* ── Upload Button (Rounded 16px, Gradient, Glow) ── */}
+              {/* ── Upload Button ── */}
               <div style={{ zIndex: 2, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10 }}>
                 <button
                   type="button"
-                  className="scan-upload-btn"
                   style={{
-                    height: 46,
-                    padding: '0 28px',
+                    height: 44,
+                    padding: '0 26px',
                     background: 'linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)',
                     color: '#ffffff',
                     border: 'none',
-                    borderRadius: 16,
-                    fontSize: 14,
+                    borderRadius: 14,
+                    fontSize: 13.5,
                     fontWeight: 600,
                     cursor: 'pointer',
                     display: 'inline-flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     gap: 8,
-                    boxShadow: '0 6px 20px rgba(37,99,235,0.3)',
-                    transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+                    boxShadow: '0 4px 14px rgba(37,99,235,0.28)',
+                    transition: 'all 0.15s ease',
                   }}
+                  onMouseEnter={e => e.currentTarget.style.boxShadow = '0 6px 20px rgba(37,99,235,0.4)'}
+                  onMouseLeave={e => e.currentTarget.style.boxShadow = '0 4px 14px rgba(37,99,235,0.28)'}
                 >
-                  <span className="material-symbols-outlined" style={{ fontSize: 19 }}>upload_file</span>
+                  <span className="material-symbols-outlined" style={{ fontSize: 18 }}>upload_file</span>
                   <span>Upload Project</span>
                 </button>
                 <span style={{ fontSize: 12, fontWeight: 600, color: '#94a3b8', letterSpacing: '0.02em' }}>

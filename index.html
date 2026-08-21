@@ -147,7 +147,7 @@
     ::selection { background: rgba(0,88,190,0.2); }
 </style>
 </head>
-<body class="min-h-screen">
+<body class="min-h-screen" style="-webkit-overflow-scrolling:touch;overscroll-behavior-y:none;">
 
 <!-- ============ NAV ============ -->
 <header id="site-header" style="position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(255,255,255,0.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid rgba(226,232,240,0.8);transform:translateZ(0);will-change:box-shadow;transition:box-shadow 0.25s ease,border-color 0.25s ease;">
@@ -723,87 +723,6 @@
     .ft-tagline { display: none; } /* hide middle tagline on very small screens to avoid clutter */
   }
 </style>
-
-<!-- ============ React (slight) — scan-type picker ============ -->
-<script crossorigin="" src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-<script crossorigin="" src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-<script crossorigin="" src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-<script type="text/babel" data-type="module">
-const { useState } = React;
-
-const TABS = [
-  {
-    key: "file",
-    label: "File",
-    icon: "upload_file",
-    heading: "sample_invoice.pdf",
-    lines: [
-      "Unpacking archive… 3 embedded objects found",
-      "Scanning embedded macros for obfuscation",
-      "Cross-referencing against known payload signatures",
-    ],
-    verdict: "No malicious payloads detected",
-    verdictType: "safe",
-  },
-  
-  {
-    key: "code",
-    label: "Source code",
-    icon: "code",
-    heading: "api/routes/payments.ts",
-    lines: [
-      "Tracing request data through 4 call sites",
-      "Checking secrets and hard-coded credentials",
-      "Modeling auth bypass and privilege paths",
-    ],
-    verdict: "Hard-coded API key on line 112",
-    verdictType: "danger",
-  },
-];
-
-function ScanPicker() {
-  const [active, setActive] = useState("file");
-  const tab = TABS.find(t => t.key === active);
-
-  return (
-    <div className="glass-panel border border-outline-variant/50 rounded-xl p-lg md:p-xl">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-md mb-lg">
-        <div>
-          <h3 className="font-title-lg text-title-lg text-on-surface font-bold">Try a preview scan</h3>
-          <p className="font-body-md text-body-md text-on-surface-variant mt-xs">See how each scanner reasons before you connect anything real.</p>
-        </div>
-        <div className="flex gap-xs bg-surface-container-high rounded-lg p-xs w-fit">
-          {TABS.map(t => (
-            <button
-              key={t.key}
-              onClick={() => setActive(t.key)}
-              className={`flex items-center gap-xs px-md py-sm rounded font-label-md text-label-md font-semibold transition-all ${
-                active === t.key ? "bg-surface-container-lowest text-primary shadow-sm" : "text-on-surface-variant hover:text-on-surface"
-              }`}
-            >
-              <span className="material-symbols-outlined text-[16px]">{t.icon}</span>
-              {t.label}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div className="bg-inverse-surface rounded-lg p-lg font-mono-code text-[13px]">
-        <p className="text-[#8b96ab] mb-md">$ aegis scan --target {tab.heading}</p>
-        {tab.lines.map((line, i) => (
-          <p key={i} className="text-[#d3e4fe] mb-xs">› {line}</p>
-        ))}
-        <p className={`mt-md flex items-center gap-xs font-semibold ${tab.verdictType === "safe" ? "text-[#a9f2d4]" : "text-[#ffb4ab]"}`}>
-          <span className="material-symbols-outlined text-[16px]">{tab.verdictType === "safe" ? "verified" : "error"}</span>
-          {tab.verdict}
-        </p>
-      </div>
-    </div>
-  );
-}
-
-ReactDOM.createRoot(document.getElementById("scan-picker-root")).render(<ScanPicker />);
-</script>
 
 <!-- ============ Vanilla JS: nav, reveal, counters, hero terminal, interactive assistant ============ -->
 <script>
