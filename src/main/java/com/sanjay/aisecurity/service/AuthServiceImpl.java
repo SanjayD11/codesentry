@@ -250,9 +250,8 @@ public class AuthServiceImpl implements AuthService {
             try {
                 emailService.sendPasswordResetEmail(user.getEmail(), resetLink);
             } catch (Exception emailEx) {
-                log.error("Password reset email delivery failed for user id: {}. Error: {}",
+                log.error("Password reset email dispatch failed for user id: {}. Error: {}",
                     user.getId(), emailEx.getMessage());
-                throw new RuntimeException("Failed to send password reset email. Please try again later.", emailEx);
             }
         });
     }

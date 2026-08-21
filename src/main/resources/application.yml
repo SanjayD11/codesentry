@@ -85,6 +85,10 @@ spring:
           auth: true
           starttls:
             enable: true
+            required: false
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
 
 # ==============================================================================
 # SERVER
@@ -119,6 +123,8 @@ springdoc:
 # APPLICATION CUSTOM PROPERTIES
 # ==============================================================================
 app:
+  frontend:
+    base-url: ${APP_FRONTEND_URL:https://codesentry-wheat.vercel.app}
 
   # JWT configuration
   jwt:

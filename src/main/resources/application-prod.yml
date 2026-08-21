@@ -41,10 +41,20 @@ spring:
   # MAIL — production SMTP
   # ----------------------------------------------------------------------------
   mail:
-    host: ${MAIL_HOST}
+    host: ${MAIL_HOST:}
     port: ${MAIL_PORT:587}
-    username: ${MAIL_USERNAME}
-    password: ${MAIL_PASSWORD}
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: false
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
 
   # ----------------------------------------------------------------------------
   # MULTIPART — production overrides for Render
@@ -87,6 +97,8 @@ logging:
 # APPLICATION PRODUCTION OVERRIDES
 # ==============================================================================
 app:
+  frontend:
+    base-url: ${APP_FRONTEND_URL:https://codesentry-wheat.vercel.app}
   upload:
     base-dir: ${UPLOAD_DIR:/data/ai-security/uploads}
   jwt:

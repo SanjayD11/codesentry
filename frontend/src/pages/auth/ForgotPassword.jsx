@@ -1,4 +1,4 @@
-﻿import { useState, useRef } from 'react'
+import { useState, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { forgotPassword } from '../../api/authApi'
 import { useToast } from '../../hooks/useToast'
@@ -167,7 +167,7 @@ export default function ForgotPassword() {
             <div className="fade-in">
               <h1 className="font-headline-lg text-[26px] text-on-surface font-extrabold tracking-tight text-center md:text-left">Reset Password</h1>
               <p className="font-body-md text-[13.5px] text-on-surface-variant mt-1 text-center md:text-left mb-6">
-                Enter your account email and we'll send you a secure reset link via Firebase.
+                Enter your account email and we'll send you a secure password reset link.
               </p>
 
               <form onSubmit={handleSubmit} noValidate aria-label="Password reset form">
@@ -230,7 +230,7 @@ export default function ForgotPassword() {
 
           <p className="flex items-center justify-center gap-1.5 font-label-md text-[11.5px] text-on-surface-variant mt-8" aria-hidden="true">
             <span className="material-symbols-outlined text-[14px] text-tertiary-container">lock</span>
-            Secure password recovery powered by Firebase
+            Secure password recovery with encrypted verification
           </p>
         </div>
       </div>

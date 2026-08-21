@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.mail.MessagingException;
 import java.util.Arrays;
+import org.springframework.scheduling.annotation.Async;
 
 @Slf4j
 @Service
@@ -65,6 +66,7 @@ public class EmailService {
         return !Arrays.asList(environment.getActiveProfiles()).contains("prod");
     }
 
+    @Async
     public void sendPasswordResetEmail(String to, String resetLink) {
         if (isDevProfile()) {
             log.info("==========================================================");
@@ -75,7 +77,7 @@ public class EmailService {
         }
 
         if (!isSmtpConfigured()) {
-            log.warn("[DEV] SMTP is NOT configured (mail.host / mail.username / mail.password are empty).");
+            log.warn("[DEV] SMTP is NOT configured (mail.host / mail.username / mail.password are empty). Email will not be dispatched.");
             return;
         }
 
@@ -107,25 +109,22 @@ public class EmailService {
 
             helper.setText(htmlContent, true);
             
-            log.info("Sending email...");
+            log.info("Sending email via SMTP...");
             mailSender.send(message);
             log.info("Password reset email successfully sent to {}", to);
 
         } catch (MailAuthenticationException e) {
-            log.error("SMTP Authentication Failed. Invalid App Password or credentials: {}", e.getMessage());
-            throw new RuntimeException("Email delivery failed: SMTP Authentication Failed", e);
+            log.error("SMTP Authentication Failed. Please verify MAIL_USERNAME and MAIL_PASSWORD on Render: {}", e.getMessage());
         } catch (MailSendException e) {
-            log.error("Connection Timeout or SMTP failure: {}", e.getMessage());
-            throw new RuntimeException("Email delivery failed: Connection Timeout", e);
+            log.error("SMTP Connection/Timeout failure. Please verify MAIL_HOST ({}) and MAIL_PORT: {}", mailHost, e.getMessage());
         } catch (MessagingException e) {
             log.error("Message formulation error: {}", e.getMessage());
-            throw new RuntimeException("Email delivery failed: Message Error", e);
         } catch (Exception e) {
             log.error("Failed to send password reset email to {}. Exception: {}", to, e.getClass().getName(), e);
-            throw new RuntimeException("Email delivery failed: " + e.getMessage(), e);
         }
     }
 
+    @Async
     public void sendVerificationEmail(String to, String verifyLink) {
         if (isDevProfile()) {
             log.info("==========================================================");
