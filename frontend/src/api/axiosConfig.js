@@ -12,25 +12,35 @@ api.interceptors.request.use((config) => {
   return config
 })
 
-let isRefreshing = false;
+let redirectingToLogin = false;
 
 // Handle 401 → redirect to login
 api.interceptors.response.use(
   (res) => res,
   (err) => {
     if (err.response?.status === 401) {
-      if (!isRefreshing) {
-        isRefreshing = true;
-        // Dispatch a custom event so the React app can show a single toast
-        window.dispatchEvent(new Event('session-expired'));
-        
+      // Only trigger once per session expiry cycle.
+      // Also guard: if there was never a token, this is a fresh page load
+      // on a protected route — redirect silently without a toast.
+      const hadToken = !!localStorage.getItem('token')
+
+      if (!redirectingToLogin) {
+        redirectingToLogin = true
         localStorage.removeItem('token')
         localStorage.removeItem('user')
-        
-        // Wait briefly for the toast to be seen before redirecting
-        setTimeout(() => {
+
+        if (hadToken) {
+          // User was genuinely logged in — show session-expired message
+          window.dispatchEvent(new Event('session-expired'))
+          setTimeout(() => {
+            redirectingToLogin = false
+            window.location.href = '/login'
+          }, 1500)
+        } else {
+          // No token at all — silent redirect, no toast spam
+          redirectingToLogin = false
           window.location.href = '/login'
-        }, 1500)
+        }
       }
     }
     return Promise.reject(err)

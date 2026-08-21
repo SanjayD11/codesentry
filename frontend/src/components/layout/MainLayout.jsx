@@ -1,9 +1,11 @@
-import { useEffect, Suspense } from 'react'
+import { useEffect } from 'react'
 import { Outlet, Navigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
 import { useToast } from '../../hooks/useToast'
 import Topnav from './Topnav'
+import BottomNav from './BottomNav'
 import PageContainer from './PageContainer'
+import LoadingSpinner from '../ui/LoadingSpinner'
 
 export default function MainLayout() {
   const { isAuthenticated } = useAuth()
@@ -19,25 +21,24 @@ export default function MainLayout() {
   }, [addToast])
 
   if (!isAuthenticated) {
-    return <Navigate to="/" replace />
+    return <Navigate to="/login" replace />
   }
 
   return (
-    <div style={{ minHeight: '100dvh', background: 'var(--snt-surface-2)', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ minHeight: '100dvh', background: 'var(--snt-surface-2, #f9f9ff)', display: 'flex', flexDirection: 'column' }}>
       <Topnav />
       <main style={{ flex: 1, width: '100%', minWidth: 0 }}>
-        <Suspense fallback={
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '400px' }}>
-            <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
-          </div>
-        }>
+        {/* On mobile/tablet, add bottom padding so content clears the bottom nav bar */}
+        <div style={{ paddingBottom: 'clamp(0px, 100vw, 64px)' }} className="main-content-pad">
+          <style>{`@media (min-width: 1024px) { .main-content-pad { padding-bottom: 0 !important; } }`}</style>
           <div key={pathname} className="section-enter">
             <PageContainer>
               <Outlet />
             </PageContainer>
           </div>
-        </Suspense>
+        </div>
       </main>
+      <BottomNav />
     </div>
   )
 }

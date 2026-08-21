@@ -29,8 +29,12 @@ const SecurityChat       = lazy(() => import('./pages/chat/SecurityChat'))
 const Settings           = lazy(() => import('./pages/settings/Settings'))
 const Profile            = lazy(() => import('./pages/profile/Profile'))
 
+// Full-screen branded splash — used for the OUTER Suspense (very first page load)
+const AppSplash = () => <LoadingSpinner fullScreen />
+
+// Lightweight inline loader — used inside already-rendered layouts
 const PageLoader = () => (
-  <div className="h-full flex items-center justify-center min-h-[400px]">
+  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '60vh' }}>
     <LoadingSpinner size="lg" />
   </div>
 )
@@ -41,7 +45,7 @@ export default function App() {
       <BrowserRouter>
         <AuthProvider>
           <ToastProvider>
-            <Suspense fallback={<PageLoader />}>
+            <Suspense fallback={<AppSplash />}>
               <Routes>
                 {/* Public Routes */}
                 <Route path="/"                element={<LandingPage />} />

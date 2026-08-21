@@ -63,11 +63,16 @@ export default function Topnav() {
       <style>{`
         @media (min-width: 1024px) {
           .tn-desktop-nav { display: flex !important; }
-          .tn-mobile-btn { display: none !important; }
+          .tn-mobile-btn  { display: none !important; }
         }
-        @media (max-width: 1023px) {
+        @media (min-width: 768px) and (max-width: 1023px) {
           .tn-desktop-nav { display: none !important; }
-          .tn-mobile-btn { display: flex !important; }
+          .tn-mobile-btn  { display: flex !important; }
+        }
+        @media (max-width: 767px) {
+          /* Bottom nav handles mobile navigation — hide hamburger */
+          .tn-desktop-nav { display: none !important; }
+          .tn-mobile-btn  { display: none !important; }
         }
       `}</style>
 
