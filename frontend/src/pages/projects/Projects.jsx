@@ -310,49 +310,90 @@ export default function Projects() {
         </div>
       ) : (
         <div style={{ background:'#ffffff', border:'1px solid #e2e8f0', borderRadius:16, overflow:'hidden', boxShadow: '0 1px 3px rgba(15,23,42,0.04)' }}>
-          <table style={{ width:'100%', borderCollapse:'collapse' }}>
-            <thead>
-              <tr style={{ borderBottom:'1px solid #cbd5e1', background:'#f8fafc' }}>
-                <th style={{ padding:'14px 20px', textAlign:'left', fontSize:11, fontWeight:700, color:'#475569', textTransform:'uppercase', letterSpacing:'0.06em' }}>Project Name</th>
-                <th style={{ padding:'14px 20px', textAlign:'left', fontSize:11, fontWeight:700, color:'#475569', textTransform:'uppercase', letterSpacing:'0.06em' }}>Type</th>
-                <th style={{ padding:'14px 20px', textAlign:'left', fontSize:11, fontWeight:700, color:'#475569', textTransform:'uppercase', letterSpacing:'0.06em' }}>Files</th>
-                <th style={{ padding:'14px 20px', textAlign:'left', fontSize:11, fontWeight:700, color:'#475569', textTransform:'uppercase', letterSpacing:'0.06em' }}>Score</th>
-                <th style={{ padding:'14px 20px', textAlign:'right', fontSize:11, fontWeight:700, color:'#475569', textTransform:'uppercase', letterSpacing:'0.06em' }}>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.map(p => (
-                <tr key={p.id} onClick={() => navigate(`/projects/${p.id}`)} style={{ borderBottom:'1px solid #e2e8f0', cursor:'pointer', transition: 'background 0.15s ease' }} onMouseEnter={e=>e.currentTarget.style.background='#f8fafc'} onMouseLeave={e=>e.currentTarget.style.background='transparent'}>
-                  <td style={{ padding:'16px 20px' }}>
-                    <p style={{ margin:0, fontSize:14, fontWeight:600, color:'#0f172a' }}>{p.projectName}</p>
-                    <p style={{ margin:'2px 0 0', fontSize:12, color:'#64748b' }}>Created {fmtDate(p.createdAt)}</p>
-                  </td>
-                  <td style={{ padding:'16px 20px' }}>
-                    <span style={{ padding:'4px 8px', borderRadius:6, background:'var(--snt-surface-3)', fontSize:10, fontWeight:700, color:'var(--snt-text-3)', letterSpacing:'0.05em', textTransform:'uppercase' }}>{p.projectType?.replace('_',' ')}</span>
-                  </td>
-                  <td style={{ padding:'16px 20px', fontSize:14, color:'var(--snt-text-2)', fontWeight:500 }}>{p.totalFiles}</td>
-                  <td style={{ padding:'16px 20px' }}>
-                    {p.lastScanTime ? (
-                      <div style={{ display:'flex', alignItems:'center', gap:8 }}>
-                        <span style={{ fontSize:15, fontWeight:700, color:scoreColor(100-(p.overallRiskScore||0)) }}>{(100-(p.overallRiskScore||0)).toFixed(0)}</span>
-                        <span style={{ fontSize:11, color:scoreColor(100-(p.overallRiskScore||0)), fontWeight:600, opacity:0.8 }}>{riskLabel(100-(p.overallRiskScore||0))}</span>
+          {/* Desktop/Tablet Table */}
+          <div className="table-scroll-wrap hidden-on-mobile">
+            <div className="table-scroll-inner">
+              <table style={{ width:'100%', borderCollapse:'collapse' }}>
+                <thead>
+                  <tr style={{ borderBottom:'1px solid #cbd5e1', background:'#f8fafc' }}>
+                    <th style={{ padding:'14px 20px', textAlign:'left', fontSize:11, fontWeight:700, color:'#475569', textTransform:'uppercase', letterSpacing:'0.06em' }}>Project Name</th>
+                    <th style={{ padding:'14px 20px', textAlign:'left', fontSize:11, fontWeight:700, color:'#475569', textTransform:'uppercase', letterSpacing:'0.06em' }}>Type</th>
+                    <th style={{ padding:'14px 20px', textAlign:'left', fontSize:11, fontWeight:700, color:'#475569', textTransform:'uppercase', letterSpacing:'0.06em' }}>Files</th>
+                    <th style={{ padding:'14px 20px', textAlign:'left', fontSize:11, fontWeight:700, color:'#475569', textTransform:'uppercase', letterSpacing:'0.06em' }}>Score</th>
+                    <th style={{ padding:'14px 20px', textAlign:'right', fontSize:11, fontWeight:700, color:'#475569', textTransform:'uppercase', letterSpacing:'0.06em' }}>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filtered.map(p => (
+                    <tr key={p.id} onClick={() => navigate(`/projects/${p.id}`)} style={{ borderBottom:'1px solid #e2e8f0', cursor:'pointer', transition: 'background 0.15s ease' }} onMouseEnter={e=>e.currentTarget.style.background='#f8fafc'} onMouseLeave={e=>e.currentTarget.style.background='transparent'}>
+                      <td style={{ padding:'16px 20px' }}>
+                        <p style={{ margin:0, fontSize:14, fontWeight:600, color:'#0f172a' }}>{p.projectName}</p>
+                        <p style={{ margin:'2px 0 0', fontSize:12, color:'#64748b' }}>Created {fmtDate(p.createdAt)}</p>
+                      </td>
+                      <td style={{ padding:'16px 20px' }}>
+                        <span style={{ padding:'4px 8px', borderRadius:6, background:'var(--snt-surface-3)', fontSize:10, fontWeight:700, color:'var(--snt-text-3)', letterSpacing:'0.05em', textTransform:'uppercase' }}>{p.projectType?.replace('_',' ')}</span>
+                      </td>
+                      <td style={{ padding:'16px 20px', fontSize:14, color:'var(--snt-text-2)', fontWeight:500 }}>{p.totalFiles}</td>
+                      <td style={{ padding:'16px 20px' }}>
+                        {p.lastScanTime ? (
+                          <div style={{ display:'flex', alignItems:'center', gap:8 }}>
+                            <span style={{ fontSize:15, fontWeight:700, color:scoreColor(100-(p.overallRiskScore||0)) }}>{(100-(p.overallRiskScore||0)).toFixed(0)}</span>
+                            <span style={{ fontSize:11, color:scoreColor(100-(p.overallRiskScore||0)), fontWeight:600, opacity:0.8 }}>{riskLabel(100-(p.overallRiskScore||0))}</span>
+                          </div>
+                        ) : <span style={{ color:'var(--snt-text-4)' }}>—</span>}
+                      </td>
+                      <td style={{ padding:'16px 20px' }}>
+                        <div style={{ display:'flex', alignItems:'center', justifyContent:'flex-end', gap:6 }}>
+                          <button className="pj-act" onClick={e => { e.stopPropagation(); navigate(`/scanner?project=${p.id}`) }} title="New Scan">
+                            <span className="material-symbols-outlined" style={{ fontSize:16 }}>shield</span>
+                          </button>
+                          <button className="pj-act danger" onClick={e => handleDelete(e, p.id)} title="Delete Project">
+                            <span className="material-symbols-outlined" style={{ fontSize:16 }}>delete</span>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* Adaptive Mobile Card List for < 768px */}
+          <div className="visible-on-mobile" style={{ display:'flex', flexDirection:'column', gap:10, padding:12 }}>
+            {filtered.map(p => {
+              const score = p.lastScanTime ? (100 - (p.overallRiskScore||0)) : null;
+              return (
+                <div key={p.id} onClick={() => navigate(`/projects/${p.id}`)} style={{
+                  background:'#f8fafc', border:'1px solid #e2e8f0', borderRadius:12, padding:'14px', display:'flex', flexDirection:'column', gap:10, cursor:'pointer'
+                }}>
+                  <div style={{ display:'flex', alignItems:'flex-start', justifyContent:'space-between', gap:8 }}>
+                    <div style={{ minWidth:0 }}>
+                      <p style={{ margin:0, fontSize:14, fontWeight:700, color:'#0f172a' }}>{p.projectName}</p>
+                      <span style={{ display:'inline-block', marginTop:4, padding:'2px 6px', borderRadius:4, background:'#e2e8f0', fontSize:9.5, fontWeight:700, color:'#475569', textTransform:'uppercase' }}>{p.projectType?.replace('_',' ')}</span>
+                    </div>
+                    {score != null ? (
+                      <div style={{ textAlign:'right', flexShrink:0 }}>
+                        <span style={{ fontSize:15, fontWeight:800, color:scoreColor(score) }}>{score.toFixed(0)}</span>
+                        <p style={{ margin:0, fontSize:10, fontWeight:600, color:scoreColor(score) }}>{riskLabel(score)}</p>
                       </div>
-                    ) : <span style={{ color:'var(--snt-text-4)' }}>—</span>}
-                  </td>
-                  <td style={{ padding:'16px 20px' }}>
-                    <div style={{ display:'flex', alignItems:'center', justifyContent:'flex-end', gap:6 }}>
+                    ) : <span style={{ fontSize:11, color:'#94a3b8' }}>No scans</span>}
+                  </div>
+                  <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', borderTop:'1px solid #e2e8f0', paddingTop:8 }}>
+                    <span style={{ fontSize:11.5, color:'#64748b' }}>{p.totalFiles} files · {fmtDate(p.createdAt)}</span>
+                    <div style={{ display:'flex', gap:6 }}>
                       <button className="pj-act" onClick={e => { e.stopPropagation(); navigate(`/scanner?project=${p.id}`) }} title="New Scan">
-                        <span className="material-symbols-outlined" style={{ fontSize:16 }}>shield</span>
+                        <span className="material-symbols-outlined" style={{ fontSize:15 }}>shield</span>
                       </button>
                       <button className="pj-act danger" onClick={e => handleDelete(e, p.id)} title="Delete Project">
-                        <span className="material-symbols-outlined" style={{ fontSize:16 }}>delete</span>
+                        <span className="material-symbols-outlined" style={{ fontSize:15 }}>delete</span>
                       </button>
                     </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
         </div>
       )}
 

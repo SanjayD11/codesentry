@@ -357,7 +357,8 @@ export default function ScanHistory() {
         </div>
       ) : (
         <div style={{ background:'#ffffff', border:'1px solid #e2e8f0', borderRadius:16, overflow:'hidden', boxShadow: '0 1px 3px rgba(15,23,42,0.04)' }}>
-          <div className="table-scroll-wrap">
+          {/* Desktop/Tablet Table */}
+          <div className="table-scroll-wrap hidden-on-mobile">
             <div className="table-scroll-inner">
               <table style={{ width:'100%', borderCollapse:'collapse' }}>
                 <thead>
@@ -425,6 +426,63 @@ export default function ScanHistory() {
                 </tbody>
               </table>
             </div>
+          </div>
+
+          {/* Adaptive Mobile Card List for < 768px */}
+          <div className="visible-on-mobile" style={{ display:'flex', flexDirection:'column', gap:10, padding:12 }}>
+            {filtered.map(s => (
+              <div key={s.scanId} onClick={()=>setDetail(s)} style={{
+                background:'#f8fafc', border:'1px solid #e2e8f0', borderRadius:12, padding:'14px', display:'flex', flexDirection:'column', gap:10, cursor:'pointer'
+              }}>
+                <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', gap:8 }}>
+                  <div style={{ display:'flex', alignItems:'center', gap:10, minWidth:0 }}>
+                    <div style={{ width:34, height:34, borderRadius:8, background:'#eff6ff', border:'1px solid #bfdbfe', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
+                      <span className="material-symbols-outlined" style={{ fontSize:17, color:'#2563eb' }}>shield</span>
+                    </div>
+                    <div style={{ minWidth:0 }}>
+                      <p style={{ margin:0, fontSize:14, fontWeight:700, color:'#0f172a' }}>Scan #{s.scanId}</p>
+                      <p style={{ margin:0, fontSize:11.5, color:'#64748b' }}>{s.scanType === 'QUICK_SCAN' ? 'Quick Scan' : `Project #${s.projectId}`}</p>
+                    </div>
+                  </div>
+                  <div onClick={e => e.stopPropagation()}>
+                    <Badge status={s.status}/>
+                  </div>
+                </div>
+
+                <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', background:'#ffffff', border:'1px solid #e2e8f0', borderRadius:8, padding:'8px 10px' }}>
+                  <div>
+                    <span style={{ fontSize:10, fontWeight:700, color:'#64748b', textTransform:'uppercase' }}>Score</span>
+                    <p style={{ margin:0, fontSize:14, fontWeight:700, color: s.securityScore != null ? scoreClr(s.securityScore) : '#94a3b8' }}>
+                      {s.securityScore != null ? `${s.securityScore.toFixed(0)} (${riskLbl(s.securityScore)})` : '—'}
+                    </p>
+                  </div>
+                  <div style={{ textAlign:'right' }}>
+                    <span style={{ fontSize:10, fontWeight:700, color:'#64748b', textTransform:'uppercase' }}>Findings</span>
+                    <p style={{ margin:0, fontSize:14, fontWeight:700, color:'#0f172a' }}>{s.totalVulnerabilities ?? 0} vulns</p>
+                  </div>
+                </div>
+
+                <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', borderTop:'1px solid #e2e8f0', paddingTop:8 }} onClick={e => e.stopPropagation()}>
+                  <span style={{ fontSize:11, color:'#64748b' }}>{fmt(s.scanStart)}</span>
+                  <div style={{ display:'flex', gap:4 }}>
+                    <button className="sh-act" title="View Details" onClick={()=>setDetail(s)}>
+                      <span className="material-symbols-outlined" style={{ fontSize:15 }}>open_in_new</span>
+                    </button>
+                    {s.status==='COMPLETED'&&(
+                      <button className="sh-act" title="Generate Report" onClick={()=>handleGenReport(s)} disabled={genPdf===s.scanId}>
+                        <span className="material-symbols-outlined" style={{ fontSize:15 }}>{genPdf===s.scanId?'hourglass_empty':'picture_as_pdf'}</span>
+                      </button>
+                    )}
+                    <button className="sh-act" title="Scan Again" onClick={()=>handleScanAgain(s)} disabled={scanning===s.scanId}>
+                      <span className="material-symbols-outlined" style={{ fontSize:15, ...(scanning===s.scanId?{animation:'spin 1s linear infinite'}:{}) }}>replay</span>
+                    </button>
+                    <button className="sh-act" style={{ color: '#dc2626' }} title="Delete Scan" onClick={()=>handleDeleteScan(s.scanId)}>
+                      <span className="material-symbols-outlined" style={{ fontSize:15 }}>delete</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       )}

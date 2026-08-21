@@ -26,53 +26,59 @@ function CompareModal({ reports, onClose }) {
 
   return createPortal(
     <div
-      style={{ position:'fixed', inset:0, background:'rgba(15,23,42,0.45)', zIndex:9999, display:'flex', alignItems:'center', justifyContent:'center', padding:24 }}
+      style={{ position:'fixed', inset:0, background:'rgba(15,23,42,0.5)', backdropFilter:'blur(4px)', zIndex:9999, display:'flex', alignItems:'center', justifyContent:'center', padding:'12px 8px' }}
       onClick={onClose}
     >
       <div
-        style={{ background:'#ffffff', borderRadius:16, width:'100%', maxWidth:620, maxHeight:'90vh', overflow:'auto', boxShadow:'0 20px 40px rgba(15,23,42,0.15)', border:'1px solid #cbd5e1' }}
+        style={{ background:'#ffffff', borderRadius:16, width:'100%', maxWidth:600, maxHeight:'92vh', overflow:'auto', boxShadow:'0 25px 50px -12px rgba(15,23,42,0.25)', border:'1px solid #cbd5e1' }}
         onClick={e => e.stopPropagation()}
       >
         <style>{`
-          @keyframes cdlgSlideUp {
-            from { opacity: 0; transform: translateY(8px) scale(0.98); }
-            to   { opacity: 1; transform: translateY(0) scale(1); }
-          }
           .cmp-select:focus { border-color: #2563eb !important; box-shadow: 0 0 0 3px rgba(37,99,235,0.12) !important; outline: none; }
+          .cmp-table-row { display: grid; grid-template-columns: 110px 1fr 1fr; }
+          @media (max-width: 480px) {
+            .cmp-modal-body { padding: 14px 12px !important; gap: 14px !important; }
+            .cmp-header { padding: 14px 16px !important; }
+            .cmp-table-row { grid-template-columns: 85px 1fr 1fr !important; }
+            .cmp-table-label { padding: 8px 6px !important; font-size: 10px !important; }
+            .cmp-table-val { padding: 8px 6px !important; font-size: 11.5px !important; word-break: break-word !important; }
+            .cmp-score-grid { gap: 6px !important; }
+            .cmp-score-card { padding: 12px 6px !important; border-radius: 10px !important; }
+            .cmp-score-num { font-size: 24px !important; }
+            .cmp-delta-circle { width: 32px !important; height: 32px !important; }
+          }
         `}</style>
 
         {/* Header */}
-        <div style={{ padding:'20px 24px', borderBottom:'1px solid var(--snt-border-2)', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
-          <div style={{ display:'flex', alignItems:'center', gap:12 }}>
-            <div style={{ width:38, height:38, borderRadius:10, background:'#eff6ff', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
-              <span className="material-symbols-outlined" style={{ fontSize:19, color:'#2563eb', fontVariationSettings:"'FILL' 1" }}>compare_arrows</span>
+        <div className="cmp-header" style={{ padding:'16px 20px', borderBottom:'1px solid var(--snt-border-2)', display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+          <div style={{ display:'flex', alignItems:'center', gap:10, minWidth:0 }}>
+            <div style={{ width:36, height:36, borderRadius:10, background:'#eff6ff', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
+              <span className="material-symbols-outlined" style={{ fontSize:18, color:'#2563eb', fontVariationSettings:"'FILL' 1" }}>compare_arrows</span>
             </div>
-            <div>
+            <div style={{ minWidth:0 }}>
               <p style={{ margin:0, fontSize:15, fontWeight:700, color:'var(--snt-text-1)', letterSpacing:'-0.01em', fontFamily:"'Plus Jakarta Sans',sans-serif" }}>Compare Reports</p>
-              <p style={{ margin:'1px 0 0', fontSize:12, color:'var(--snt-text-4)', fontWeight:500 }}>Side-by-side security analysis</p>
+              <p style={{ margin:'1px 0 0', fontSize:11.5, color:'var(--snt-text-4)', fontWeight:500, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>Side-by-side security analysis</p>
             </div>
           </div>
           <button
             onClick={onClose}
-            style={{ width:30, height:30, border:'1px solid var(--snt-border)', borderRadius:8, background:'var(--snt-surface)', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', transition:'background 100ms ease, border-color 100ms ease' }}
-            onMouseEnter={e=>{e.currentTarget.style.background='#f8fafc';e.currentTarget.style.borderColor='#cbd5e1'}}
-            onMouseLeave={e=>{e.currentTarget.style.background='#fff';e.currentTarget.style.borderColor='#e2e8f0'}}
+            style={{ width:30, height:30, border:'1px solid var(--snt-border)', borderRadius:8, background:'var(--snt-surface)', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', transition:'all 100ms ease', flexShrink:0 }}
           >
             <span className="material-symbols-outlined" style={{ fontSize:16, color:'var(--snt-text-3)' }}>close</span>
           </button>
         </div>
 
-        <div style={{ padding:'24px', display:'flex', flexDirection:'column', gap:20 }}>
+        <div className="cmp-modal-body" style={{ padding:'20px', display:'flex', flexDirection:'column', gap:18 }}>
           {/* Selectors */}
-          <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:14 }}>
+          <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:10 }}>
             {[{ label:'Baseline', val:a, set:setA }, { label:'Comparison', val:b, set:setB }].map(({ label, val, set }) => (
-              <div key={label}>
-                <p style={{ margin:'0 0 6px', fontSize:11, fontWeight:700, color:'#64748b', textTransform:'uppercase', letterSpacing:'0.07em' }}>{label}</p>
+              <div key={label} style={{ minWidth:0 }}>
+                <p style={{ margin:'0 0 5px', fontSize:10.5, fontWeight:700, color:'#64748b', textTransform:'uppercase', letterSpacing:'0.07em' }}>{label}</p>
                 <select
                   className="cmp-select"
                   value={val}
                   onChange={e => set(e.target.value)}
-                  style={{ width:'100%', padding:'9px 12px', border:'1px solid #cbd5e1', borderRadius:9, fontSize:13, color:'#0f172a', background:'#f8fafc', cursor:'pointer', transition:'border-color 100ms ease, box-shadow 100ms ease', fontFamily:"'Manrope',sans-serif", fontWeight:500 }}
+                  style={{ width:'100%', padding:'8px 10px', border:'1px solid #cbd5e1', borderRadius:8, fontSize:12.5, color:'#0f172a', background:'#f8fafc', cursor:'pointer', fontFamily:"'Manrope',sans-serif", fontWeight:500 }}
                 >
                   {reports.map(r => <option key={r.id} value={r.id}>{r.reportName || `Report #${r.id}`}</option>)}
                 </select>
@@ -83,81 +89,81 @@ function CompareModal({ reports, onClose }) {
           {rA && rB && (
             <>
               {/* Score cards + delta */}
-              <div style={{ display:'grid', gridTemplateColumns:'1fr auto 1fr', gap:16, alignItems:'center' }}>
+              <div className="cmp-score-grid" style={{ display:'grid', gridTemplateColumns:'1fr auto 1fr', gap:12, alignItems:'center' }}>
                 {/* Baseline Card */}
-                <div style={{
+                <div className="cmp-score-card" style={{
                   background: scoreBg(rA.securityScore ?? 0),
-                  borderRadius:14, padding:'20px 16px', textAlign:'center',
+                  borderRadius:12, padding:'16px 12px', textAlign:'center',
                   border:`1px solid ${rA.securityScore >= 80 ? '#bbf7d0' : rA.securityScore >= 60 ? '#fde68a' : '#fecaca'}`,
-                  display:'flex', flexDirection:'column', alignItems:'center', gap:6, minWidth:0
+                  display:'flex', flexDirection:'column', alignItems:'center', gap:4, minWidth:0
                 }}>
-                  <span style={{ fontSize:10, fontWeight:700, color:'#64748b', textTransform:'uppercase', letterSpacing:'0.09em' }}>
+                  <span style={{ fontSize:9.5, fontWeight:700, color:'#64748b', textTransform:'uppercase', letterSpacing:'0.09em' }}>
                     Baseline
                   </span>
-                  <span style={{ fontSize:36, fontWeight:800, color: scoreColor(rA.securityScore ?? 0), letterSpacing:'-0.03em', lineHeight:1 }}>
+                  <span className="cmp-score-num" style={{ fontSize:32, fontWeight:800, color: scoreColor(rA.securityScore ?? 0), letterSpacing:'-0.03em', lineHeight:1 }}>
                     {rA.securityScore?.toFixed(0) ?? '—'}
                   </span>
-                  <span style={{ fontSize:11, fontWeight:600, color: scoreColor(rA.securityScore ?? 0) }}>
+                  <span style={{ fontSize:10.5, fontWeight:600, color: scoreColor(rA.securityScore ?? 0) }}>
                     {rA.securityScore != null ? riskLabel(rA.securityScore) : 'No score'}
                   </span>
-                  <span style={{ fontSize:11, color:'#64748b', fontWeight:500, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap', maxWidth:'100%' }}>
+                  <span style={{ fontSize:10.5, color:'#64748b', fontWeight:500, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap', maxWidth:'100%' }}>
                     {rA.reportName || `Report #${rA.id}`}
                   </span>
                 </div>
 
                 {/* Delta Badge */}
-                <div style={{ display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', gap:4, padding:'0 4px' }}>
+                <div style={{ display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', gap:2, padding:'0 2px' }}>
                   {scoreDiff ? (
                     <>
-                      <div style={{ width:40, height:40, borderRadius:20, background: scoreDiff.improved ? '#f0fdf4' : '#fef2f2', border:`1px solid ${scoreDiff.improved ? '#bbf7d0' : '#fecaca'}`, display:'flex', alignItems:'center', justifyContent:'center' }}>
-                        <span className="material-symbols-outlined" style={{ fontSize:22, color: scoreDiff.improved ? '#16a34a' : '#dc2626', fontVariationSettings:"'FILL' 1" }}>
+                      <div className="cmp-delta-circle" style={{ width:36, height:36, borderRadius:18, background: scoreDiff.improved ? '#f0fdf4' : '#fef2f2', border:`1px solid ${scoreDiff.improved ? '#bbf7d0' : '#fecaca'}`, display:'flex', alignItems:'center', justifyContent:'center' }}>
+                        <span className="material-symbols-outlined" style={{ fontSize:18, color: scoreDiff.improved ? '#16a34a' : '#dc2626', fontVariationSettings:"'FILL' 1" }}>
                           {scoreDiff.improved ? 'trending_up' : 'trending_down'}
                         </span>
                       </div>
-                      <span style={{ fontSize:13, fontWeight:800, color: scoreDiff.improved ? '#16a34a' : '#dc2626', marginTop:2 }}>
+                      <span style={{ fontSize:12, fontWeight:800, color: scoreDiff.improved ? '#16a34a' : '#dc2626', marginTop:2 }}>
                         {scoreDiff.improved ? '+' : ''}{scoreDiff.d.toFixed(1)}
                       </span>
-                      <span style={{ fontSize:10, color:'#64748b', fontWeight:600, textTransform:'uppercase', letterSpacing:'0.06em' }}>Delta</span>
+                      <span style={{ fontSize:9, color:'#64748b', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em' }}>Delta</span>
                     </>
                   ) : (
-                    <span style={{ fontSize:20, color:'#cbd5e1' }}>—</span>
+                    <span style={{ fontSize:18, color:'#cbd5e1' }}>—</span>
                   )}
                 </div>
 
                 {/* Comparison Card */}
-                <div style={{
+                <div className="cmp-score-card" style={{
                   background: scoreBg(rB.securityScore ?? 0),
-                  borderRadius:14, padding:'20px 16px', textAlign:'center',
+                  borderRadius:12, padding:'16px 12px', textAlign:'center',
                   border:`1px solid ${rB.securityScore >= 80 ? '#bbf7d0' : rB.securityScore >= 60 ? '#fde68a' : '#fecaca'}`,
-                  display:'flex', flexDirection:'column', alignItems:'center', gap:6, minWidth:0
+                  display:'flex', flexDirection:'column', alignItems:'center', gap:4, minWidth:0
                 }}>
-                  <span style={{ fontSize:10, fontWeight:700, color:'#64748b', textTransform:'uppercase', letterSpacing:'0.09em' }}>
+                  <span style={{ fontSize:9.5, fontWeight:700, color:'#64748b', textTransform:'uppercase', letterSpacing:'0.09em' }}>
                     Comparison
                   </span>
-                  <span style={{ fontSize:36, fontWeight:800, color: scoreColor(rB.securityScore ?? 0), letterSpacing:'-0.03em', lineHeight:1 }}>
+                  <span className="cmp-score-num" style={{ fontSize:32, fontWeight:800, color: scoreColor(rB.securityScore ?? 0), letterSpacing:'-0.03em', lineHeight:1 }}>
                     {rB.securityScore?.toFixed(0) ?? '—'}
                   </span>
-                  <span style={{ fontSize:11, fontWeight:600, color: scoreColor(rB.securityScore ?? 0) }}>
+                  <span style={{ fontSize:10.5, fontWeight:600, color: scoreColor(rB.securityScore ?? 0) }}>
                     {rB.securityScore != null ? riskLabel(rB.securityScore) : 'No score'}
                   </span>
-                  <span style={{ fontSize:11, color:'#64748b', fontWeight:500, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap', maxWidth:'100%' }}>
+                  <span style={{ fontSize:10.5, color:'#64748b', fontWeight:500, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap', maxWidth:'100%' }}>
                     {rB.reportName || `Report #${rB.id}`}
                   </span>
                 </div>
               </div>
 
               {/* Detail table */}
-              <div style={{ border:'1px solid #e2e8f0', borderRadius:12, overflow:'hidden' }}>
+              <div style={{ border:'1px solid #e2e8f0', borderRadius:10, overflow:'hidden' }}>
                 {[
                   { label:'Generated', vA: fmtDate(rA.generatedAt), vB: fmtDate(rB.generatedAt) },
                   { label:'Project',   vA: rA.projectName || '—', vB: rB.projectName || '—' },
                   { label:'Risk',      vA: rA.securityScore != null ? riskLabel(rA.securityScore) : '—', vB: rB.securityScore != null ? riskLabel(rB.securityScore) : '—' },
                   { label:'File Size', vA: fmtSize(rA.reportSizeBytes), vB: fmtSize(rB.reportSizeBytes) },
                 ].map((row, i) => (
-                  <div key={row.label} style={{ display:'grid', gridTemplateColumns:'120px 1fr 1fr', borderBottom: i < 3 ? '1px solid #e2e8f0' : 'none', background: i % 2 === 0 ? '#fff' : '#f8fafc' }}>
-                    <div style={{ padding:'11px 16px', fontSize:11, fontWeight:700, color:'#64748b', textTransform:'uppercase', letterSpacing:'0.07em', display:'flex', alignItems:'center' }}>{row.label}</div>
-                    <div style={{ padding:'11px 16px', fontSize:13, color:'#0f172a', borderLeft:'1px solid #e2e8f0', fontWeight:500, display:'flex', alignItems:'center' }}>{row.vA}</div>
-                    <div style={{ padding:'11px 16px', fontSize:13, color:'#0f172a', borderLeft:'1px solid #e2e8f0', fontWeight:500, display:'flex', alignItems:'center' }}>{row.vB}</div>
+                  <div key={row.label} className="cmp-table-row" style={{ borderBottom: i < 3 ? '1px solid #e2e8f0' : 'none', background: i % 2 === 0 ? '#fff' : '#f8fafc' }}>
+                    <div className="cmp-table-label" style={{ padding:'10px 12px', fontSize:10.5, fontWeight:700, color:'#64748b', textTransform:'uppercase', letterSpacing:'0.06em', display:'flex', alignItems:'center' }}>{row.label}</div>
+                    <div className="cmp-table-val" style={{ padding:'10px 12px', fontSize:12.5, color:'#0f172a', borderLeft:'1px solid #e2e8f0', fontWeight:500, display:'flex', alignItems:'center' }}>{row.vA}</div>
+                    <div className="cmp-table-val" style={{ padding:'10px 12px', fontSize:12.5, color:'#0f172a', borderLeft:'1px solid #e2e8f0', fontWeight:500, display:'flex', alignItems:'center' }}>{row.vB}</div>
                   </div>
                 ))}
               </div>
@@ -165,12 +171,10 @@ function CompareModal({ reports, onClose }) {
           )}
 
           {/* Footer */}
-          <div style={{ display:'flex', justifyContent:'flex-end', paddingTop:4 }}>
+          <div style={{ display:'flex', justifyContent:'flex-end', paddingTop:2 }}>
             <button
               onClick={onClose}
-              style={{ height:38, padding:'0 22px', background:'var(--snt-surface-2)', color:'var(--snt-text-2)', border:'1px solid var(--snt-border)', borderRadius:9, fontSize:13, fontWeight:600, cursor:'pointer', fontFamily:"'Manrope',sans-serif", transition:'all 100ms ease' }}
-              onMouseEnter={e=>{e.currentTarget.style.background='#f1f5f9'}}
-              onMouseLeave={e=>{e.currentTarget.style.background='#f8fafc'}}
+              style={{ height:36, padding:'0 20px', background:'var(--snt-surface-2)', color:'var(--snt-text-2)', border:'1px solid var(--snt-border)', borderRadius:8, fontSize:12.5, fontWeight:600, cursor:'pointer', fontFamily:"'Manrope',sans-serif", transition:'all 100ms ease' }}
             >Close</button>
           </div>
         </div>
@@ -285,18 +289,23 @@ export default function Reports() {
       <style>{`
         .rp-card { box-shadow: 0 1px 3px rgba(15,23,42,0.04); transition: border-color 0.2s ease, box-shadow 0.2s ease; cursor: pointer; transform: none !important; }
         .rp-card:hover { border-color: #93c5fd !important; box-shadow: 0 4px 18px rgba(37,99,235,0.1), 0 1px 4px rgba(37,99,235,0.04); transform: none !important; }
-        .rp-act { height:36px; padding:0 12px; border:1px solid #cbd5e1; border-radius:8px; background:#fff; color:#475569; cursor:pointer; display:flex; align-items:center; gap:6px; font-size:12px; font-weight:600; transition: border-color 0.15s ease, background 0.15s ease; flex: 1; min-width: 0; justify-content: center; transform: none !important; }
+        .rp-act-grid { display: grid; grid-template-columns: repeat(3, 1fr) auto; gap: 8px; margin-top: auto; }
+        .rp-act { height:36px; padding:0 8px; border:1px solid #cbd5e1; border-radius:8px; background:#fff; color:#475569; cursor:pointer; display:flex; align-items:center; gap:5px; font-size:12px; font-weight:600; transition: all 0.15s ease; justify-content: center; transform: none !important; white-space: nowrap; }
         .rp-act:hover { background:#f8fafc; color:#0f172a; border-color:#94a3b8; transform: none !important; }
         .rp-act.primary:hover { background:#eff6ff; color:#2563eb; border-color:#93c5fd; transform: none !important; }
         .rp-act.ai:hover { background:#f0fdf4; color:#16a34a; border-color:#86efac; transform: none !important; }
         .rp-act:disabled { opacity:0.4; cursor:not-allowed; transform: none !important; }
+        .rp-act-del { width: 36px !important; padding: 0 !important; }
+        
         /* Desktop */
         .rp-stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; }
         .rp-hero-btns-row { display: flex; gap: 10px; }
+        
         /* Tablet */
         @media (max-width: 1024px) {
           .rp-stats-grid { grid-template-columns: repeat(2, 1fr) !important; }
         }
+        
         /* Mobile */
         @media (max-width: 640px) {
           .rp-stats-grid { grid-template-columns: 1fr !important; gap: 10px !important; }
@@ -316,6 +325,14 @@ export default function Reports() {
           .rp-stat-card-left { margin-bottom: 0 !important; gap: 12px !important; }
           .rp-stat-card-left span.label { font-size: 14px !important; color: #0f172a !important; font-weight: 600 !important; }
           .rp-stat-card-val { font-size: 15px !important; display: flex !important; align-items: center !important; gap: 8px !important; }
+
+          .rp-card-body { padding: 14px !important; gap: 12px !important; }
+          .rp-act-grid { gap: 6px !important; }
+          .rp-act { height: 34px !important; padding: 0 6px !important; font-size: 11.5px !important; }
+        }
+        @media (max-width: 360px) {
+          .rp-act-grid { grid-template-columns: 1fr 1fr !important; gap: 6px !important; }
+          .rp-act-del { width: 100% !important; grid-column: span 1 !important; }
         }
       `}</style>
 
@@ -446,60 +463,60 @@ export default function Reports() {
               onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 4px 18px rgba(37,99,235,0.1), 0 1px 4px rgba(37,99,235,0.04)'; e.currentTarget.style.borderColor = '#93c5fd' }}
               onMouseLeave={e => { e.currentTarget.style.boxShadow = '0 1px 3px rgba(15,23,42,0.04)'; e.currentTarget.style.borderColor = '#e2e8f0' }}
               >
-                <div style={{ padding:'20px', flex:1, display:'flex', flexDirection:'column', gap:16 }}>
+                <div className="rp-card-body" style={{ padding:'18px 20px', flex:1, display:'flex', flexDirection:'column', gap:14 }}>
                   {/* Top row */}
                   <div style={{ display:'flex', alignItems:'flex-start', justifyContent:'space-between', gap:8 }}>
-                    <div style={{ display:'flex', alignItems:'center', gap:12 }}>
-                      <div style={{ width:40, height:40, borderRadius:10, background:'#eff6ff', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
-                        <span className="material-symbols-outlined" style={{ fontSize:20, color:'#2563eb', fontVariationSettings:"'FILL' 1" }}>description</span>
+                    <div style={{ display:'flex', alignItems:'center', gap:10, minWidth:0, flex:1 }}>
+                      <div style={{ width:38, height:38, borderRadius:10, background:'#eff6ff', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
+                        <span className="material-symbols-outlined" style={{ fontSize:19, color:'#2563eb', fontVariationSettings:"'FILL' 1" }}>description</span>
                       </div>
-                      <div style={{ minWidth:0 }}>
-                        <p style={{ margin:0, fontSize:15, fontWeight:600, color:'var(--snt-text-1)', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap', letterSpacing:'-0.01em' }}>{r.reportName || `Report #${r.id}`}</p>
-                        <p style={{ margin:'2px 0 0', fontSize:12, color:'var(--snt-text-3)', fontWeight:500 }}>{r.projectName || 'Unknown Project'}</p>
+                      <div style={{ minWidth:0, flex:1 }}>
+                        <p title={r.reportName || `Report #${r.id}`} style={{ margin:0, fontSize:14, fontWeight:600, color:'var(--snt-text-1)', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap', letterSpacing:'-0.01em' }}>{r.reportName || `Report #${r.id}`}</p>
+                        <p style={{ margin:'2px 0 0', fontSize:11.5, color:'var(--snt-text-3)', fontWeight:500, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{r.projectName || 'Unknown Project'}</p>
                       </div>
                     </div>
                     <button onClick={() => toggleFav(r.id)} title={isFav ? 'Remove from favorites' : 'Add to favorites'} style={{ border:'none', background:'none', cursor:'pointer', padding:4, borderRadius:6, flexShrink:0, display:'flex', alignItems:'center', justifyContent:'center' }}>
-                      <span className="material-symbols-outlined" style={{ fontSize:20, color: isFav ? '#f59e0b' : '#d1d5db', fontVariationSettings: isFav ? "'FILL' 1" : "'FILL' 0", transition:'color 0.2s' }}>star</span>
+                      <span className="material-symbols-outlined" style={{ fontSize:18, color: isFav ? '#f59e0b' : '#d1d5db', fontVariationSettings: isFav ? "'FILL' 1" : "'FILL' 0", transition:'color 0.2s' }}>star</span>
                     </button>
                   </div>
 
                   {/* Score + Risk row */}
-                  <div style={{ display:'flex', alignItems:'center', gap:12, background:'var(--snt-surface-2)', border:'1px solid #f3f4f6', borderRadius:12, padding:'12px 16px' }}>
+                  <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', gap:8, background:'var(--snt-surface-2)', border:'1px solid #f3f4f6', borderRadius:11, padding:'10px 12px' }}>
                     {score != null ? (
-                      <>
-                        <div style={{ width:40, height:40, borderRadius:10, background:scoreBg(score), border:`1px solid ${score>=80?'#bbf7d0':score>=60?'#fde68a':'#fecaca'}`, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
-                          <span style={{ fontSize:15, fontWeight:700, color:scoreColor(score), letterSpacing:'-0.02em' }}>{score.toFixed(0)}</span>
+                      <div style={{ display:'flex', alignItems:'center', gap:8, minWidth:0 }}>
+                        <div style={{ width:36, height:36, borderRadius:9, background:scoreBg(score), border:`1px solid ${score>=80?'#bbf7d0':score>=60?'#fde68a':'#fecaca'}`, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
+                          <span style={{ fontSize:14.5, fontWeight:700, color:scoreColor(score), letterSpacing:'-0.02em' }}>{score.toFixed(0)}</span>
                         </div>
-                        <div>
-                          <p style={{ margin:0, fontSize:13, fontWeight:600, color:scoreColor(score) }}>{riskLabel(score)}</p>
-                          <p style={{ margin:0, fontSize:11, color:'var(--snt-text-4)', fontWeight:500 }}>Security Score</p>
+                        <div style={{ minWidth:0 }}>
+                          <p style={{ margin:0, fontSize:12.5, fontWeight:600, color:scoreColor(score), overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{riskLabel(score)}</p>
+                          <p style={{ margin:0, fontSize:10.5, color:'var(--snt-text-4)', fontWeight:500 }}>Security Score</p>
                         </div>
-                      </>
+                      </div>
                     ) : (
-                      <span style={{ fontSize:12, color:'var(--snt-text-4)', fontWeight:500 }}>No score available</span>
+                      <span style={{ fontSize:11.5, color:'var(--snt-text-4)', fontWeight:500 }}>No score available</span>
                     )}
-                    <div style={{ marginLeft:'auto', textAlign:'right' }}>
-                      <p style={{ margin:0, fontSize:12, color:'var(--snt-text-3)', fontWeight:500 }}>{fmtDate(r.generatedAt)}</p>
-                      <p style={{ margin:'2px 0 0', fontSize:11, color:'var(--snt-text-4)', fontWeight:500 }}>{fmtSize(r.reportSizeBytes)}</p>
+                    <div style={{ textAlign:'right', flexShrink:0 }}>
+                      <p style={{ margin:0, fontSize:11.5, color:'var(--snt-text-3)', fontWeight:500 }}>{fmtDate(r.generatedAt)}</p>
+                      <p style={{ margin:'1px 0 0', fontSize:10.5, color:'var(--snt-text-4)', fontWeight:500 }}>{fmtSize(r.reportSizeBytes)}</p>
                     </div>
                   </div>
 
                   {/* Actions */}
-                  <div style={{ display:'flex', gap:8, marginTop:'auto' }}>
+                  <div className="rp-act-grid">
                     <button onClick={() => navigate(`/reports/${r.scanHistoryId}`)} title="View Report" className="rp-act primary">
-                      <span className="material-symbols-outlined" style={{ fontSize:16 }}>visibility</span>
-                      View
+                      <span className="material-symbols-outlined" style={{ fontSize:15 }}>visibility</span>
+                      <span>View</span>
                     </button>
                     <button onClick={() => handleDownload(r)} title="Download PDF" className="rp-act">
-                      <span className="material-symbols-outlined" style={{ fontSize:16 }}>download</span>
-                      PDF
+                      <span className="material-symbols-outlined" style={{ fontSize:15 }}>download</span>
+                      <span>PDF</span>
                     </button>
                     <button onClick={() => handleAiExplain(r)} title="AI Explain" className="rp-act ai">
-                      <span className="material-symbols-outlined" style={{ fontSize:16 }}>psychology</span>
-                      Explain
+                      <span className="material-symbols-outlined" style={{ fontSize:15 }}>psychology</span>
+                      <span>Explain</span>
                     </button>
-                    <button onClick={() => handleDelete(r.id)} disabled={deleting === r.id} title="Delete" className="rp-act" style={{ flex:'none', width:36, padding:0, color:'#ef4444' }}>
-                      {deleting === r.id ? <LoadingSpinner size="sm" /> : <span className="material-symbols-outlined" style={{ fontSize:16 }}>delete</span>}
+                    <button onClick={() => handleDelete(r.id)} disabled={deleting === r.id} title="Delete" className="rp-act rp-act-del" style={{ color:'#ef4444' }}>
+                      {deleting === r.id ? <LoadingSpinner size="sm" /> : <span className="material-symbols-outlined" style={{ fontSize:15 }}>delete</span>}
                     </button>
                   </div>
                 </div>
