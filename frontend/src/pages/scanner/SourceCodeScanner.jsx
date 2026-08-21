@@ -497,62 +497,281 @@ export default function SourceCodeScanner() {
           </select>
         </div>
 
-        {/* ── Step 2: Source Files ── */}
+        {/* ── Step 2: Source Files / Continuous AI Security Scanner ── */}
         <div style={{
           background: '#ffffff',
           border: '1px solid #e2e8f0',
-          borderRadius: 16,
-          padding: 32,
-          opacity: selectedProjectId ? 1 : 0.5,
+          borderRadius: 20,
+          padding: '28px 24px',
+          opacity: selectedProjectId ? 1 : 0.55,
           pointerEvents: selectedProjectId ? 'auto' : 'none',
           boxShadow: '0 1px 3px rgba(15,23,42,0.04)',
-          transition: 'border-color 0.15s ease, box-shadow 0.15s ease',
-        }}
-        onMouseEnter={e => selectedProjectId && (e.currentTarget.style.boxShadow = '0 4px 16px rgba(15,23,42,0.06)', e.currentTarget.style.borderColor = '#cbd5e1')}
-        onMouseLeave={e => selectedProjectId && (e.currentTarget.style.boxShadow = '0 1px 3px rgba(15,23,42,0.04)', e.currentTarget.style.borderColor = '#e2e8f0')}
-        >
-          <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:20 }}>
+          transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
+        }}>
+          <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:20, flexWrap:'wrap', gap:12 }}>
             <div style={{ display:'flex', alignItems:'center', gap:12 }}>
               <div style={{ width:28, height:28, borderRadius:'50%', background: selectedProjectId ? '#2563eb' : '#94a3b8', color:'#ffffff', display:'flex', alignItems:'center', justifyContent:'center', fontSize:13, fontWeight:700 }}>2</div>
-              <h2 style={{ margin:0, fontSize:18, fontWeight:700, color:'#0f172a', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>Source Files</h2>
+              <h2 style={{ margin:0, fontSize:18, fontWeight:700, color:'#0f172a', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>Source Files & Repository</h2>
             </div>
-            <button onClick={handleUploadClick} disabled={uploading} style={{ height:36, padding:'0 16px', background:'#eff6ff', color:'#2563eb', border:'1px solid #bfdbfe', borderRadius:8, fontSize:13, fontWeight:600, cursor:'pointer', display:'flex', alignItems:'center', gap:6, transition: 'all 0.15s ease' }} onMouseEnter={e=>e.currentTarget.style.background='#dbeafe'} onMouseLeave={e=>e.currentTarget.style.background='#eff6ff'}>
-              {uploading ? <LoadingSpinner size="sm" /> : <><span className="material-symbols-outlined" style={{ fontSize:16 }}>upload</span> Upload File</>}
-            </button>
+            {files.length > 0 && (
+              <button
+                onClick={handleUploadClick}
+                disabled={uploading}
+                style={{
+                  height:38, padding:'0 18px',
+                  background:'linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)',
+                  color:'#fff', border:'none', borderRadius:12, fontSize:13, fontWeight:600,
+                  cursor:'pointer', display:'flex', alignItems:'center', gap:6,
+                  boxShadow:'0 2px 8px rgba(37,99,235,0.25)', transition:'all 0.2s ease'
+                }}
+                onMouseEnter={e=>e.currentTarget.style.boxShadow='0 4px 16px rgba(37,99,235,0.4)'}
+                onMouseLeave={e=>e.currentTarget.style.boxShadow='0 2px 8px rgba(37,99,235,0.25)'}
+              >
+                {uploading ? <LoadingSpinner size="sm" /> : <><span className="material-symbols-outlined" style={{ fontSize:16 }}>upload</span> Add More Files</>}
+              </button>
+            )}
             <input type="file" ref={fileInputRef} onChange={handleFileChange} style={{ display:'none' }} />
           </div>
 
           {files.length > 0 ? (
-            <div style={{ border:'1px solid #cbd5e1', borderRadius:12, overflow:'hidden', boxShadow: '0 1px 2px rgba(15,23,42,0.04)' }}>
-              {files.map((f, i) => (
-                <div key={f.id} style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'16px 20px', background:'#ffffff', borderBottom: i !== files.length-1 ? '1px solid #e2e8f0' : 'none', transition: 'background 0.15s ease' }} onMouseEnter={e=>e.currentTarget.style.background='#f8fafc'} onMouseLeave={e=>e.currentTarget.style.background='#ffffff'}>
-                  <div style={{ display:'flex', alignItems:'center', gap:12 }}>
-                    <div style={{ width: 34, height: 34, borderRadius: 8, background: '#f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <span className="material-symbols-outlined" style={{ fontSize:20, color:'#2563eb' }}>description</span>
-                    </div>
-                    <div>
-                      <p style={{ margin:0, fontSize:14, fontWeight:600, color:'#0f172a' }}>{f.originalFilename}</p>
-                      <p style={{ margin:0, fontSize:12, color:'#64748b' }}>{(f.fileSize / 1024).toFixed(1)} KB · Uploaded {new Date(f.createdAt).toLocaleDateString()}</p>
-                    </div>
-                  </div>
-                  <button onClick={() => handleDeleteFile(f.id)} style={{ width:32, height:32, border:'none', background:'transparent', color:'#94a3b8', cursor:'pointer', borderRadius:8, transition:'all 0.2s' }} onMouseEnter={e=>{e.currentTarget.style.background='#fef2f2';e.currentTarget.style.color='#ef4444'}} onMouseLeave={e=>{e.currentTarget.style.background='transparent';e.currentTarget.style.color='#94a3b8'}}>
-                    <span className="material-symbols-outlined" style={{ fontSize:18 }}>delete</span>
-                  </button>
+            <div style={{ display:'flex', flexDirection:'column', gap:16 }}>
+              {/* Uploaded Files Table */}
+              <div style={{ border:'1px solid #e2e8f0', borderRadius:16, overflow:'hidden', boxShadow: '0 1px 3px rgba(15,23,42,0.03)' }}>
+                <div style={{ background:'#f8fafc', padding:'10px 18px', borderBottom:'1px solid #e2e8f0', display:'flex', justifyContent:'space-between', alignItems:'center' }}>
+                  <span style={{ fontSize:11.5, fontWeight:700, color:'#64748b', textTransform:'uppercase', letterSpacing:'0.06em' }}>Uploaded Package ({files.length})</span>
+                  <span style={{ fontSize:11.5, color:'#94a3b8', fontWeight:500 }}>Ready for Multi-LLM security review</span>
                 </div>
-              ))}
+                {files.map((f, i) => (
+                  <div key={f.id} style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'14px 18px', background:'#ffffff', borderBottom: i !== files.length-1 ? '1px solid #f1f5f9' : 'none', transition: 'background 0.15s ease' }} onMouseEnter={e=>e.currentTarget.style.background='#f8fafc'} onMouseLeave={e=>e.currentTarget.style.background='#ffffff'}>
+                    <div style={{ display:'flex', alignItems:'center', gap:12, minWidth:0 }}>
+                      <div style={{ width: 36, height: 36, borderRadius: 10, background: '#eff6ff', border:'1px solid #dbeafe', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink:0 }}>
+                        <span className="material-symbols-outlined" style={{ fontSize:20, color:'#2563eb' }}>description</span>
+                      </div>
+                      <div style={{ minWidth:0 }}>
+                        <p style={{ margin:0, fontSize:13.5, fontWeight:600, color:'#0f172a', whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>{f.originalFilename}</p>
+                        <p style={{ margin:0, fontSize:12, color:'#64748b' }}>{(f.fileSize / 1024).toFixed(1)} KB · Added {new Date(f.createdAt).toLocaleDateString()}</p>
+                      </div>
+                    </div>
+                    <button onClick={() => handleDeleteFile(f.id)} style={{ width:32, height:32, border:'none', background:'transparent', color:'#94a3b8', cursor:'pointer', borderRadius:8, transition:'all 0.15s', flexShrink:0 }} onMouseEnter={e=>{e.currentTarget.style.background='#fef2f2';e.currentTarget.style.color='#ef4444'}} onMouseLeave={e=>{e.currentTarget.style.background='transparent';e.currentTarget.style.color='#94a3b8'}} title="Delete file">
+                      <span className="material-symbols-outlined" style={{ fontSize:18 }}>delete</span>
+                    </button>
+                  </div>
+                ))}
+              </div>
             </div>
           ) : (
-            <div 
+            /* ── Futuristic AI Continuous Security Scanning Upload Card ── */
+            <div
               onClick={handleUploadClick}
-              style={{ border:'2px dashed #cbd5e1', borderRadius:12, padding:40, textAlign:'center', background:'#f8fafc', cursor:'pointer', transition:'all 0.18s cubic-bezier(0.4, 0, 0.2, 1)' }}
-              onMouseEnter={e => { e.currentTarget.style.borderColor = '#2563eb'; e.currentTarget.style.background = '#eff6ff'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(37,99,235,0.06)'; }}
-              onMouseLeave={e => { e.currentTarget.style.borderColor = '#cbd5e1'; e.currentTarget.style.background = '#f8fafc'; e.currentTarget.style.boxShadow = 'none'; }}
+              onDragOver={e => { e.preventDefault(); e.stopPropagation(); }}
+              onDrop={e => {
+                e.preventDefault();
+                e.stopPropagation();
+                if (e.dataTransfer.files?.[0]) {
+                  const syntheticEvent = { target: { files: e.dataTransfer.files } };
+                  handleFileChange(syntheticEvent);
+                }
+              }}
+              className="scanner-dropzone-card"
+              style={{
+                position: 'relative',
+                borderRadius: 24,
+                padding: '48px 24px',
+                textAlign: 'center',
+                background: '#F8FAFF',
+                border: '1px solid #E5EEF9',
+                cursor: 'pointer',
+                overflow: 'hidden',
+                boxShadow: '0 8px 30px rgba(37,99,235,0.04), 0 1px 3px rgba(15,23,42,0.03)',
+                transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
             >
-              <div style={{ width: 48, height: 48, borderRadius: '50%', background: '#eff6ff', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px' }}>
-                <span className="material-symbols-outlined" style={{ fontSize:24, color:'#2563eb' }}>upload_file</span>
+              <style>{`
+                @keyframes scanBorderRotate {
+                  0%   { stroke-dashoffset: 1200; }
+                  100% { stroke-dashoffset: 0; }
+                }
+                @keyframes iconShieldPulse {
+                  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(37,99,235,0.25)); }
+                  50%      { transform: scale(1.05); filter: drop-shadow(0 0 20px rgba(37,99,235,0.45)); }
+                }
+                @keyframes scanRingSpin {
+                  from { transform: rotate(0deg); }
+                  to   { transform: rotate(360deg); }
+                }
+                @keyframes gridPan {
+                  0%   { background-position: 0 0; }
+                  100% { background-position: 28px 28px; }
+                }
+                @keyframes particleFloat1 {
+                  0%   { transform: translateY(0) scale(0.8); opacity: 0; }
+                  50%  { opacity: 0.6; }
+                  100% { transform: translateY(-40px) scale(1.2); opacity: 0; }
+                }
+                @keyframes particleFloat2 {
+                  0%   { transform: translateY(0) scale(1); opacity: 0; }
+                  50%  { opacity: 0.7; }
+                  100% { transform: translateY(-55px) scale(0.7); opacity: 0; }
+                }
+                @keyframes beamSweep {
+                  0%   { transform: translateX(-100%) rotate(35deg); opacity: 0; }
+                  20%  { opacity: 0.45; }
+                  80%  { opacity: 0.45; }
+                  100% { transform: translateX(200%) rotate(35deg); opacity: 0; }
+                }
+
+                .scanner-dropzone-card:hover {
+                  background: #EFF6FF !important;
+                  border-color: #BFDBFE !important;
+                  transform: scale(1.01);
+                  box-shadow: 0 16px 40px -8px rgba(37,99,235,0.18), 0 0 0 1px rgba(37,99,235,0.15) !important;
+                }
+                .scanner-dropzone-card:hover .diagonal-beam {
+                  animation: beamSweep 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+                }
+                .scanner-dropzone-card:hover .scan-svg-rect {
+                  stroke: #2563eb;
+                  filter: drop-shadow(0 0 8px rgba(37,99,235,0.7));
+                }
+                .scanner-dropzone-card:hover .scan-upload-btn {
+                  transform: translateY(-2px);
+                  box-shadow: 0 8px 24px rgba(37,99,235,0.38) !important;
+                }
+              `}</style>
+
+              {/* ── Background: 5% Animated Grid Pattern ── */}
+              <div style={{
+                position: 'absolute', inset: 0, pointerEvents: 'none',
+                backgroundImage: 'linear-gradient(rgba(37,99,235,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(37,99,235,0.05) 1px, transparent 1px)',
+                backgroundSize: '28px 28px',
+                animation: 'gridPan 18s linear infinite',
+              }} />
+
+              {/* ── Background: Soft Radial Blue Glow from Center ── */}
+              <div style={{
+                position: 'absolute', inset: 0, pointerEvents: 'none',
+                background: 'radial-gradient(circle at 50% 45%, rgba(37,99,235,0.09) 0%, transparent 65%)',
+              }} />
+
+              {/* ── Background: Floating Micro Particles ── */}
+              <div style={{ position:'absolute', left:'25%', top:'60%', width:4, height:4, borderRadius:'50%', background:'#60a5fa', animation:'particleFloat1 3.5s ease-in-out infinite', pointerEvents:'none' }} />
+              <div style={{ position:'absolute', right:'28%', top:'65%', width:5, height:5, borderRadius:'50%', background:'#3b82f6', animation:'particleFloat2 4.2s 1.2s ease-in-out infinite', pointerEvents:'none' }} />
+              <div style={{ position:'absolute', left:'42%', top:'75%', width:3, height:3, borderRadius:'50%', background:'#93c5fd', animation:'particleFloat1 3.8s 2s ease-in-out infinite', pointerEvents:'none' }} />
+
+              {/* ── Hover Diagonal Scanning Beam Sweep ── */}
+              <div className="diagonal-beam" style={{
+                position: 'absolute', top: -100, bottom: -100, width: 80,
+                background: 'linear-gradient(90deg, transparent, rgba(96,165,250,0.3), rgba(37,99,235,0.5), transparent)',
+                pointerEvents: 'none', opacity: 0,
+              }} />
+
+              {/* ── Continuous Neon-Blue Scanning Border Outline ── */}
+              <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none', borderRadius: 24 }}>
+                <defs>
+                  <linearGradient id="scannerNeonGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#2563EB" />
+                    <stop offset="50%" stopColor="#60A5FA" />
+                    <stop offset="100%" stopColor="rgba(37,99,235,0.05)" />
+                  </linearGradient>
+                </defs>
+                <rect
+                  className="scan-svg-rect"
+                  x="1.5" y="1.5"
+                  width="calc(100% - 3px)" height="calc(100% - 3px)"
+                  rx="23" ry="23"
+                  fill="none"
+                  stroke="url(#scannerNeonGrad)"
+                  strokeWidth="2"
+                  strokeDasharray="180 320"
+                  style={{
+                    animation: 'scanBorderRotate 3.6s linear infinite',
+                    filter: 'drop-shadow(0 0 5px rgba(37,99,235,0.45))',
+                    transition: 'stroke 0.3s ease, filter 0.3s ease',
+                  }}
+                />
+              </svg>
+
+              {/* ── Center Icon: Frosted Container + Rotating Ring + Pulsing Shield ── */}
+              <div style={{ position: 'relative', width: 84, height: 84, marginBottom: 20, display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 2 }}>
+                {/* Thin Rotating Scan Ring */}
+                <svg width="84" height="84" viewBox="0 0 84 84" style={{ position: 'absolute', inset: 0, animation: 'scanRingSpin 4s linear infinite', pointerEvents: 'none' }}>
+                  <defs>
+                    <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#2563eb" stopOpacity="1" />
+                      <stop offset="70%" stopColor="#60a5fa" stopOpacity="0.4" />
+                      <stop offset="100%" stopColor="#93c5fd" stopOpacity="0" />
+                    </linearGradient>
+                  </defs>
+                  <circle cx="42" cy="42" r="38" fill="none" stroke="url(#ringGrad)" strokeWidth="2.5" strokeLinecap="round" strokeDasharray="120 120" />
+                </svg>
+
+                {/* Frosted Circular Container */}
+                <div style={{
+                  width: 68, height: 68, borderRadius: '50%',
+                  background: 'rgba(255,255,255,0.92)',
+                  backdropFilter: 'blur(10px)',
+                  WebkitBackdropFilter: 'blur(10px)',
+                  border: '1px solid rgba(191,219,254,0.8)',
+                  boxShadow: '0 8px 24px -4px rgba(37,99,235,0.18), inset 0 1px 2px rgba(255,255,255,0.8)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  animation: 'iconShieldPulse 2.2s ease-in-out infinite',
+                }}>
+                  <span className="material-symbols-outlined" style={{ fontSize: 32, color: '#2563eb', fontVariationSettings: "'FILL' 1" }}>
+                    security
+                  </span>
+                </div>
               </div>
-              <p style={{ margin:'0 0 6px', fontSize:15, fontWeight:700, color:'#0f172a', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>No files uploaded yet</p>
-              <p style={{ margin:0, fontSize:13, color:'#64748b' }}>Click to upload your source code files or ZIP archives to begin scanning.</p>
+
+              {/* ── Text Details ── */}
+              <div style={{ zIndex: 2, maxWidth: 540, marginBottom: 24 }}>
+                <h3 style={{
+                  margin: '0 0 8px', fontSize: 20, fontWeight: 700, color: '#0f172a',
+                  letterSpacing: '-0.02em', fontFamily: "'Plus Jakarta Sans', sans-serif"
+                }}>
+                  Source Code Security Scan
+                </h3>
+                <p style={{
+                  margin: 0, fontSize: 13.5, color: '#64748B', lineHeight: 1.6,
+                  fontWeight: 400,
+                }}>
+                  Drop your project or upload ZIP, Java, Python, JS, TS, C/C++, PHP, or other source files for AI-powered vulnerability analysis.
+                </p>
+              </div>
+
+              {/* ── Upload Button (Rounded 16px, Gradient, Glow) ── */}
+              <div style={{ zIndex: 2, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10 }}>
+                <button
+                  type="button"
+                  className="scan-upload-btn"
+                  style={{
+                    height: 46,
+                    padding: '0 28px',
+                    background: 'linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)',
+                    color: '#ffffff',
+                    border: 'none',
+                    borderRadius: 16,
+                    fontSize: 14,
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: 8,
+                    boxShadow: '0 6px 20px rgba(37,99,235,0.3)',
+                    transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+                  }}
+                >
+                  <span className="material-symbols-outlined" style={{ fontSize: 19 }}>upload_file</span>
+                  <span>Upload Project</span>
+                </button>
+                <span style={{ fontSize: 12, fontWeight: 600, color: '#94a3b8', letterSpacing: '0.02em' }}>
+                  Drag &amp; Drop • ZIP up to 100 MB
+                </span>
+              </div>
             </div>
           )}
         </div>

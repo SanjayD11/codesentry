@@ -150,7 +150,7 @@
 <body class="min-h-screen">
 
 <!-- ============ NAV ============ -->
-<header id="site-header" style="position:fixed;top:0;left:0;right:0;z-index:1000;border-bottom:1px solid transparent;transition:background 0.3s,border-color 0.3s,box-shadow 0.3s;">
+<header id="site-header" style="position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(255,255,255,0.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid rgba(226,232,240,0.8);transform:translateZ(0);will-change:box-shadow;transition:box-shadow 0.25s ease,border-color 0.25s ease;">
     <div style="max-width:1440px;margin:0 auto;padding:0 16px;height:64px;display:flex;align-items:center;justify-content:space-between;">
         <a href="#top" style="display:flex;align-items:center;flex-shrink:0;">
             <img src="/logo.png" alt="CodeSentry" style="height:38px;width:auto;" />
@@ -178,6 +178,12 @@
 </header>
 
 <style>
+  /* Scrolled header state */
+  #site-header.is-scrolled {
+    box-shadow: 0 4px 20px -2px rgba(15,23,42,0.06), 0 1px 3px rgba(15,23,42,0.03);
+    border-bottom-color: #cbd5e1;
+  }
+
   /* ---- Nav responsive visibility (no Tailwind dependency) ---- */
   @media (max-width: 767px) {
     #desktop-nav  { display: none !important; }
@@ -220,12 +226,12 @@
   .mob-nav-link:hover .mob-chevron { color: #93c5fd; transform: translateX(2px); }
 </style>
 
-<!-- Backdrop -->
-<div id="mobile-menu-backdrop" class="hidden fixed inset-0 z-[998] bg-slate-900/55"></div>
+<!-- Full-viewport Hardware-Accelerated Backdrop with Touch Lock -->
+<div id="mobile-menu-backdrop" class="hidden" style="position:fixed;top:0;left:0;right:0;bottom:0;width:100vw;height:100vh;height:100dvh;z-index:998;background:rgba(15,23,42,0.6);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);touch-action:none;overscroll-behavior:none;transform:translateZ(0);will-change:opacity;"></div>
 
 <!-- Mobile Nav Card -->
 <div id="mobile-menu" class="hidden fixed z-[999] bg-white border border-slate-100 rounded-2xl overflow-hidden"
-     style="top:68px;left:16px;right:16px;max-width:380px;margin:0 auto;box-shadow:0 20px 50px -10px rgba(15,23,42,0.22),0 4px 12px rgba(15,23,42,0.06);">
+     style="top:68px;left:16px;right:16px;max-width:380px;margin:0 auto;box-shadow:0 20px 50px -10px rgba(15,23,42,0.22),0 4px 12px rgba(15,23,42,0.06);transform:translateZ(0);">
 
     <!-- Card header row with close button -->
     <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px 10px;border-bottom:1px solid #f1f5f9;">
@@ -804,22 +810,24 @@ ReactDOM.createRoot(document.getElementById("scan-picker-root")).render(<ScanPic
     // Enable progressive scroll-reveal
     document.documentElement.classList.add('js-reveal');
 
-    // Sticky header background on scroll
+    // Sticky header background on scroll (smooth GPU-accelerated transition)
     const header = document.getElementById('site-header');
+    let lastScrolled = false;
     window.addEventListener('scroll', () => {
-        if (window.scrollY > 8) {
-            header.classList.add('bg-white/90', 'backdrop-blur-md', 'border-outline-variant/50', 'shadow-sm');
-        } else {
-            header.classList.remove('bg-white/90', 'backdrop-blur-md', 'border-outline-variant/50', 'shadow-sm');
+        const isScrolled = window.scrollY > 8;
+        if (isScrolled !== lastScrolled) {
+            header.classList.toggle('is-scrolled', isScrolled);
+            lastScrolled = isScrolled;
         }
-    });
+    }, { passive: true });
 
-    // Mobile menu — smooth open/close with CSS animation
+    // Mobile menu — smooth open/close with scroll lock
     const menuBtn   = document.getElementById('mobile-menu-btn');
     const menuClose = document.getElementById('mobile-menu-close');
     const menuIcon  = document.getElementById('mobile-menu-icon');
     const mobileMenu    = document.getElementById('mobile-menu');
     const menuBackdrop  = document.getElementById('mobile-menu-backdrop');
+    let menuOpen = false;
 
     function openMenu() {
         mobileMenu.classList.remove('hidden', 'menu-close');
@@ -827,7 +835,9 @@ ReactDOM.createRoot(document.getElementById("scan-picker-root")).render(<ScanPic
         void mobileMenu.offsetWidth; // force reflow
         mobileMenu.classList.add('menu-open');
         menuBackdrop.classList.add('bd-open');
-        menuIcon.textContent = 'menu'; // stays as hamburger; close is inside card
+        document.body.style.overflow = 'hidden';
+        document.documentElement.style.overflow = 'hidden';
+        menuOpen = true;
     }
 
     function closeMenu() {
@@ -835,22 +845,23 @@ ReactDOM.createRoot(document.getElementById("scan-picker-root")).render(<ScanPic
         menuBackdrop.classList.remove('bd-open');
         mobileMenu.classList.add('menu-close');
         menuBackdrop.classList.add('bd-close');
+        document.body.style.overflow = '';
+        document.documentElement.style.overflow = '';
         setTimeout(() => {
             mobileMenu.classList.add('hidden');
             menuBackdrop.classList.add('hidden');
             mobileMenu.classList.remove('menu-close');
             menuBackdrop.classList.remove('bd-close');
         }, 160);
+        menuOpen = false;
     }
 
-    let menuOpen = false;
     menuBtn.addEventListener('click', () => {
         menuOpen ? closeMenu() : openMenu();
-        menuOpen = !menuOpen;
     });
-    if (menuClose) menuClose.addEventListener('click', () => { closeMenu(); menuOpen = false; });
-    menuBackdrop.addEventListener('click', () => { closeMenu(); menuOpen = false; });
-    mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => { closeMenu(); menuOpen = false; }));
+    if (menuClose) menuClose.addEventListener('click', closeMenu);
+    menuBackdrop.addEventListener('click', closeMenu);
+    mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
 
     // Scroll reveal
     const revealEls = document.querySelectorAll('.reveal');
