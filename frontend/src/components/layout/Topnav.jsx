@@ -255,7 +255,11 @@ export default function Topnav() {
                       textDecoration: 'none',
                     }}
                   >
-                    <span className="material-symbols-outlined" style={{ fontSize: 18, color: active ? '#0058be' : '#64748b' }}>{item.icon}</span>
+                    {item.icon === 'ai-bot' ? (
+                      <img src="/ai-bot.png" alt="AI" style={{ width: 18, height: 18, borderRadius: 4, objectFit: 'cover' }} />
+                    ) : (
+                      <span className="material-symbols-outlined" style={{ fontSize: 18, color: active ? '#0058be' : '#64748b' }}>{item.icon}</span>
+                    )}
                     {item.name}
                   </Link>
                 )

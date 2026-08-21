@@ -1,4 +1,4 @@
-﻿import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
 
 export default function Sidebar() {
@@ -18,7 +18,7 @@ export default function Sidebar() {
       { name: 'Source Code Scanner', path: '/scanner',   icon: 'code' },
       { name: 'Analysis Reports',    path: '/reports',   icon: 'description' },
       { name: 'Scan History',        path: '/history',   icon: 'history' },
-      { name: 'AI Assistant',        path: '/chat',      icon: 'smart_toy' },
+      { name: 'AI Assistant',        path: '/chat',      icon: 'ai-bot' },
     ]
   }
 
@@ -49,7 +49,11 @@ export default function Sidebar() {
                   : 'text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors font-medium'
               }`}
             >
-              <span className={`material-symbols-outlined text-[20px] ${active ? 'text-primary' : 'font-light text-secondary'}`}>{item.icon}</span>
+              {item.icon === 'ai-bot' ? (
+                <img src="/ai-bot.png" alt="AI" style={{ width: 20, height: 20, borderRadius: 4, objectFit: 'cover' }} />
+              ) : (
+                <span className={`material-symbols-outlined text-[20px] ${active ? 'text-primary' : 'font-light text-secondary'}`}>{item.icon}</span>
+              )}
               <span className="font-body-md text-body-md">{item.name}</span>
             </Link>
           )

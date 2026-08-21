@@ -349,7 +349,7 @@ export default function Dashboard() {
             <ActionRow icon="code" to="/scanner" label="Source Code Scanner" desc="Paste or upload source code for AI analysis" />
             <ActionRow icon="description" to="/reports" label="Analysis Reports" desc="Browse and export generated vulnerability reports" />
             <ActionRow icon="history" to="/history" label="Scan History" desc="View all past scans and detailed findings" />
-            <ActionRow icon="smart_toy" to="/chat" label="AI Security Assistant" desc="Get contextual guidance on vulnerabilities" />
+            <ActionRow image="/ai-bot.png" to="/chat" label="AI Security Assistant" desc="Get contextual guidance on vulnerabilities" />
           </div>
         </div>
 
@@ -367,15 +367,11 @@ export default function Dashboard() {
             
             {/* Header */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 20 }}>
-              <div style={{
+              <img src="/ai-bot.png" alt="Sentinel AI" style={{
                 width: 44, height: 44, borderRadius: 12, flexShrink: 0,
-                background: 'var(--snt-surface)',
-                border: '1px solid #e2e6f0',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                boxShadow: '0 2px 8px rgba(17,28,45,0.04)',
-              }}>
-                <span className="material-symbols-outlined" style={{ fontSize: 22, color: 'var(--snt-text-1)', fontVariationSettings: "'FILL' 0" }}>auto_awesome</span>
-              </div>
+                objectFit: 'cover',
+                boxShadow: '0 4px 14px rgba(0,88,190,0.18)',
+              }} />
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 2 }}>
                   <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#16a34a' }} />
@@ -431,7 +427,7 @@ export default function Dashboard() {
 
 // ─── Micro-components ──────────────────────────────────────────────────────────
 
-function ActionRow({ icon, to, label, desc }) {
+function ActionRow({ icon, to, label, desc, image }) {
   const [hovered, setHovered] = useState(false)
   return (
     <Link
@@ -451,9 +447,13 @@ function ActionRow({ icon, to, label, desc }) {
         width: 34, height: 34, borderRadius: 8, flexShrink: 0,
         background: hovered ? 'rgba(0,88,190,0.1)' : '#f0f3ff',
         color: '#0058be', display: 'flex', alignItems: 'center', justifyContent: 'center',
-        transition: 'background 0.18s ease',
+        transition: 'background 0.18s ease', overflow: 'hidden',
       }}>
-        <span className="material-symbols-outlined" style={{ fontSize: 17 }}>{icon}</span>
+        {image ? (
+          <img src={image} alt="" style={{ width: 26, height: 26, borderRadius: 6, objectFit: 'cover' }} />
+        ) : (
+          <span className="material-symbols-outlined" style={{ fontSize: 17 }}>{icon}</span>
+        )}
       </div>
       <div style={{ minWidth: 0 }}>
         <p style={{ margin: 0, fontSize: 13.5, fontWeight: 600, color: '#111c2d' }}>{label}</p>
