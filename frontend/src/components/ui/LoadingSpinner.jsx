@@ -5,12 +5,13 @@
 export default function LoadingSpinner({ size = 'md', className = '', fullScreen = false }) {
   if (fullScreen) {
     return (
-      <div style={{
+      <div id="cs-splash" style={{
         position: 'fixed', inset: 0, zIndex: 9999,
         background: '#f9f9ff',
         display: 'flex', flexDirection: 'column',
         alignItems: 'center', justifyContent: 'center',
         fontFamily: "'Manrope', sans-serif",
+        transition: 'opacity 0.42s cubic-bezier(0.4,0,0.2,1)',
       }}>
         <style>{`
           @keyframes cs-spin  { to { transform: rotate(360deg); } }
@@ -19,11 +20,11 @@ export default function LoadingSpinner({ size = 'md', className = '', fullScreen
             0%   { transform: translateX(-100%); }
             100% { transform: translateX(400%); }
           }
-          @keyframes cs-fadein { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+          @keyframes cs-fadein { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         `}</style>
 
         {/* Logo + ring */}
-        <div style={{ position: 'relative', width: 88, height: 88, marginBottom: 24 }}>
+        <div style={{ position: 'relative', width: 88, height: 88, marginBottom: 28 }}>
           {/* Outer gradient ring */}
           <svg width="88" height="88" viewBox="0 0 88 88" style={{
             position: 'absolute', inset: 0,
@@ -52,16 +53,16 @@ export default function LoadingSpinner({ size = 'md', className = '', fullScreen
 
         {/* App name */}
         <p style={{
-          margin: '0 0 8px', fontSize: 20, fontWeight: 700, color: '#111c2d',
+          margin: '0 0 6px', fontSize: 20, fontWeight: 700, color: '#111c2d',
           letterSpacing: '-0.02em',
-          animation: 'cs-fadein 0.4s ease both',
+          animation: 'cs-fadein 0.5s 0.15s ease both',
           fontFamily: "'Plus Jakarta Sans', 'Manrope', sans-serif",
         }}>
           CodeSentry
         </p>
         <p style={{
-          margin: '0 0 28px', fontSize: 13, color: '#64748b', fontWeight: 500,
-          animation: 'cs-fadein 0.5s 0.1s ease both',
+          margin: '0 0 32px', fontSize: 13, color: '#64748b', fontWeight: 500,
+          animation: 'cs-fadein 0.5s 0.3s ease both',
         }}>
           AI Security Analysis Platform
         </p>
@@ -70,7 +71,7 @@ export default function LoadingSpinner({ size = 'md', className = '', fullScreen
         <div style={{
           width: 160, height: 3, borderRadius: 4,
           background: '#e2e8f0', overflow: 'hidden',
-          animation: 'cs-fadein 0.5s 0.15s ease both',
+          animation: 'cs-fadein 0.5s 0.4s ease both',
         }}>
           <div style={{
             width: 40, height: '100%',
