@@ -18,10 +18,11 @@ spring:
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
     hikari:
-      minimum-idle: 5
-      maximum-pool-size: 20
+      minimum-idle: 1
+      maximum-pool-size: 10
       idle-timeout: 120000
-      connection-timeout: 30000
+      connection-timeout: 20000
+      initialization-fail-timeout: 20000
       max-lifetime: 600000
       connection-test-query: SELECT 1
       pool-name: AiSecurityProdPool
@@ -78,20 +79,16 @@ server:
     min-response-size: 1024
 
 # ==============================================================================
-# LOGGING — production: only warnings and errors
+# LOGGING — clean console output for cloud container runtime
 # ==============================================================================
 logging:
   level:
-    root: WARN
+    root: INFO
     com.sanjay.aisecurity: INFO
+    com.zaxxer.hikari: INFO
+    org.springframework.boot.web.embedded.tomcat: INFO
     org.springframework.security: WARN
     org.hibernate.SQL: WARN
-  file:
-    name: /var/log/ai-security/application.log
-  logback:
-    rollingpolicy:
-      max-file-size: 50MB
-      max-history: 30
 
 # ==============================================================================
 # APPLICATION PRODUCTION OVERRIDES
