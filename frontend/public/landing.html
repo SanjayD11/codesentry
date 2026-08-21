@@ -166,45 +166,102 @@
                 Start scanning
             </a>
         </div>
-        <button id="mobile-menu-btn" class="md:hidden p-2 rounded-xl text-slate-700 hover:bg-slate-100/80 transition-colors focus:outline-none z-50 relative" aria-label="Toggle navigation menu">
-            <span class="material-symbols-outlined text-[24px]" id="mobile-menu-icon">menu</span>
+        <!-- Hamburger: tiny, icon-only, no card hover effect -->
+        <button id="mobile-menu-btn" class="md:hidden flex items-center justify-center w-8 h-8 text-slate-600 hover:text-slate-900 transition-colors focus:outline-none" aria-label="Toggle navigation menu">
+            <span class="material-symbols-outlined" style="font-size:22px;line-height:1;" id="mobile-menu-icon">menu</span>
         </button>
     </div>
 </header>
 
-<!-- Backdrop overlay (dim & blur the entire page when menu is open) -->
-<div id="mobile-menu-backdrop" class="hidden fixed inset-0 z-[998] bg-slate-900/60 backdrop-blur-sm transition-opacity duration-200"></div>
+<style>
+  /* Mobile menu slide-down animation */
+  @keyframes menuSlideDown {
+    from { opacity: 0; transform: translateY(-8px) scale(0.98); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  @keyframes menuSlideUp {
+    from { opacity: 1; transform: translateY(0) scale(1); }
+    to   { opacity: 0; transform: translateY(-8px) scale(0.98); }
+  }
+  @keyframes backdropFadeIn  { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes backdropFadeOut { from { opacity: 1; } to { opacity: 0; } }
 
-<!-- Solid, Crisp & 100% Opaque Mobile Navigation Card (Zero Text Bleed) -->
-<div id="mobile-menu" class="hidden fixed inset-x-4 top-20 z-[999] max-w-[380px] mx-auto bg-white border border-slate-200 shadow-[0_25px_60px_-15px_rgba(15,23,42,0.35)] rounded-2xl p-4 flex flex-col gap-1 transition-all duration-200">
-    <a href="#capabilities" class="flex items-center justify-between px-3.5 py-3 rounded-xl text-slate-800 hover:text-primary hover:bg-blue-50/70 font-semibold text-[15px] transition-colors">
-        <span class="flex items-center gap-3">
-            <span class="material-symbols-outlined text-[20px] text-slate-400">auto_awesome</span>
-            Capabilities
-        </span>
-        <span class="material-symbols-outlined text-[18px] text-slate-400">chevron_right</span>
-    </a>
-    <a href="#how-it-works" class="flex items-center justify-between px-3.5 py-3 rounded-xl text-slate-800 hover:text-primary hover:bg-blue-50/70 font-semibold text-[15px] transition-colors">
-        <span class="flex items-center gap-3">
-            <span class="material-symbols-outlined text-[20px] text-slate-400">schema</span>
-            How it works
-        </span>
-        <span class="material-symbols-outlined text-[18px] text-slate-400">chevron_right</span>
-    </a>
-    <a href="#assistant" class="flex items-center justify-between px-3.5 py-3 rounded-xl text-slate-800 hover:text-primary hover:bg-blue-50/70 font-semibold text-[15px] transition-colors">
-        <span class="flex items-center gap-3">
-            <span class="material-symbols-outlined text-[20px] text-slate-400">smart_toy</span>
-            AI Assistant
-        </span>
-        <span class="material-symbols-outlined text-[18px] text-slate-400">chevron_right</span>
-    </a>
-    
-    <div class="h-px bg-slate-100 my-1.5"></div>
+  #mobile-menu.menu-open   { animation: menuSlideDown 0.18s cubic-bezier(0.4,0,0.2,1) forwards; }
+  #mobile-menu.menu-close  { animation: menuSlideUp   0.15s cubic-bezier(0.4,0,0.2,1) forwards; }
+  #mobile-menu-backdrop.bd-open  { animation: backdropFadeIn  0.18s ease forwards; }
+  #mobile-menu-backdrop.bd-close { animation: backdropFadeOut 0.15s ease forwards; }
 
-    <div class="pt-1">
-        <a href="/login" class="cta-mobile-btn w-full bg-primary hover:bg-primary-fixed-variant text-white text-center py-3 px-4 rounded-xl font-semibold text-[14.5px] flex items-center justify-center gap-2 shadow-md transition-all active:scale-[0.98]">
+  /* Nav link rows: gentle colour fade only, no bg block */
+  .mob-nav-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 11px 14px;
+    border-radius: 10px;
+    color: #1e293b;
+    font-size: 15px;
+    font-weight: 600;
+    transition: color 0.15s ease;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .mob-nav-link:hover { color: #1d4ed8; }
+  .mob-nav-link .mob-icon  { color: #94a3b8; font-size: 19px; transition: color 0.15s ease; }
+  .mob-nav-link:hover .mob-icon { color: #3b82f6; }
+  .mob-nav-link .mob-chevron { color: #cbd5e1; font-size: 16px; transition: color 0.15s ease, transform 0.15s ease; }
+  .mob-nav-link:hover .mob-chevron { color: #93c5fd; transform: translateX(2px); }
+</style>
+
+<!-- Backdrop -->
+<div id="mobile-menu-backdrop" class="hidden fixed inset-0 z-[998] bg-slate-900/55"></div>
+
+<!-- Mobile Nav Card -->
+<div id="mobile-menu" class="hidden fixed z-[999] bg-white border border-slate-100 rounded-2xl overflow-hidden"
+     style="top:68px;left:16px;right:16px;max-width:380px;margin:0 auto;box-shadow:0 20px 50px -10px rgba(15,23,42,0.22),0 4px 12px rgba(15,23,42,0.06);">
+
+    <!-- Card header row with close button -->
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px 10px;border-bottom:1px solid #f1f5f9;">
+        <span style="font-size:11px;font-weight:700;color:#94a3b8;letter-spacing:0.08em;text-transform:uppercase;">Navigation</span>
+        <button id="mobile-menu-close" aria-label="Close menu"
+                style="display:flex;align-items:center;justify-content:center;width:26px;height:26px;color:#94a3b8;background:none;border:none;cursor:pointer;transition:color 0.12s ease;padding:0;"
+                onmouseenter="this.style.color='#475569'" onmouseleave="this.style.color='#94a3b8'">
+            <span class="material-symbols-outlined" style="font-size:18px;line-height:1;">close</span>
+        </button>
+    </div>
+
+    <!-- Nav links -->
+    <div style="padding:8px 8px 4px;">
+        <a href="#capabilities" class="mob-nav-link">
+            <span style="display:flex;align-items:center;gap:10px;">
+                <span class="material-symbols-outlined mob-icon">auto_awesome</span>
+                Capabilities
+            </span>
+            <span class="material-symbols-outlined mob-chevron">chevron_right</span>
+        </a>
+        <a href="#how-it-works" class="mob-nav-link">
+            <span style="display:flex;align-items:center;gap:10px;">
+                <span class="material-symbols-outlined mob-icon">schema</span>
+                How it works
+            </span>
+            <span class="material-symbols-outlined mob-chevron">chevron_right</span>
+        </a>
+        <a href="#assistant" class="mob-nav-link">
+            <span style="display:flex;align-items:center;gap:10px;">
+                <span class="material-symbols-outlined mob-icon">smart_toy</span>
+                AI Assistant
+            </span>
+            <span class="material-symbols-outlined mob-chevron">chevron_right</span>
+        </a>
+    </div>
+
+    <!-- CTA -->
+    <div style="padding:8px 16px 16px;">
+        <div style="height:1px;background:#f1f5f9;margin-bottom:12px;"></div>
+        <a href="/login" id="mobile-cta-btn"
+           style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:#1d4ed8;color:#fff;font-size:14.5px;font-weight:600;padding:11px 16px;border-radius:10px;text-decoration:none;transition:background 0.15s ease;"
+           onmouseenter="this.style.background='#1e40af'" onmouseleave="this.style.background='#1d4ed8'">
             <span id="mobile-cta-text">Start scanning</span>
-            <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+            <span class="material-symbols-outlined" style="font-size:17px;line-height:1;">arrow_forward</span>
         </a>
     </div>
 </div>
@@ -687,25 +744,43 @@ ReactDOM.createRoot(document.getElementById("scan-picker-root")).render(<ScanPic
         }
     });
 
-    // Mobile menu toggle
-    const menuBtn = document.getElementById('mobile-menu-btn');
-    const menuIcon = document.getElementById('mobile-menu-icon');
-    const mobileMenu = document.getElementById('mobile-menu');
-    const menuBackdrop = document.getElementById('mobile-menu-backdrop');
-    function closeMobileMenu() {
-        if (mobileMenu) mobileMenu.classList.add('hidden');
-        if (menuBackdrop) menuBackdrop.classList.add('hidden');
-        if (menuIcon) menuIcon.textContent = 'menu';
+    // Mobile menu — smooth open/close with CSS animation
+    const menuBtn   = document.getElementById('mobile-menu-btn');
+    const menuClose = document.getElementById('mobile-menu-close');
+    const menuIcon  = document.getElementById('mobile-menu-icon');
+    const mobileMenu    = document.getElementById('mobile-menu');
+    const menuBackdrop  = document.getElementById('mobile-menu-backdrop');
+
+    function openMenu() {
+        mobileMenu.classList.remove('hidden', 'menu-close');
+        menuBackdrop.classList.remove('hidden', 'bd-close');
+        void mobileMenu.offsetWidth; // force reflow
+        mobileMenu.classList.add('menu-open');
+        menuBackdrop.classList.add('bd-open');
+        menuIcon.textContent = 'menu'; // stays as hamburger; close is inside card
     }
-    if (menuBtn && mobileMenu) {
-        menuBtn.addEventListener('click', () => {
-            const isHidden = mobileMenu.classList.toggle('hidden');
-            if (menuBackdrop) menuBackdrop.classList.toggle('hidden', isHidden);
-            if (menuIcon) menuIcon.textContent = isHidden ? 'menu' : 'close';
-        });
-        if (menuBackdrop) menuBackdrop.addEventListener('click', closeMobileMenu);
-        mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMobileMenu));
+
+    function closeMenu() {
+        mobileMenu.classList.remove('menu-open');
+        menuBackdrop.classList.remove('bd-open');
+        mobileMenu.classList.add('menu-close');
+        menuBackdrop.classList.add('bd-close');
+        setTimeout(() => {
+            mobileMenu.classList.add('hidden');
+            menuBackdrop.classList.add('hidden');
+            mobileMenu.classList.remove('menu-close');
+            menuBackdrop.classList.remove('bd-close');
+        }, 160);
     }
+
+    let menuOpen = false;
+    menuBtn.addEventListener('click', () => {
+        menuOpen ? closeMenu() : openMenu();
+        menuOpen = !menuOpen;
+    });
+    if (menuClose) menuClose.addEventListener('click', () => { closeMenu(); menuOpen = false; });
+    menuBackdrop.addEventListener('click', () => { closeMenu(); menuOpen = false; });
+    mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => { closeMenu(); menuOpen = false; }));
 
     // Scroll reveal
     const revealEls = document.querySelectorAll('.reveal');
