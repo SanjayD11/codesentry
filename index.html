@@ -3,7 +3,8 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Aegis Nexus — AI Security Analysis Platform</title>
+<title>CodeSentry — AI Security Analysis Platform</title>
+<link rel="icon" type="image/png" href="/favicon.png" />
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Inter:wght@100..900&family=Plus+Jakarta+Sans:wght@400..800&display=swap" rel="stylesheet"/>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
@@ -90,7 +91,7 @@
     }
 </script>
 <style>
-    body { background-color: theme('colors.background'); color: theme('colors.on-background'); font-family: 'Inter', sans-serif; }
+    body { background-color: theme('colors.background'); color: theme('colors.on-background'); font-family: 'Inter', sans-serif; overflow-x: hidden; }
     h1, h2, h3, h4, h5, h6 { font-family: 'Plus Jakarta Sans', sans-serif; }
     .font-mono-code { font-family: 'Geist', monospace; }
 
@@ -153,16 +154,11 @@
     ::selection { background: rgba(0,88,190,0.2); }
 </style>
 </head>
-<body class="min-h-screen">
-
-<!-- ============ NAV ============ -->
+<body class="min-h-screen"><!-- ============ NAV ============ -->
 <header id="site-header" class="fixed top-0 inset-x-0 z-50 border-b border-transparent transition-all duration-300">
     <div class="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop h-16 flex items-center justify-between">
-        <a href="#top" class="flex items-center gap-sm">
-            <div class="w-9 h-9 rounded-lg bg-primary-container flex items-center justify-center text-on-primary-container shadow-sm">
-                <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">security</span>
-            </div>
-            <span class="font-headline-md text-[18px] font-extrabold tracking-tight text-primary">Aegis Nexus</span>
+        <a href="#top" class="flex items-center">
+            <img src="/logo.png" alt="CodeSentry" class="h-[38px] sm:h-[40px] w-auto" />
         </a>
         <nav class="hidden md:flex items-center gap-2xl font-label-md text-label-md text-on-surface-variant">
             <a href="#capabilities" class="hover:text-primary transition-colors font-medium">Capabilities</a>
@@ -170,60 +166,93 @@
             <a href="#assistant" class="hover:text-primary transition-colors font-medium">Analysis Assistant</a>
         </nav>
         <div class="hidden md:flex items-center gap-md">
-            Free forever
-            </span>
-            <a href="login.html" class="cta-magnetic bg-primary text-on-primary px-lg py-sm rounded-lg font-label-md text-label-md font-semibold shadow-[inset_0_1px_0_rgba(255,255,255,0.2),0_1px_2px_rgba(0,0,0,0.1)] hover:bg-primary-fixed-variant transition-all hover:shadow-md">
+            <span class="text-xs font-semibold text-slate-500 bg-slate-100 px-2.5 py-1 rounded-full border border-slate-200">Free Platform</span>
+            <a href="/login" class="cta-magnetic bg-primary text-on-primary px-lg py-sm rounded-lg font-label-md text-label-md font-semibold shadow-[inset_0_1px_0_rgba(255,255,255,0.2),0_1px_2px_rgba(0,0,0,0.1)] hover:bg-primary-fixed-variant transition-all hover:shadow-md">
                 Start scanning
             </a>
         </div>
-        <button id="mobile-menu-btn" class="md:hidden p-sm text-on-surface">
-            <span class="material-symbols-outlined" id="mobile-menu-icon">menu</span>
+        <button id="mobile-menu-btn" class="md:hidden p-2 rounded-xl text-on-surface hover:bg-surface-container-high transition-colors focus:outline-none" aria-label="Toggle navigation menu">
+            <span class="material-symbols-outlined text-[24px]" id="mobile-menu-icon">menu</span>
         </button>
     </div>
-    <div id="mobile-menu" class="hidden md:hidden bg-surface-container-lowest border-t border-outline-variant/50 px-margin-mobile py-md flex flex-col gap-sm">
-        <a href="#capabilities" class="py-sm text-on-surface-variant font-medium">Capabilities</a>
-        <a href="#how-it-works" class="py-sm text-on-surface-variant font-medium">How it works</a>
-        <a href="#assistant" class="py-sm text-on-surface-variant font-medium">AI Assistant</a>
-        <a href="login.html" class="mt-sm bg-primary text-on-primary text-center px-lg py-sm rounded-lg font-label-md font-semibold">Start scanning</a>
+    
+    <!-- Clean Minimalist & Frosted Mobile/Tablet Menu -->
+    <div id="mobile-menu" class="hidden md:hidden fixed inset-x-3 top-20 z-50 bg-white/95 backdrop-blur-xl border border-slate-200/90 shadow-2xl rounded-2xl p-3 sm:p-4 flex flex-col gap-1.5 transition-all duration-300 transform origin-top">
+        <a href="#capabilities" class="group flex items-center gap-3 p-3 rounded-xl hover:bg-blue-50/80 active:bg-blue-100/50 transition-all duration-150 text-on-surface">
+            <div class="w-10 h-10 rounded-xl bg-blue-50 text-primary flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-colors flex-shrink-0">
+                <span class="material-symbols-outlined text-[20px]">auto_awesome</span>
+            </div>
+            <div class="min-w-0">
+                <p class="font-bold text-[14px] text-slate-900 group-hover:text-primary transition-colors">Capabilities</p>
+                <p class="text-[12px] text-slate-500 truncate">Multi-engine attack surface analysis</p>
+            </div>
+            <span class="material-symbols-outlined text-slate-400 ml-auto text-[18px] group-hover:translate-x-1 group-hover:text-primary transition-all">chevron_right</span>
+        </a>
+        <a href="#how-it-works" class="group flex items-center gap-3 p-3 rounded-xl hover:bg-emerald-50/80 active:bg-emerald-100/50 transition-all duration-150 text-on-surface">
+            <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center group-hover:bg-emerald-600 group-hover:text-white transition-colors flex-shrink-0">
+                <span class="material-symbols-outlined text-[20px]">schema</span>
+            </div>
+            <div class="min-w-0">
+                <p class="font-bold text-[14px] text-slate-900 group-hover:text-emerald-600 transition-colors">How it works</p>
+                <p class="text-[12px] text-slate-500 truncate">3-step automated reasoning workflow</p>
+            </div>
+            <span class="material-symbols-outlined text-slate-400 ml-auto text-[18px] group-hover:translate-x-1 group-hover:text-emerald-600 transition-all">chevron_right</span>
+        </a>
+        <a href="#assistant" class="group flex items-center gap-3 p-3 rounded-xl hover:bg-indigo-50/80 active:bg-indigo-100/50 transition-all duration-150 text-on-surface">
+            <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center group-hover:bg-indigo-600 group-hover:text-white transition-colors flex-shrink-0">
+                <span class="material-symbols-outlined text-[20px]">smart_toy</span>
+            </div>
+            <div class="min-w-0">
+                <p class="font-bold text-[14px] text-slate-900 group-hover:text-indigo-600 transition-colors">AI Assistant</p>
+                <p class="text-[12px] text-slate-500 truncate">Contextual vulnerability remediation</p>
+            </div>
+            <span class="material-symbols-outlined text-slate-400 ml-auto text-[18px] group-hover:translate-x-1 group-hover:text-indigo-600 transition-all">chevron_right</span>
+        </a>
+        
+        <div class="pt-2 mt-1 border-t border-slate-100">
+            <a href="/login" class="cta-mobile-btn w-full bg-primary hover:bg-primary-fixed-variant text-white text-center py-3 px-4 rounded-xl font-label-md font-semibold flex items-center justify-center gap-2 shadow-md transition-all active:scale-[0.98]">
+                <span class="material-symbols-outlined text-[18px]">rocket_launch</span>
+                <span id="mobile-cta-text">Start scanning</span>
+            </a>
+        </div>
     </div>
 </header>
 
 <main id="top">
 
 <!-- ============ HERO ============ -->
-<section class="mesh-bg pt-32 pb-3xl md:pt-40 md:pb-3xl overflow-hidden relative">
-    <div class="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop grid lg:grid-cols-2 gap-3xl items-center relative z-10">
-        <div class="reveal relative min-w-0">
+<section class="mesh-bg pt-24 pb-16 sm:pt-32 sm:pb-24 md:pt-36 md:pb-28 overflow-hidden relative">
+    <div class="max-w-max-width mx-auto px-4 sm:px-margin-mobile md:px-margin-desktop grid lg:grid-cols-2 gap-12 lg:gap-3xl items-center relative z-10">
+        <div class="reveal relative text-center lg:text-left flex flex-col items-center lg:items-start">
             <div class="hero-grid absolute -inset-x-16 -top-24 h-[420px] -z-10"></div>
-            <p class="font-bold text-primary tracking-[0.2em] uppercase text-[12px] mb-6">AI Security Analysis Platform</p>
-            <h1 class="text-[40px] leading-[1.15] md:text-[56px] md:leading-[1.1] font-bold tracking-[-0.03em] text-on-surface mb-6" style="text-wrap: balance;">
-                <span class="text-primary">Secure Your Code.</span><br class="hidden md:block"/> Understand Every Vulnerability.
+            <p class="font-bold text-primary tracking-[0.15em] sm:tracking-[0.2em] uppercase text-[11px] sm:text-[12px] mb-4 sm:mb-6">AI Security Analysis Platform</p>
+            <h1 class="text-[28px] leading-[1.2] sm:text-[36px] sm:leading-[1.15] md:text-[54px] md:leading-[1.1] font-bold tracking-[-0.02em] md:tracking-[-0.03em] text-on-surface mb-4 sm:mb-6">
+                <span class="text-primary">Secure Your Code.</span><br class="hidden sm:block"/> Understand Every Vulnerability.
             </h1>
-            <p class="font-body-lg text-body-lg text-on-surface-variant max-w-[440px]">
+            <p class="text-[14px] leading-[22px] sm:text-body-lg sm:leading-[24px] text-on-surface-variant max-w-[440px] mx-auto lg:mx-0 px-1 sm:px-0">
                 An AI-assisted platform that evaluates your source code and files. Identify hidden vulnerabilities, get plain-language explanations, and apply actionable fixes.
             </p>
-            <div id="hero-cta" class="flex flex-col sm:flex-row gap-md mt-xl">
-                <a href="login.html" class="cta-magnetic bg-primary text-on-primary px-xl py-md rounded-lg font-label-md text-label-md font-semibold shadow-[inset_0_1px_0_rgba(255,255,255,0.2),0_1px_2px_rgba(0,0,0,0.1)] hover:bg-primary-fixed-variant transition-all hover:shadow-md flex items-center justify-center gap-sm">
+            <div id="hero-cta" class="flex flex-col sm:flex-row gap-3 sm:gap-md mt-6 sm:mt-xl justify-center lg:justify-start w-full sm:w-auto">
+                <a href="/login" class="cta-magnetic bg-primary text-on-primary px-6 sm:px-xl py-3 sm:py-md rounded-lg text-[13px] sm:text-label-md font-semibold shadow-[inset_0_1px_0_rgba(255,255,255,0.2),0_1px_2px_rgba(0,0,0,0.1)] hover:bg-primary-fixed-variant transition-all hover:shadow-md flex items-center justify-center gap-sm">
                     Start Analysis
                 </a>
-                <a href="#capabilities" class="cta-magnetic bg-surface-container-lowest border border-outline-variant text-on-surface px-xl py-md rounded-lg font-label-md text-label-md font-semibold hover:bg-surface-container-low transition-all flex items-center justify-center gap-sm">
+                <a href="#capabilities" class="cta-magnetic bg-surface-container-lowest border border-outline-variant text-on-surface px-6 sm:px-xl py-3 sm:py-md rounded-lg text-[13px] sm:text-label-md font-semibold hover:bg-surface-container-low transition-all flex items-center justify-center gap-sm">
                     Explore Platform
                 </a>
             </div>
-            
         </div>
 
         <!-- Signature element: live scan terminal -->
-        <div class="reveal min-w-0 w-full">
-            <div class="terminal-shell max-w-[520px] mx-auto w-full">
+        <div class="reveal w-full min-w-0">
+            <div class="terminal-shell max-w-[520px] mx-auto w-full shadow-[0_20px_50px_rgba(15,23,42,0.2)]">
                 <div class="terminal-bar px-lg py-sm flex items-center justify-between">
                     <div class="flex items-center gap-sm">
                         <span class="w-3 h-3 rounded-full bg-[#ff5f56]"></span>
                         <span class="w-3 h-3 rounded-full bg-[#ffbd2e]"></span>
                         <span class="w-3 h-3 rounded-full bg-[#27c93f]"></span>
                     </div>
-                    <span class="font-mono-code text-[12px] text-[#8b96ab] truncate max-w-[150px] sm:max-w-none">auth_handler.py — Aegis Nexus scan</span>
-                    <span class="material-symbols-outlined text-[16px] text-[#8b96ab]">radar</span>
+                    <span class="font-mono-code text-[12px] text-[#8b96ab] truncate max-w-[200px] sm:max-w-none">auth_handler.py — CodeSentry scan</span>
+                    <span class="material-symbols-outlined text-[16px] text-[#8b96ab]">shield</span>
                 </div>
                 <div class="terminal-body pt-lg pb-md">
                     <div class="code-block-wrap mx-lg">
@@ -264,28 +293,28 @@
     </div>
 </section>
 
-<!-- ============ STATS BAND ============ -->
-<section class="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop -mt-2xl relative z-20">
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-lg reveal">
-        <div class="glass-panel border-outline-variant/50 rounded-xl p-lg hover-lift">
-            <div class="p-sm bg-primary-container/10 rounded-lg text-primary ring-1 ring-primary-container/20 w-fit mb-md"><span class="material-symbols-outlined">radar</span></div>
-            <h3 class="font-headline-lg text-[26px] md:text-headline-lg text-on-surface font-extrabold tracking-tight"><span class="stat-count" data-target="0" id="stat-scans" >0</span></h3>
-            <p class="font-body-md text-body-md text-on-surface-variant font-medium mt-xs">Scans executed</p>
+<!-- ============ STATS BAND (Clean separation on mobile & desktop) ============ -->
+<section class="max-w-max-width mx-auto px-4 sm:px-margin-mobile md:px-margin-desktop mt-8 sm:mt-12 lg:-mt-12 relative z-20">
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-6 reveal">
+        <div class="glass-panel border border-outline-variant/60 rounded-2xl p-4 sm:p-6 hover-lift bg-white/95 shadow-[0_4px_20px_rgba(15,23,42,0.04)]">
+            <div class="p-2 sm:p-2.5 bg-primary-container/10 rounded-xl text-primary ring-1 ring-primary-container/20 w-fit mb-3"><span class="material-symbols-outlined text-[20px] sm:text-[24px]">shield</span></div>
+            <h3 class="text-[22px] sm:text-[28px] md:text-[32px] text-on-surface font-extrabold tracking-tight"><span class="stat-count" data-target="0" id="stat-scans">0</span></h3>
+            <p class="text-[12px] sm:text-body-md text-on-surface-variant font-medium mt-1">Scans executed</p>
         </div>
-        <div class="glass-panel border-outline-variant/50 rounded-xl p-lg hover-lift">
-            <div class="p-sm bg-error-container/30 rounded-lg text-error ring-1 ring-error-container/40 w-fit mb-md"><span class="material-symbols-outlined">warning</span></div>
-            <h3 class="font-headline-lg text-[26px] md:text-headline-lg text-on-surface font-extrabold tracking-tight"><span class="stat-count" data-target="0" id="stat-vulns" >0</span></h3>
-            <p class="font-body-md text-body-md text-on-surface-variant font-medium mt-xs">Vulnerabilities identified</p>
+        <div class="glass-panel border border-outline-variant/60 rounded-2xl p-4 sm:p-6 hover-lift bg-white/95 shadow-[0_4px_20px_rgba(15,23,42,0.04)]">
+            <div class="p-2 sm:p-2.5 bg-error-container/30 rounded-xl text-error ring-1 ring-error-container/40 w-fit mb-3"><span class="material-symbols-outlined text-[20px] sm:text-[24px]">warning</span></div>
+            <h3 class="text-[22px] sm:text-[28px] md:text-[32px] text-on-surface font-extrabold tracking-tight"><span class="stat-count" data-target="0" id="stat-vulns">0</span></h3>
+            <p class="text-[12px] sm:text-body-md text-on-surface-variant font-medium mt-1">Vulnerabilities identified</p>
         </div>
-        <div class="glass-panel border-outline-variant/50 rounded-xl p-lg hover-lift">
-            <div class="p-sm bg-tertiary-container/10 rounded-lg text-tertiary-container ring-1 ring-tertiary-container/20 w-fit mb-md"><span class="material-symbols-outlined">bolt</span></div>
-            <h3 class="font-headline-lg text-[26px] md:text-headline-lg text-on-surface font-extrabold tracking-tight"><span class="stat-count" data-target="0" id="stat-users"  >0</span></h3>
-            <p class="font-body-md text-body-md text-on-surface-variant font-medium mt-xs">Registered users</p>
+        <div class="glass-panel border border-outline-variant/60 rounded-2xl p-4 sm:p-6 hover-lift bg-white/95 shadow-[0_4px_20px_rgba(15,23,42,0.04)]">
+            <div class="p-2 sm:p-2.5 bg-tertiary-container/10 rounded-xl text-tertiary-container ring-1 ring-tertiary-container/20 w-fit mb-3"><span class="material-symbols-outlined text-[20px] sm:text-[24px]">bolt</span></div>
+            <h3 class="text-[22px] sm:text-[28px] md:text-[32px] text-on-surface font-extrabold tracking-tight"><span class="stat-count" data-target="0" id="stat-users">0</span></h3>
+            <p class="text-[12px] sm:text-body-md text-on-surface-variant font-medium mt-1">Registered users</p>
         </div>
-        <div class="glass-panel border-outline-variant/50 rounded-xl p-lg hover-lift">
-            <div class="p-sm bg-secondary-container/30 rounded-lg text-secondary ring-1 ring-secondary-container/40 w-fit mb-md"><span class="material-symbols-outlined">timer</span></div>
-            <h3 class="font-headline-lg text-[26px] md:text-headline-lg text-on-surface font-extrabold tracking-tight">&lt;<span class="stat-count" data-target="0" id="stat-projects" >0</span></h3>
-            <p class="font-body-md text-body-md text-on-surface-variant font-medium mt-xs">Active projects</p>
+        <div class="glass-panel border border-outline-variant/60 rounded-2xl p-4 sm:p-6 hover-lift bg-white/95 shadow-[0_4px_20px_rgba(15,23,42,0.04)]">
+            <div class="p-2 sm:p-2.5 bg-secondary-container/30 rounded-xl text-secondary ring-1 ring-secondary-container/40 w-fit mb-3"><span class="material-symbols-outlined text-[20px] sm:text-[24px]">timer</span></div>
+            <h3 class="text-[22px] sm:text-[28px] md:text-[32px] text-on-surface font-extrabold tracking-tight">&lt;<span class="stat-count" data-target="0" id="stat-projects">0</span></h3>
+            <p class="text-[12px] sm:text-body-md text-on-surface-variant font-medium mt-1">Active projects</p>
         </div>
     </div>
 </section>
@@ -295,7 +324,7 @@
     <div class="max-w-[600px] mb-2xl reveal">
         <span class="eyebrow-rule font-label-md text-label-md text-primary font-bold uppercase tracking-wide">Capabilities</span>
         <h2 class="font-headline-lg text-[28px] md:text-headline-lg text-on-surface font-extrabold tracking-tight mt-sm">Comprehensive attack surface analysis</h2>
-        <p class="font-body-lg text-body-lg text-on-surface-variant mt-md">Analyze your entire application stack. Aegis Nexus applies consistent vulnerability reasoning across file uploads and full code repositories.</p>
+        <p class="font-body-lg text-body-lg text-on-surface-variant mt-md">Analyze your entire application stack. CodeSentry applies consistent vulnerability reasoning across file uploads and full code repositories.</p>
     </div>
 
     <div class="grid md:grid-cols-2 gap-lg reveal">
@@ -358,25 +387,65 @@
     </div>
 </section>
 
-<!-- ============ AI ASSISTANT ============ -->
+<!-- ============ AI ASSISTANT (Interactive with smooth animations) ============ -->
 <section id="assistant" class="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop py-3xl grid lg:grid-cols-2 gap-3xl items-center">
     <div class="reveal order-2 lg:order-1">
-        <div class="glass-panel border-outline-variant/50 rounded-xl p-lg max-w-[460px]">
+        <div class="glass-panel border border-outline-variant/60 rounded-2xl p-5 sm:p-6 max-w-[480px] shadow-[0_8px_30px_rgba(15,23,42,0.06)] bg-white/95">
             <div class="flex items-center gap-sm mb-lg pb-md border-b border-outline-variant/50">
                 <div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container"><span class="material-symbols-outlined text-[16px]">smart_toy</span></div>
                 <span class="font-label-md text-label-md font-bold text-on-surface">Analysis Assistant</span>
-                <span class="ml-auto w-2 h-2 rounded-full bg-tertiary-container"></span>
+                <span class="ml-auto flex items-center gap-1 text-[11px] font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Live Agent
+                </span>
             </div>
-            <div class="space-y-md">
-                <div class="bg-surface-container-high rounded-lg rounded-tl-none p-md max-w-[85%]">
-                    <p class="font-body-md text-body-md text-on-surface">Why is <code class="font-mono-code text-[12px] bg-surface-container-lowest px-xs py-[1px] rounded">auth_handler.py:4</code> flagged critical?</p>
+            <div class="space-y-3">
+                <div class="bg-surface-container-high rounded-xl rounded-tl-none p-3.5 max-w-[85%] shadow-sm">
+                    <p class="font-body-md text-body-md text-on-surface">Why is <code class="font-mono-code text-[12px] bg-surface-container-lowest px-1.5 py-0.5 rounded border border-outline-variant/40">auth_handler.py:4</code> flagged critical?</p>
                 </div>
-                <div class="bg-primary-container/10 rounded-lg rounded-tr-none p-md ml-auto max-w-[90%]">
-                    <p class="font-body-md text-body-md text-on-surface">The query concatenates <code class="font-mono-code text-[12px] bg-surface-container-lowest px-xs py-[1px] rounded">user_id</code> directly into SQL. A request like <code class="font-mono-code text-[12px] bg-surface-container-lowest px-xs py-[1px] rounded">id=1 OR 1=1</code> returns every row. Swap to a parameterized query and the driver escapes input automatically. Want me to open a patch?</p>
+                <div class="bg-primary-container/10 border border-primary/10 rounded-xl rounded-tr-none p-3.5 ml-auto max-w-[92%] shadow-sm">
+                    <p class="font-body-md text-body-md text-on-surface leading-relaxed">The query concatenates <code class="font-mono-code text-[12px] bg-surface-container-lowest px-1.5 py-0.5 rounded border border-outline-variant/40">user_id</code> directly into SQL. A request like <code class="font-mono-code text-[12px] bg-surface-container-lowest px-1.5 py-0.5 rounded border border-outline-variant/40">id=1 OR 1=1</code> returns every row. Swap to a parameterized query and the driver escapes input automatically. Want me to open a patch?</p>
                 </div>
-                <div class="flex gap-sm">
-                    <button class="text-label-md font-label-md font-semibold bg-primary text-on-primary px-md py-xs rounded-lg">View patch</button>
-                    <button class="text-label-md font-label-md font-semibold border border-outline-variant text-on-surface-variant px-md py-xs rounded-lg">Explain context</button>
+                
+                <!-- Action Buttons -->
+                <div class="flex items-center gap-2 pt-1">
+                    <button id="btn-view-patch" class="text-[12.5px] font-semibold bg-primary text-white hover:bg-primary-fixed-variant px-3.5 py-2 rounded-xl flex items-center gap-1.5 transition-all shadow-sm active:scale-95 cursor-pointer">
+                        <span class="material-symbols-outlined text-[16px]">code_blocks</span>
+                        View patch
+                    </button>
+                    <button id="btn-explain-context" class="text-[12.5px] font-semibold border border-outline-variant text-slate-700 bg-white hover:bg-slate-50 px-3.5 py-2 rounded-xl flex items-center gap-1.5 transition-all shadow-sm active:scale-95 cursor-pointer">
+                        <span class="material-symbols-outlined text-[16px]">psychology</span>
+                        Explain context
+                    </button>
+                </div>
+
+                <!-- Dynamic Animated Response Panel -->
+                <div id="assistant-dynamic-panel" class="hidden transition-all duration-300 pt-1">
+                    <!-- Diff Patch Card -->
+                    <div id="patch-view" class="hidden bg-[#111c2d] text-[#d3e4fe] rounded-xl p-3.5 font-mono-code text-[12px] border border-white/10 shadow-lg">
+                        <div class="flex items-center justify-between text-[#8b96ab] text-[11px] mb-2 pb-1.5 border-b border-white/10">
+                            <span class="flex items-center gap-1.5 text-slate-200 font-semibold"><span class="material-symbols-outlined text-[14px] text-emerald-400">check_circle</span> auth_handler.py (Fix)</span>
+                            <span class="text-emerald-400 bg-emerald-950/80 border border-emerald-800/60 px-2 py-0.5 rounded text-[10px] font-bold">READY TO MERGE</span>
+                        </div>
+                        <div class="space-y-1 text-[11.5px] leading-relaxed">
+                            <div class="text-[#8b96ab]">@@ -4,1 +4,1 @@</div>
+                            <div class="text-rose-300 bg-rose-950/50 px-2 py-1 rounded -mx-1">-     query = "SELECT * FROM users WHERE id=" + user_id</div>
+                            <div class="text-emerald-300 bg-emerald-950/50 px-2 py-1 rounded -mx-1">+     query = "SELECT * FROM users WHERE id=%s", (user_id,)</div>
+                        </div>
+                    </div>
+
+                    <!-- Explain Context Card -->
+                    <div id="context-view" class="hidden bg-blue-50/90 border border-blue-200/80 rounded-xl p-3.5 text-slate-800 text-[12.5px] shadow-sm">
+                        <div class="flex items-center gap-1.5 font-bold text-blue-900 text-[12.5px] mb-1.5">
+                            <span class="material-symbols-outlined text-[16px] text-primary">security</span>
+                            Vulnerability Context & Threat Model
+                        </div>
+                        <p class="text-slate-600 text-[12px] leading-relaxed mb-2">
+                            <strong>CWE-89: SQL Injection</strong> — String concatenation allows attacker input to escape query context and execute arbitrary SQL commands.
+                        </p>
+                        <div class="flex items-center gap-2 text-[11px] text-emerald-700 bg-emerald-100/60 px-2 py-1 rounded font-semibold">
+                            <span class="material-symbols-outlined text-[14px]">verified_user</span> Remediation: Parameterized prepared statements prevent AST tampering.
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -432,6 +501,7 @@
         </div>
     </div>
 </section>
+
 <!-- ============ ACADEMIC PROJECT ============ -->
 <section class="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop py-2xl">
     <div class="rounded-xl border border-primary-container/30 bg-primary-container/5 p-xl md:p-2xl flex flex-col md:flex-row items-center gap-xl reveal">
@@ -448,15 +518,16 @@
         </div>
     </div>
 </section>
+
 <!-- ============ FINAL CTA ============ -->
 <section class="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop pb-3xl">
     <div class="mesh-bg border border-outline-variant/50 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)] rounded-xl p-3xl flex flex-col items-center text-center gap-lg reveal">
-        <div class="radar-ring w-16 h-16 rounded-full border-2 border-dashed border-primary/40 flex items-center justify-center">
-            <span class="material-symbols-outlined text-primary text-[28px]">radar</span>
+        <div class="w-16 h-16 rounded-full border-2 border-dashed border-primary/30 bg-primary/5 flex items-center justify-center">
+            <span class="material-symbols-outlined text-primary text-[28px]" style="font-variation-settings: 'FILL' 1;">shield</span>
         </div>
         <h2 class="font-headline-lg text-[28px] md:text-headline-lg text-on-surface font-extrabold tracking-tight max-w-[520px]">Begin your security analysis</h2>
         <p class="font-body-lg text-body-lg text-on-surface-variant max-w-[480px]">Upload files or connect your source code to evaluate the integrated AI security platform.</p>
-        <a href="login.html" class="cta-magnetic bg-primary text-on-primary px-xl py-md rounded-lg font-label-md text-label-md font-semibold shadow-[inset_0_1px_0_rgba(255,255,255,0.2),0_1px_2px_rgba(0,0,0,0.1)] hover:bg-primary-fixed-variant transition-all hover:shadow-md">
+        <a href="/login" class="cta-magnetic bg-primary text-on-primary px-xl py-md rounded-lg font-label-md text-label-md font-semibold shadow-[inset_0_1px_0_rgba(255,255,255,0.2),0_1px_2px_rgba(0,0,0,0.1)] hover:bg-primary-fixed-variant transition-all hover:shadow-md">
             Start scanning
         </a>
     </div>
@@ -464,26 +535,68 @@
 
 </main>
 
-<!-- ============ FOOTER ============ -->
-<footer class="border-t border-outline-variant/50 bg-surface-container-lowest py-lg md:py-xl">
-    <div class="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop flex flex-col md:flex-row items-center justify-between gap-lg">
-        
-        <div class="flex items-center gap-md">
-            <div class="w-8 h-8 rounded-lg bg-primary-container flex items-center justify-center text-on-primary-container">
-                <span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">security</span>
+<!-- ============ PROFESSIONAL & MINIMALIST FOOTER ============ -->
+<footer class="border-t border-slate-200/80 bg-white py-12 md:py-16 text-slate-600">
+    <div class="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+            <!-- Brand Column -->
+            <div class="flex flex-col gap-3.5">
+                <a href="#top" class="flex items-center">
+                    <img src="/logo.png" alt="CodeSentry" class="h-[36px] w-auto object-contain object-left" />
+                </a>
+                <p class="text-[13px] text-slate-500 leading-relaxed max-w-[260px]">
+                    Autonomous AI security analysis & code vulnerability intelligence platform for modern engineering teams.
+                </p>
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200/80 w-fit">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    Systems Operational
+                </div>
             </div>
-            <div class="text-left">
-                <span class="font-headline-md text-[16px] font-extrabold tracking-tight text-primary leading-tight block">Aegis Nexus</span>
-                <span class="font-body-sm text-body-sm text-on-surface-variant leading-tight block mt-[2px]">AI Security Analysis Platform</span>
+
+            <!-- Products Column -->
+            <div>
+                <h4 class="font-bold text-[12.5px] text-slate-900 uppercase tracking-wider mb-3.5 font-display">Capabilities</h4>
+                <ul class="space-y-2.5 text-[13px]">
+                    <li><a href="#capabilities" class="text-slate-600 hover:text-primary transition-colors">Source Code Scanner</a></li>
+                    <li><a href="#capabilities" class="text-slate-600 hover:text-primary transition-colors">File & Binary Sandbox</a></li>
+                    <li><a href="#assistant" class="text-slate-600 hover:text-primary transition-colors">AI Remediation Assistant</a></li>
+                    <li><a href="/login" class="text-slate-600 hover:text-primary transition-colors">Vulnerability Reports</a></li>
+                </ul>
+            </div>
+
+            <!-- Platform Column -->
+            <div>
+                <h4 class="font-bold text-[12.5px] text-slate-900 uppercase tracking-wider mb-3.5 font-display">Platform</h4>
+                <ul class="space-y-2.5 text-[13px]">
+                    <li><a href="#how-it-works" class="text-slate-600 hover:text-primary transition-colors">Reasoning Architecture</a></li>
+                    <li><a href="/login" class="text-slate-600 hover:text-primary transition-colors">Role-Based Access (RBAC)</a></li>
+                    <li><a href="/login" class="text-slate-600 hover:text-primary transition-colors">Security Audit Logs</a></li>
+                    <li><a href="/login" class="text-slate-600 hover:text-primary transition-colors">Live API Endpoints</a></li>
+                </ul>
+            </div>
+
+            <!-- Engineering Column -->
+            <div>
+                <h4 class="font-bold text-[12.5px] text-slate-900 uppercase tracking-wider mb-3.5 font-display">Engineering</h4>
+                <p class="text-[12.5px] text-slate-500 leading-relaxed mb-3">
+                    Built with Spring Boot, React, and Multi-LLM security reasoning pipeline.
+                </p>
+                <div class="p-3 bg-slate-50 rounded-xl border border-slate-200/70">
+                    <p class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Lead Developer</p>
+                    <p class="text-[13px] font-bold text-primary mt-0.5">Sanjay Dharmarajou</p>
+                </div>
             </div>
         </div>
 
-        <div class="flex flex-col md:flex-row items-center gap-xs md:gap-md font-body-sm text-body-sm text-on-surface-variant">
-            <span>Designed & Developed by Sanjay Dharmarajou</span>
-            <span class="hidden md:block w-1 h-1 rounded-full bg-outline-variant/50"></span>
-            <span>© 2026 Aegis Nexus. v1.0.0</span>
+        <!-- Bottom Line Divider & Legal -->
+        <div class="pt-6 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4 text-[12px] text-slate-400">
+            <p>© 2026 CodeSentry. All rights reserved.</p>
+            <div class="flex items-center gap-2 bg-blue-50/70 border border-blue-100 px-3.5 py-1 rounded-full text-[12px] text-blue-800 font-medium">
+                <span class="material-symbols-outlined text-[14px] text-primary">verified</span>
+                Designed & Developed by Sanjay Dharmarajou
+            </div>
+            <p class="font-mono-code text-[11px] text-slate-400">v1.0.0 · Production</p>
         </div>
-        
     </div>
 </footer>
 
@@ -568,15 +681,15 @@ function ScanPicker() {
 ReactDOM.createRoot(document.getElementById("scan-picker-root")).render(<ScanPicker />);
 </script>
 
-<!-- ============ Vanilla JS: nav, reveal, counters, hero terminal ============ -->
+<!-- ============ Vanilla JS: nav, reveal, counters, hero terminal, interactive assistant ============ -->
 <script>
     // Sticky header background on scroll
     const header = document.getElementById('site-header');
     window.addEventListener('scroll', () => {
         if (window.scrollY > 8) {
-            header.classList.add('bg-surface/80', 'backdrop-blur-md', 'border-outline-variant/50');
+            header.classList.add('bg-white/90', 'backdrop-blur-md', 'border-outline-variant/50', 'shadow-sm');
         } else {
-            header.classList.remove('bg-surface/80', 'backdrop-blur-md', 'border-outline-variant/50');
+            header.classList.remove('bg-white/90', 'backdrop-blur-md', 'border-outline-variant/50', 'shadow-sm');
         }
     });
 
@@ -633,17 +746,6 @@ ReactDOM.createRoot(document.getElementById("scan-picker-root")).render(<ScanPic
     }, { threshold: 0.5 });
     document.querySelectorAll('.stat-count').forEach(el => countObserver.observe(el));
 
-    // Score bars
-    const barObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.style.width = entry.target.dataset.width;
-                barObserver.unobserve(entry.target);
-            }
-        });
-    }, { threshold: 0.3 });
-    document.querySelectorAll('.score-bar').forEach(el => barObserver.observe(el));
-
     // Hero terminal: reveal finding badge partway through the sweep, then allow "Fix with AI"
     const statusBadge = document.getElementById('status-badge');
     const statusIcon = document.getElementById('status-icon');
@@ -671,7 +773,6 @@ ReactDOM.createRoot(document.getElementById("scan-picker-root")).render(<ScanPic
 
     aiFixBtn.addEventListener('click', () => {
         if (fixed) {
-            // revert to vulnerable state for replay
             fixed = false;
             vulnCode.textContent = '    query = "SELECT * FROM users WHERE id=" + user_id';
             vulnLine.classList.remove('flag-safe');
@@ -698,36 +799,85 @@ ReactDOM.createRoot(document.getElementById("scan-picker-root")).render(<ScanPic
         aiFixBtn.innerHTML = '<span class="material-symbols-outlined text-[16px]">history</span> Revert';
     });
 
+    // ============ INTERACTIVE AI ASSISTANT DEMO (View Patch & Explain Context) ============
+    const btnViewPatch = document.getElementById('btn-view-patch');
+    const btnExplainContext = document.getElementById('btn-explain-context');
+    const dynamicPanel = document.getElementById('assistant-dynamic-panel');
+    const patchView = document.getElementById('patch-view');
+    const contextView = document.getElementById('context-view');
+    let activeAssistantTab = null;
+
+    function toggleAssistantView(viewType) {
+        if (activeAssistantTab === viewType) {
+            // Close panel
+            dynamicPanel.classList.add('hidden');
+            patchView.classList.add('hidden');
+            contextView.classList.add('hidden');
+            btnViewPatch.className = "text-[12.5px] font-semibold bg-primary text-white hover:bg-primary-fixed-variant px-3.5 py-2 rounded-xl flex items-center gap-1.5 transition-all shadow-sm active:scale-95 cursor-pointer";
+            btnExplainContext.className = "text-[12.5px] font-semibold border border-outline-variant text-slate-700 bg-white hover:bg-slate-50 px-3.5 py-2 rounded-xl flex items-center gap-1.5 transition-all shadow-sm active:scale-95 cursor-pointer";
+            activeAssistantTab = null;
+            return;
+        }
+
+        activeAssistantTab = viewType;
+        dynamicPanel.classList.remove('hidden');
+
+        if (viewType === 'patch') {
+            patchView.classList.remove('hidden');
+            contextView.classList.add('hidden');
+            btnViewPatch.className = "text-[12.5px] font-semibold bg-emerald-600 text-white px-3.5 py-2 rounded-xl flex items-center gap-1.5 transition-all shadow-md active:scale-95 cursor-pointer ring-2 ring-emerald-400/50";
+            btnExplainContext.className = "text-[12.5px] font-semibold border border-outline-variant text-slate-700 bg-white hover:bg-slate-50 px-3.5 py-2 rounded-xl flex items-center gap-1.5 transition-all shadow-sm active:scale-95 cursor-pointer";
+        } else {
+            patchView.classList.add('hidden');
+            contextView.classList.remove('hidden');
+            btnExplainContext.className = "text-[12.5px] font-semibold bg-primary text-white px-3.5 py-2 rounded-xl flex items-center gap-1.5 transition-all shadow-md active:scale-95 cursor-pointer ring-2 ring-blue-400/50";
+            btnViewPatch.className = "text-[12.5px] font-semibold border border-outline-variant text-slate-700 bg-white hover:bg-slate-50 px-3.5 py-2 rounded-xl flex items-center gap-1.5 transition-all shadow-sm active:scale-95 cursor-pointer";
+        }
+    }
+
+    if (btnViewPatch) btnViewPatch.addEventListener('click', () => toggleAssistantView('patch'));
+    if (btnExplainContext) btnExplainContext.addEventListener('click', () => toggleAssistantView('context'));
+
     // Fetch live stats in real-time
+    const BACKEND_API = 'https://codesentry-api-htph.onrender.com/api/v1';
     function fetchPublicStats() {
-        fetch('/api/v1/public/stats')
-            .then(res => res.json())
+        fetch(BACKEND_API + '/public/stats')
+            .then(res => {
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                return res.json();
+            })
             .then(data => {
-                if (data.success && data.data) {
+                if (data && data.data) {
                     const s = data.data;
-                    updateStatEl('stat-scans', s.totalScans || 0);
-                    updateStatEl('stat-vulns', s.vulnerabilitiesFound || 0);
-                    updateStatEl('stat-users', s.registeredUsers || 0);
-                    updateStatEl('stat-projects', s.activeProjects || 0);
+                    updateStatEl('stat-scans',    Number(s.totalScans)          || 0);
+                    updateStatEl('stat-vulns',    Number(s.vulnerabilitiesFound) || 0);
+                    updateStatEl('stat-users',    Number(s.registeredUsers)      || 0);
+                    updateStatEl('stat-projects', Number(s.activeProjects)       || 0);
                 }
             })
-            .catch(err => console.error("Failed to fetch public stats:", err));
+            .catch(err => console.warn("Stats fetch failed (will retry):", err));
     }
 
     function updateStatEl(id, newVal) {
         const el = document.getElementById(id);
         if (!el) return;
         const oldVal = parseFloat(el.dataset.target) || 0;
+        el.dataset.target = newVal;
         if (oldVal !== newVal) {
-            el.dataset.target = newVal;
-            if (el.hasAttribute('data-animated')) {
-                animateCount(el);
-            }
+            animateCount(el);
         }
     }
 
-    fetchPublicStats();
-    setInterval(fetchPublicStats, 5000);
+    setTimeout(fetchPublicStats, 300);
+    setInterval(fetchPublicStats, 10000);
+
+    // Update CTA if already logged in
+    if (localStorage.getItem('token')) {
+        document.querySelectorAll('a[href="/login"]').forEach(btn => {
+            btn.href = '/dashboard';
+            const label = btn.querySelector('#mobile-cta-text') || btn;
+            if(label.textContent.trim() === 'Start scanning' || label.textContent.trim() === 'Start Analysis') {
+                label.textContent = 'Go to Dashboard';
 </script>
 </body>
 </html>

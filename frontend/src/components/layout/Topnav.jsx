@@ -61,6 +61,10 @@ export default function Topnav() {
       fontFamily: "'Manrope', sans-serif",
     }}>
       <style>{`
+        .tn-user-name { display: none; }
+        @media (min-width: 640px) {
+          .tn-user-name { display: inline !important; }
+        }
         @media (min-width: 1024px) {
           .tn-desktop-nav { display: flex !important; }
           .tn-mobile-btn  { display: none !important; }
@@ -77,7 +81,7 @@ export default function Topnav() {
       `}</style>
 
       {/* Brand & Mobile Hamburger Toggle */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0 }}>
         <button
           className="tn-mobile-btn"
           onClick={() => setMobileDrawerOpen(true)}
@@ -85,14 +89,14 @@ export default function Topnav() {
           style={{
             background: 'none', border: '1px solid #cbd5e1', borderRadius: 8,
             padding: '6px 8px', cursor: 'pointer', color: '#0f172a',
-            display: 'flex', alignItems: 'center', justifyContent: 'center'
+            display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0
           }}
         >
           <span className="material-symbols-outlined" style={{ fontSize: 20 }}>menu</span>
         </button>
 
         <a href="/landing.html" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none', flexShrink: 0, cursor: 'pointer' }}>
-          <img src="/logo.png" alt="CodeSentry" style={{ height: '34px', width: 'auto' }} />
+          <img src="/logo.png" alt="CodeSentry" style={{ height: '32px', width: 'auto', maxHeight: '34px' }} />
         </a>
       </div>
 
@@ -151,7 +155,7 @@ export default function Topnav() {
         <button
           onClick={() => setProfileOpen(p => !p)}
           style={{
-            display: 'flex', alignItems: 'center', gap: 8,
+            display: 'flex', alignItems: 'center', gap: 6,
             background: 'none', border: 'none', cursor: 'pointer',
             padding: '4px 6px', borderRadius: 8,
             transition: 'background 0.15s ease',
@@ -160,17 +164,19 @@ export default function Topnav() {
           onMouseLeave={e => e.currentTarget.style.background = 'none'}
         >
           <div style={{
-            width: 30, height: 30, borderRadius: '50%',
+            width: 32, height: 32, borderRadius: '50%',
             background: '#d0e1fb', color: '#0058be',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             fontSize: 12.5, fontWeight: 700, fontFamily: "'Plus Jakarta Sans', 'Manrope', sans-serif",
-            border: '1.5px solid #c2c6d6',
+            border: '1.5px solid #c2c6d6', flexShrink: 0
           }}>
             {initials}
           </div>
-          <span style={{ fontSize: 13.5, fontWeight: 600, color: '#111c2d', display: 'none sm:inline' }}>{displayName}</span>
+          <span className="tn-user-name" style={{ fontSize: 13.5, fontWeight: 600, color: '#111c2d', maxWidth: 140, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            {displayName}
+          </span>
           <span className="material-symbols-outlined" style={{
-            fontSize: 16, color: '#424754',
+            fontSize: 16, color: '#424754', flexShrink: 0,
             transform: profileOpen ? 'rotate(180deg)' : 'rotate(0deg)',
             transition: 'transform 0.18s ease',
           }}>expand_more</span>
