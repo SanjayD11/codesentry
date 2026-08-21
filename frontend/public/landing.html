@@ -150,7 +150,7 @@
 <body class="min-h-screen">
 
 <!-- ============ NAV ============ -->
-<header id="site-header" class="fixed top-0 inset-x-0 z-50 border-b border-transparent transition-all duration-300">
+<header id="site-header" class="fixed top-0 inset-x-0 z-[1000] border-b border-transparent transition-all duration-300">
     <div class="max-w-max-width mx-auto px-margin-mobile md:px-margin-desktop h-16 flex items-center justify-between">
         <a href="#top" class="flex items-center">
             <img src="/logo.png" alt="CodeSentry" class="h-[38px] sm:h-[40px] w-auto" />
@@ -166,48 +166,48 @@
                 Start scanning
             </a>
         </div>
-        <button id="mobile-menu-btn" class="md:hidden p-2 rounded-xl text-slate-700 hover:bg-slate-100/80 transition-colors focus:outline-none" aria-label="Toggle navigation menu">
+        <button id="mobile-menu-btn" class="md:hidden p-2 rounded-xl text-slate-700 hover:bg-slate-100/80 transition-colors focus:outline-none z-50 relative" aria-label="Toggle navigation menu">
             <span class="material-symbols-outlined text-[24px]" id="mobile-menu-icon">menu</span>
         </button>
     </div>
-    
-    <!-- Backdrop overlay when menu is open -->
-    <div id="mobile-menu-backdrop" class="hidden md:hidden fixed inset-0 z-40 bg-slate-900/25 backdrop-blur-[2px] transition-opacity duration-300"></div>
-
-    <!-- Clean, Minimalist & Professional Mobile/Tablet Navigation Drawer -->
-    <div id="mobile-menu" class="hidden md:hidden fixed inset-x-4 top-20 z-50 max-w-[380px] mx-auto bg-white/92 backdrop-blur-xl border border-slate-200/80 shadow-[0_20px_40px_-12px_rgba(15,23,42,0.18)] rounded-2xl p-3 sm:p-4 flex flex-col gap-1 transition-all duration-300 transform origin-top">
-        <a href="#capabilities" class="flex items-center justify-between px-3 py-2.5 rounded-xl text-slate-800 hover:text-primary hover:bg-blue-50/60 font-semibold text-[14.5px] transition-all">
-            <span class="flex items-center gap-2.5">
-                <span class="material-symbols-outlined text-[20px] text-slate-400">auto_awesome</span>
-                Capabilities
-            </span>
-            <span class="material-symbols-outlined text-[16px] text-slate-300">chevron_right</span>
-        </a>
-        <a href="#how-it-works" class="flex items-center justify-between px-3 py-2.5 rounded-xl text-slate-800 hover:text-primary hover:bg-blue-50/60 font-semibold text-[14.5px] transition-all">
-            <span class="flex items-center gap-2.5">
-                <span class="material-symbols-outlined text-[20px] text-slate-400">schema</span>
-                How it works
-            </span>
-            <span class="material-symbols-outlined text-[16px] text-slate-300">chevron_right</span>
-        </a>
-        <a href="#assistant" class="flex items-center justify-between px-3 py-2.5 rounded-xl text-slate-800 hover:text-primary hover:bg-blue-50/60 font-semibold text-[14.5px] transition-all">
-            <span class="flex items-center gap-2.5">
-                <span class="material-symbols-outlined text-[20px] text-slate-400">smart_toy</span>
-                AI Assistant
-            </span>
-            <span class="material-symbols-outlined text-[16px] text-slate-300">chevron_right</span>
-        </a>
-        
-        <div class="h-px bg-slate-100 my-1"></div>
-
-        <div class="pt-1">
-            <a href="/login" class="cta-mobile-btn w-full bg-primary hover:bg-primary-fixed-variant text-white text-center py-2.5 px-4 rounded-xl font-semibold text-[14px] flex items-center justify-center gap-2 shadow-sm transition-all active:scale-[0.98]">
-                <span id="mobile-cta-text">Start scanning</span>
-                <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
-            </a>
-        </div>
-    </div>
 </header>
+
+<!-- Backdrop overlay (dim & blur the entire page when menu is open) -->
+<div id="mobile-menu-backdrop" class="hidden fixed inset-0 z-[998] bg-slate-900/60 backdrop-blur-sm transition-opacity duration-200"></div>
+
+<!-- Solid, Crisp & 100% Opaque Mobile Navigation Card (Zero Text Bleed) -->
+<div id="mobile-menu" class="hidden fixed inset-x-4 top-20 z-[999] max-w-[380px] mx-auto bg-white border border-slate-200 shadow-[0_25px_60px_-15px_rgba(15,23,42,0.35)] rounded-2xl p-4 flex flex-col gap-1 transition-all duration-200">
+    <a href="#capabilities" class="flex items-center justify-between px-3.5 py-3 rounded-xl text-slate-800 hover:text-primary hover:bg-blue-50/70 font-semibold text-[15px] transition-colors">
+        <span class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-[20px] text-slate-400">auto_awesome</span>
+            Capabilities
+        </span>
+        <span class="material-symbols-outlined text-[18px] text-slate-400">chevron_right</span>
+    </a>
+    <a href="#how-it-works" class="flex items-center justify-between px-3.5 py-3 rounded-xl text-slate-800 hover:text-primary hover:bg-blue-50/70 font-semibold text-[15px] transition-colors">
+        <span class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-[20px] text-slate-400">schema</span>
+            How it works
+        </span>
+        <span class="material-symbols-outlined text-[18px] text-slate-400">chevron_right</span>
+    </a>
+    <a href="#assistant" class="flex items-center justify-between px-3.5 py-3 rounded-xl text-slate-800 hover:text-primary hover:bg-blue-50/70 font-semibold text-[15px] transition-colors">
+        <span class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-[20px] text-slate-400">smart_toy</span>
+            AI Assistant
+        </span>
+        <span class="material-symbols-outlined text-[18px] text-slate-400">chevron_right</span>
+    </a>
+    
+    <div class="h-px bg-slate-100 my-1.5"></div>
+
+    <div class="pt-1">
+        <a href="/login" class="cta-mobile-btn w-full bg-primary hover:bg-primary-fixed-variant text-white text-center py-3 px-4 rounded-xl font-semibold text-[14.5px] flex items-center justify-center gap-2 shadow-md transition-all active:scale-[0.98]">
+            <span id="mobile-cta-text">Start scanning</span>
+            <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+        </a>
+    </div>
+</div>
 
 <main id="top">
 
