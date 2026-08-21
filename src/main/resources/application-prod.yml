@@ -119,8 +119,14 @@ app:
     gemini:
       api-key: ${GEMINI_API_KEY:}
   mail:
-    from-address: ${MAIL_FROM_ADDRESS}
-    from-name: ${MAIL_FROM_NAME:CodeSentry Support}
+    from-address: ${MAIL_FROM_ADDRESS:sanjayraju5164@gmail.com}
+    from-name: ${MAIL_FROM_NAME:CodeSentry Security}
+
+resend:
+  api-key: ${RESEND_API_KEY:}
+
+brevo:
+  api-key: ${BREVO_API_KEY:}
 
 ai:
   retry:
