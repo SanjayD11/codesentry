@@ -29,8 +29,12 @@ export default function MainLayout() {
       <Topnav />
       <main style={{ flex: 1, width: '100%', minWidth: 0 }}>
         {/* On mobile/tablet, add bottom padding so content clears the bottom nav bar */}
-        <div style={{ paddingBottom: 'clamp(0px, 100vw, 64px)' }} className="main-content-pad">
-          <style>{`@media (min-width: 1024px) { .main-content-pad { padding-bottom: 0 !important; } }`}</style>
+        <div style={{ paddingBottom: 84 }} className="main-content-pad">
+          <style>{`
+            @media (min-width: 1024px) {
+              .main-content-pad { padding-bottom: 0 !important; }
+            }
+          `}</style>
           <div key={pathname} className="section-enter">
             <PageContainer>
               <Outlet />

@@ -107,54 +107,121 @@ export default function AdminProjects() {
   };
 
   return (
-    <div style={{ fontFamily:"'Manrope',sans-serif", color:C.onSurface }}>
+    <div style={{ fontFamily:"'Manrope',sans-serif", color:C.onSurface, padding:0 }}>
       <style>{`
         .ap-row:hover { background:#f5f8ff !important; }
         .ap-row td { padding:12px 16px; border-bottom:1px solid #f0f3ff; font-size:13.5px; vertical-align:middle; }
         .ap-th { padding:10px 16px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:${C.onVariant}; border-bottom:2px solid #e8eef8; text-align:left; }
+
+        .ap-table-wrapper { display: block; }
+        .ap-cards-wrapper { display: none; }
+
+        @media (max-width: 767px) {
+          .ap-table-wrapper { display: none !important; }
+          .ap-cards-wrapper { display: flex !important; flex-direction: column; gap: 12px; }
+          .ap-filter-bar {
+            display: grid !important;
+            grid-template-columns: 1fr 1fr !important;
+            gap: 8px !important;
+          }
+          .ap-search-box {
+            grid-column: 1 / -1 !important;
+            max-width: 100% !important;
+          }
+        }
       `}</style>
 
       <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', flexWrap:'wrap', gap:12, marginBottom:20 }}>
         <div>
           <h1 style={{ margin:0, fontSize:22, fontWeight:800, fontFamily:"'Plus Jakarta Sans',sans-serif" }}>Project Management</h1>
           <p style={{ margin:'4px 0 0', fontSize:13.5, color:C.onVariant }}>
-            {total.toLocaleString()} projects · Lifecycle management only
+            {total.toLocaleString()} projects · Lifecycle management
           </p>
         </div>
       </div>
 
       {/* Search & Filters */}
-      <div style={{ display:'flex', gap:10, flexWrap:'wrap', marginBottom:16 }}>
-        <div style={{ display:'flex', alignItems:'center', gap:6, background:'#ffffff',
+      <div className="ap-filter-bar" style={{ display:'flex', gap:10, flexWrap:'wrap', marginBottom:16 }}>
+        <div className="ap-search-box" style={{ display:'flex', alignItems:'center', gap:6, background:'#ffffff',
           border:'1px solid #cbd5e1', borderRadius:10, padding:'6px 14px', flex:'1', minWidth:200, maxWidth:360, boxShadow:'0 1px 2px rgba(15,23,42,0.04)' }}>
           <span className="material-symbols-outlined" style={{ fontSize:16, color:'#64748b' }}>search</span>
           <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search projects or owner..."
             style={{ border:'none', background:'transparent', outline:'none', fontSize:13.5, width:'100%', color:'#0f172a' }} />
         </div>
-        <select value={filterStatus} onChange={e => setFilterStatus(e.target.value)} style={{ ...inputStyle, border:'1px solid #cbd5e1', borderRadius:10, background:'#ffffff' }}>
+        <select value={filterStatus} onChange={e => setFilterStatus(e.target.value)} style={{ ...inputStyle, border:'1px solid #cbd5e1', borderRadius:10, background:'#ffffff', minWidth:0, width:'100%' }}>
           <option value="">All Statuses</option>
           <option value="ACTIVE">Active</option>
           <option value="ARCHIVED">Archived</option>
         </select>
-        <select value={filterActive} onChange={e => setFilterActive(e.target.value)} style={{ ...inputStyle, border:'1px solid #cbd5e1', borderRadius:10, background:'#ffffff' }}>
-          <option value="">Active & Archived</option>
-          <option value="true">Active Only</option>
-          <option value="false">Archived Only</option>
-        </select>
-        <select value={sortBy} onChange={e => setSortBy(e.target.value)} style={{ ...inputStyle, border:'1px solid #cbd5e1', borderRadius:10, background:'#ffffff' }}>
+        <select value={sortBy} onChange={e => setSortBy(e.target.value)} style={{ ...inputStyle, border:'1px solid #cbd5e1', borderRadius:10, background:'#ffffff', minWidth:0, width:'100%' }}>
           <option value="createdAt">Created</option>
           <option value="updatedAt">Updated</option>
           <option value="name">Name</option>
           <option value="securityScore">Risk Score</option>
         </select>
-        <select value={sortDir} onChange={e => setSortDir(e.target.value)} style={{ ...inputStyle, border:'1px solid #cbd5e1', borderRadius:10, background:'#ffffff' }}>
-          <option value="desc">Newest first</option>
-          <option value="asc">Oldest first</option>
-        </select>
       </div>
 
-      {/* Table */}
-      <div style={{ background:'#ffffff', borderRadius:16, border:'1px solid #e2e8f0',
+      {/* Mobile Card List View (< 768px) */}
+      <div className="ap-cards-wrapper">
+        {loading ? (
+          <div style={{ display:'flex', justifyContent:'center', padding:48 }}><LoadingSpinner size="lg" /></div>
+        ) : projects.length === 0 ? (
+          <div style={{ textAlign:'center', padding:32, background:'#fff', borderRadius:14, border:'1px solid #e2e8f0', color:C.onVariant }}>
+            No projects found
+          </div>
+        ) : (
+          projects.map(p => {
+            const risk = riskLevel(p.securityScore ?? 100);
+            return (
+              <div key={p.id} style={{
+                background:'#ffffff', borderRadius:14, border:'1px solid #e2e8f0', padding:16,
+                boxShadow:'0 1px 3px rgba(15,23,42,0.04)', display:'flex', flexDirection:'column', gap:10
+              }}>
+                <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', gap:8 }}>
+                  <div>
+                    <div style={{ fontWeight:700, fontSize:15, color:C.onSurface }}>{p.name}</div>
+                    {p.description && <div style={{ fontSize:12, color:C.onVariant, marginTop:2 }}>{p.description}</div>}
+                  </div>
+                  <div style={{ display:'flex', gap:6, flexShrink:0 }}>
+                    {p.active ? pill('Active', C.tertiary, C.tertiaryBg) : pill('Archived', C.onVariant, '#f0f3ff')}
+                    {pill(risk.label, risk.color, risk.bg)}
+                  </div>
+                </div>
+
+                <div style={{ display:'flex', justifyContent:'space-between', fontSize:12, color:C.onVariant, background:'#f8fafc', padding:'8px 10px', borderRadius:8, flexWrap:'wrap', gap:6 }}>
+                  <span>Owner: <strong>{p.user ? `${p.user.firstName} ${p.user.lastName}` : '—'}</strong></span>
+                  <span>Type: <strong>{p.projectType || 'General'}</strong></span>
+                  <span>Updated: <strong>{formatDate(p.updatedAt)}</strong></span>
+                </div>
+
+                <div style={{ display:'flex', justifyContent:'flex-end', gap:8, paddingTop:4, borderTop:'1px solid #f1f5f9' }}>
+                  {p.active ? (
+                    <button style={{ ...btnOutline, color:'#8a5d00', borderColor:'#d4a017', padding:'6px 12px', minHeight:32 }}
+                      onClick={() => handleArchive(p)} title="Archive">
+                      <span className="material-symbols-outlined" style={{ fontSize:14 }}>archive</span>
+                      Archive
+                    </button>
+                  ) : (
+                    <button style={{ ...btnOutline, color:C.tertiary, borderColor:C.tertiary, padding:'6px 12px', minHeight:32 }}
+                      onClick={() => handleRestore(p)} title="Restore">
+                      <span className="material-symbols-outlined" style={{ fontSize:14 }}>unarchive</span>
+                      Restore
+                    </button>
+                  )}
+                  <button style={{ ...btnOutline, color:C.error, borderColor:C.error, padding:'6px 12px', minHeight:32 }}
+                    onClick={() => handleDelete(p)} title="Delete">
+                    <span className="material-symbols-outlined" style={{ fontSize:14 }}>delete</span>
+                    Delete
+                  </button>
+                </div>
+              </div>
+            );
+          })
+        )}
+      </div>
+
+      {/* Desktop/Tablet Table View (>= 768px) */}
+      <div className="ap-table-wrapper" style={{ background:'#ffffff', borderRadius:16, border:'1px solid #e2e8f0',
         boxShadow:'0 1px 3px rgba(15,23,42,0.04)', overflow:'hidden', transition: 'border-color 0.2s ease, box-shadow 0.2s ease' }}
         onMouseEnter={e => { e.currentTarget.style.borderColor = '#93c5fd'; e.currentTarget.style.boxShadow = '0 4px 18px rgba(37,99,235,0.1), 0 1px 4px rgba(37,99,235,0.04)' }}
         onMouseLeave={e => { e.currentTarget.style.borderColor = '#e2e8f0'; e.currentTarget.style.boxShadow = '0 1px 3px rgba(15,23,42,0.04)' }}
@@ -234,7 +301,7 @@ export default function AdminProjects() {
         )}
         {totalPages > 1 && (
           <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center',
-            padding:'12px 16px', borderTop:`1px solid #f0f3ff`, background:'var(--snt-surface-2)' }}>
+            padding:'12px 16px', borderTop:`1px solid #f0f3ff`, background:'var(--snt-surface-2)', flexWrap:'wrap', gap:8 }}>
             <span style={{ fontSize:13, color:C.onVariant }}>
               Showing {page*size+1}–{Math.min((page+1)*size,total)} of {total}
             </span>
@@ -247,12 +314,28 @@ export default function AdminProjects() {
         )}
       </div>
 
+      {/* Mobile Pagination for cards (< 768px) */}
+      {totalPages > 1 && (
+        <div className="ap-cards-wrapper" style={{ marginTop: 12 }}>
+          <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center',
+            padding:'12px 16px', background:'#ffffff', borderRadius:12, border:'1px solid #e2e8f0', flexWrap:'wrap', gap:8 }}>
+            <span style={{ fontSize:12.5, color:C.onVariant }}>
+              {page + 1} of {totalPages} pages ({total} projects)
+            </span>
+            <div style={{ display:'flex', gap:6 }}>
+              <button style={btnOutline} disabled={page===0} onClick={()=>setPage(p=>p-1)}>Prev</button>
+              <button style={btnOutline} disabled={page>=totalPages-1} onClick={()=>setPage(p=>p+1)}>Next</button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Confirm Dialog */}
       {confirmDialog && (
         <div style={{ position:'fixed', inset:0, zIndex:9999, display:'flex', alignItems:'center', justifyContent:'center',
-          padding:16, background:'rgba(15,23,42,0.45)' }}>
+          padding:12, background:'rgba(15,23,42,0.45)' }}>
           <div style={{ background:'#ffffff', borderRadius:16, boxShadow:'0 20px 40px rgba(15,23,42,0.15)',
-            border:'1px solid #cbd5e1', width:'100%', maxWidth:380, padding:24, fontFamily:"'Manrope',sans-serif" }}>
+            border:'1px solid #cbd5e1', width:'100%', maxWidth:380, padding:20, fontFamily:"'Manrope',sans-serif" }}>
             <h3 style={{ margin:'0 0 10px', fontSize:17, fontWeight:700, fontFamily:"'Plus Jakarta Sans',sans-serif" }}>
               {confirmDialog.title}
             </h3>

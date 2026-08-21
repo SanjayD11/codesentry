@@ -204,12 +204,12 @@ export default function AdminUsers() {
 
   const modalOverlay = {
     position:'fixed', inset:0, zIndex:9999, display:'flex', alignItems:'center',
-    justifyContent:'center', padding:16, background:'rgba(15,23,42,0.45)'
+    justifyContent:'center', padding:12, background:'rgba(15,23,42,0.45)'
   };
   const modalBox = (maxW = 448) => ({
     background:'#ffffff', borderRadius:16, boxShadow:'0 20px 40px rgba(15,23,42,0.15)',
     border:'1px solid #cbd5e1', width:'100%', maxWidth:maxW,
-    padding:24, fontFamily:"'Manrope',sans-serif", maxHeight:'90vh', overflowY:'auto'
+    padding:20, fontFamily:"'Manrope',sans-serif", maxHeight:'90vh', overflowY:'auto'
   });
 
   return (
@@ -218,7 +218,28 @@ export default function AdminUsers() {
         .au-row:hover { background: #f5f8ff !important; }
         .au-row td { padding:12px 16px; border-bottom:1px solid #f0f3ff; font-size:13.5px; vertical-align:middle; }
         .au-th { padding:10px 16px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:${COLORS.onVariant}; border-bottom:2px solid #e8eef8; text-align:left; }
-        .au-btn-sm { display:inline-flex; align-items:center; gap:4px; padding:4px 10px; border-radius:6px; font-size:12px; font-weight:600; cursor:pointer; border:1px solid transparent; font-family:inherit; transition:all 0.15s; }
+        .au-btn-sm { display:inline-flex; align-items:center; justify-content:center; gap:4px; padding:6px 10px; border-radius:6px; font-size:12px; font-weight:600; cursor:pointer; border:1px solid transparent; font-family:inherit; transition:all 0.15s; min-height:32px; }
+
+        .au-table-wrapper { display: block; }
+        .au-cards-wrapper { display: none; }
+
+        @media (max-width: 767px) {
+          .au-table-wrapper { display: none !important; }
+          .au-cards-wrapper { display: flex !important; flex-direction: column; gap: 12px; }
+          .au-filter-bar {
+            display: grid !important;
+            grid-template-columns: 1fr 1fr !important;
+            gap: 8px !important;
+          }
+          .au-search-box {
+            grid-column: 1 / -1 !important;
+            max-width: 100% !important;
+          }
+          .au-filter-select {
+            width: 100% !important;
+            min-width: 0 !important;
+          }
+        }
       `}</style>
 
       {/* Header */}
@@ -236,20 +257,20 @@ export default function AdminUsers() {
       </div>
 
       {/* Filters */}
-      <div style={{ display:'flex', gap:10, flexWrap:'wrap', marginBottom:16 }}>
-        <div style={{ display:'flex', alignItems:'center', gap:6, background:'#ffffff',
+      <div className="au-filter-bar" style={{ display:'flex', gap:10, flexWrap:'wrap', marginBottom:16 }}>
+        <div className="au-search-box" style={{ display:'flex', alignItems:'center', gap:6, background:'#ffffff',
           border:'1px solid #cbd5e1', borderRadius:10, padding:'6px 14px', flex:'1', minWidth:180, maxWidth:320, boxShadow:'0 1px 2px rgba(15,23,42,0.04)' }}>
           <span className="material-symbols-outlined" style={{ fontSize:16, color:'#64748b' }}>search</span>
           <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search users..."
             style={{ border:'none', background:'transparent', outline:'none', fontSize:13.5, width:'100%', color:'#0f172a' }} />
         </div>
-        <select value={filterRole} onChange={e => setFilterRole(e.target.value)}
+        <select className="au-filter-select" value={filterRole} onChange={e => setFilterRole(e.target.value)}
           style={{ ...inputStyle, width:'auto', minWidth:120, borderRadius:10, padding:'6px 12px', border:'1px solid #cbd5e1', background:'#ffffff' }}>
           <option value="">All Roles</option>
           <option value="USER">Members</option>
           <option value="ADMIN">Admins</option>
         </select>
-        <select value={filterActive} onChange={e => setFilterActive(e.target.value)}
+        <select className="au-filter-select" value={filterActive} onChange={e => setFilterActive(e.target.value)}
           style={{ ...inputStyle, width:'auto', minWidth:120, borderRadius:10, padding:'6px 12px', border:'1px solid #cbd5e1', background:'#ffffff' }}>
           <option value="">All Status</option>
           <option value="true">Active</option>
@@ -257,8 +278,92 @@ export default function AdminUsers() {
         </select>
       </div>
 
-      {/* Table */}
-      <div style={{ background:'#ffffff', borderRadius:16, border:'1px solid #e2e8f0', boxShadow:'0 1px 3px rgba(15,23,42,0.04)', overflow:'hidden', transition: 'border-color 0.2s ease, box-shadow 0.2s ease' }}
+      {/* Mobile Card List View (< 768px) */}
+      <div className="au-cards-wrapper">
+        {loading ? (
+          <div style={{ display:'flex', justifyContent:'center', padding:48 }}><LoadingSpinner size="lg" /></div>
+        ) : users.length === 0 ? (
+          <div style={{ textAlign:'center', padding:32, background:'#fff', borderRadius:14, border:'1px solid #e2e8f0', color:COLORS.onVariant }}>
+            No users found
+          </div>
+        ) : (
+          users.map(u => (
+            <div key={u.id} style={{
+              background:'#ffffff', borderRadius:14, border:'1px solid #e2e8f0', padding:16,
+              boxShadow:'0 1px 3px rgba(15,23,42,0.04)', display:'flex', flexDirection:'column', gap:12
+            }}>
+              <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', gap:8 }}>
+                <div style={{ display:'flex', alignItems:'center', gap:10, minWidth:0 }} onClick={() => setSelectedUser(u)}>
+                  <div style={{ width:38, height:38, borderRadius:'50%', background:COLORS.primaryBg,
+                    color:COLORS.primary, display:'flex', alignItems:'center', justifyContent:'center',
+                    fontSize:13, fontWeight:700, flexShrink:0 }}>
+                    {(u.firstName?.[0]||'') + (u.lastName?.[0]||'')}
+                  </div>
+                  <div style={{ minWidth:0 }}>
+                    <div style={{ fontWeight:700, fontSize:14.5, color:COLORS.onSurface, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>
+                      {u.firstName} {u.lastName}
+                    </div>
+                    <div style={{ fontSize:12.5, color:COLORS.onVariant, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>
+                      {u.email}
+                    </div>
+                  </div>
+                </div>
+                <div style={{ display:'flex', gap:6, flexShrink:0 }}>
+                  {u.role === 'ADMIN'
+                    ? pill('Admin', COLORS.primary, COLORS.primaryBg)
+                    : pill('Member', COLORS.onVariant, '#f0f3ff')}
+                  {u.active
+                    ? pill('Active', COLORS.tertiary, COLORS.tertiaryBg)
+                    : pill('Disabled', COLORS.error, COLORS.errorContainer)}
+                </div>
+              </div>
+
+              <div style={{ display:'flex', justifyContent:'space-between', fontSize:12, color:COLORS.onVariant, padding:'8px 10px', background:'#f8fafc', borderRadius:8 }}>
+                <span>Projects: <strong>{u.projectCount ?? 0}</strong></span>
+                <span>Joined: <strong>{formatDate(u.createdAt)}</strong></span>
+                <span>Login: <strong>{formatRelativeTime(u.lastLogin)}</strong></span>
+              </div>
+
+              <div style={{ display:'grid', gridTemplateColumns:'repeat(5, 1fr)', gap:6, paddingTop:4, borderTop:'1px solid #f1f5f9' }}>
+                <button className="au-btn-sm" style={{ background:'#f0f3ff', color:COLORS.primary }}
+                  onClick={() => openEdit(u)} title="Edit user">
+                  <span className="material-symbols-outlined" style={{ fontSize:15 }}>edit</span>
+                </button>
+                <button className="au-btn-sm" style={{ background:'#f0f3ff', color:COLORS.onVariant }}
+                  onClick={() => { setShowResetModal(u); setResetPassword(''); }} title="Reset password">
+                  <span className="material-symbols-outlined" style={{ fontSize:15 }}>lock_reset</span>
+                </button>
+                <button className="au-btn-sm"
+                  style={{ background: u.active ? COLORS.errorContainer : COLORS.tertiaryBg,
+                    color: u.active ? COLORS.error : COLORS.tertiary }}
+                  onClick={() => handleToggle(u)} title={u.active ? 'Disable' : 'Enable'}
+                  disabled={u.email === user?.email}>
+                  <span className="material-symbols-outlined" style={{ fontSize:15 }}>
+                    {u.active ? 'person_off' : 'person'}
+                  </span>
+                </button>
+                <button className="au-btn-sm"
+                  style={{ background:'#f0f3ff', color:COLORS.onVariant }}
+                  onClick={() => handleRole(u)} title="Change Role"
+                  disabled={u.email === user?.email}>
+                  <span className="material-symbols-outlined" style={{ fontSize:15 }}>
+                    {u.role === 'ADMIN' ? 'arrow_downward' : 'arrow_upward'}
+                  </span>
+                </button>
+                <button className="au-btn-sm"
+                  style={{ background:COLORS.errorContainer, color:COLORS.error }}
+                  onClick={() => handleDelete(u)} title="Delete user"
+                  disabled={u.email === user?.email}>
+                  <span className="material-symbols-outlined" style={{ fontSize:15 }}>delete</span>
+                </button>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+
+      {/* Desktop/Tablet Table View (>= 768px) */}
+      <div className="au-table-wrapper" style={{ background:'#ffffff', borderRadius:16, border:'1px solid #e2e8f0', boxShadow:'0 1px 3px rgba(15,23,42,0.04)', overflow:'hidden', transition: 'border-color 0.2s ease, box-shadow 0.2s ease' }}
         onMouseEnter={e => { e.currentTarget.style.borderColor = '#93c5fd'; e.currentTarget.style.boxShadow = '0 4px 18px rgba(37,99,235,0.1), 0 1px 4px rgba(37,99,235,0.04)' }}
         onMouseLeave={e => { e.currentTarget.style.borderColor = '#e2e8f0'; e.currentTarget.style.boxShadow = '0 1px 3px rgba(15,23,42,0.04)' }}
       >
@@ -351,7 +456,7 @@ export default function AdminUsers() {
         {/* Pagination */}
         {totalPages > 1 && (
           <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center',
-            padding:'12px 16px', borderTop:`1px solid #f0f3ff`, background:'var(--snt-surface-2)' }}>
+            padding:'12px 16px', borderTop:`1px solid #f0f3ff`, background:'var(--snt-surface-2)', flexWrap:'wrap', gap:8 }}>
             <span style={{ fontSize:13, color:COLORS.onVariant }}>
               Showing {page * size + 1}–{Math.min((page + 1) * size, total)} of {total}
             </span>
@@ -363,6 +468,22 @@ export default function AdminUsers() {
           </div>
         )}
       </div>
+
+      {/* Mobile Pagination for cards (< 768px) */}
+      {totalPages > 1 && (
+        <div className="au-cards-wrapper" style={{ marginTop: 12 }}>
+          <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center',
+            padding:'12px 16px', background:'#ffffff', borderRadius:12, border:'1px solid #e2e8f0', flexWrap:'wrap', gap:8 }}>
+            <span style={{ fontSize:12.5, color:COLORS.onVariant }}>
+              {page + 1} of {totalPages} pages ({total} users)
+            </span>
+            <div style={{ display:'flex', gap:6 }}>
+              <button style={btnOutline} disabled={page === 0} onClick={() => setPage(p => p - 1)}>Prev</button>
+              <button style={btnOutline} disabled={page >= totalPages - 1} onClick={() => setPage(p => p + 1)}>Next</button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* User Detail Modal */}
       {selectedUser && (

@@ -129,49 +129,68 @@ export default function BottomNav() {
         backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
         borderTop: '1px solid rgba(194,198,214,0.5)',
         paddingBottom: 'env(safe-area-inset-bottom, 0px)',
-        height: 64, alignItems: 'center', justifyContent: 'space-around',
+        height: 64, alignItems: 'center', justifyContent: showFab ? 'space-around' : 'stretch',
         boxShadow: '0 -4px 24px rgba(15,23,42,0.07)',
       }}>
-        {leftItems.map(item => {
-          const active = isActive(item.path)
-          return (
-            <Link key={item.path} to={item.path} className={`bnav-item${active ? ' active' : ''}`}>
-              <div className="bnav-icon">
-                <span className="material-symbols-outlined" style={{
-                  fontSize: 22, color: active ? '#0058be' : '#94a3b8',
-                  fontVariationSettings: active ? "'FILL' 1" : "'FILL' 0",
-                  transition: 'all 0.15s ease',
-                }}>{item.icon}</span>
-              </div>
-              <span className="bnav-label">{item.name}</span>
-            </Link>
-          )
-        })}
+        {showFab ? (
+          <>
+            {leftItems.map(item => {
+              const active = isActive(item.path)
+              return (
+                <Link key={item.path} to={item.path} className={`bnav-item${active ? ' active' : ''}`}>
+                  <div className="bnav-icon">
+                    <span className="material-symbols-outlined" style={{
+                      fontSize: 22, color: active ? '#0058be' : '#94a3b8',
+                      fontVariationSettings: active ? "'FILL' 1" : "'FILL' 0",
+                      transition: 'all 0.15s ease',
+                    }}>{item.icon}</span>
+                  </div>
+                  <span className="bnav-label">{item.name}</span>
+                </Link>
+              )
+            })}
 
-        {showFab && (
-          <div className="bnav-fab-wrapper">
-            <button className={`bnav-fab${scanOpen ? ' open' : ''}`} onClick={() => setScanOpen(o => !o)} aria-label="Quick actions">
-              <span className="material-symbols-outlined fab-icon">add</span>
-            </button>
-          </div>
+            <div className="bnav-fab-wrapper">
+              <button className={`bnav-fab${scanOpen ? ' open' : ''}`} onClick={() => setScanOpen(o => !o)} aria-label="Quick actions">
+                <span className="material-symbols-outlined fab-icon">add</span>
+              </button>
+            </div>
+
+            {rightItems.map(item => {
+              const active = isActive(item.path)
+              return (
+                <Link key={item.path} to={item.path} className={`bnav-item${active ? ' active' : ''}`}>
+                  <div className="bnav-icon">
+                    <span className="material-symbols-outlined" style={{
+                      fontSize: 22, color: active ? '#0058be' : '#94a3b8',
+                      fontVariationSettings: active ? "'FILL' 1" : "'FILL' 0",
+                      transition: 'all 0.15s ease',
+                    }}>{item.icon}</span>
+                  </div>
+                  <span className="bnav-label">{item.name}</span>
+                </Link>
+              )
+            })}
+          </>
+        ) : (
+          items.map(item => {
+            const active = isActive(item.path)
+            return (
+              <Link key={item.path} to={item.path} className={`bnav-item${active ? ' active' : ''}`} style={{ flex: 1 }}>
+                <div className="bnav-icon">
+                  <span className="material-symbols-outlined" style={{
+                    fontSize: 22, color: active ? '#0058be' : '#94a3b8',
+                    fontVariationSettings: active ? "'FILL' 1" : "'FILL' 0",
+                    transition: 'all 0.15s ease',
+                  }}>{item.icon}</span>
+                </div>
+                <span className="bnav-label">{item.name}</span>
+              </Link>
+            )
+          })
         )}
-
-        {rightItems.map(item => {
-          const active = isActive(item.path)
-          return (
-            <Link key={item.path} to={item.path} className={`bnav-item${active ? ' active' : ''}`}>
-              <div className="bnav-icon">
-                <span className="material-symbols-outlined" style={{
-                  fontSize: 22, color: active ? '#0058be' : '#94a3b8',
-                  fontVariationSettings: active ? "'FILL' 1" : "'FILL' 0",
-                  transition: 'all 0.15s ease',
-                }}>{item.icon}</span>
-              </div>
-              <span className="bnav-label">{item.name}</span>
-            </Link>
-          )
-        })}
       </nav>
     </>
   )
 }
+

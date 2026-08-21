@@ -203,7 +203,7 @@ export default function AdminDashboard() {
         .admin-dashboard-root {
           display: flex;
           flex-direction: column;
-          gap: var(--xl);
+          gap: 20px;
           width: 100%;
           font-family: var(--font-body);
           color: var(--on-surface);
@@ -214,13 +214,13 @@ export default function AdminDashboard() {
           justify-content: space-between;
           align-items: flex-end;
           flex-wrap: wrap;
-          gap: var(--md);
+          gap: 16px;
         }
 
         .page-title-group h1 {
           font-family: var(--font-display);
           font-weight: 800;
-          font-size: 28px;
+          font-size: 26px;
           margin: 0;
           color: var(--on-surface);
           letter-spacing: -0.02em;
@@ -228,27 +228,31 @@ export default function AdminDashboard() {
 
         .page-title-group p {
           color: var(--on-surface-variant);
-          margin: 6px 0 0 0;
-          font-size: 15px;
+          margin: 4px 0 0 0;
+          font-size: 14px;
         }
 
         .header-actions {
           display: flex;
-          gap: var(--sm);
+          flex-wrap: wrap;
+          gap: 8px;
+          width: auto;
         }
 
         .btn {
           display: inline-flex;
           align-items: center;
+          justify-content: center;
           gap: 6px;
           padding: 8px 16px;
           border-radius: var(--radius-full);
           font-family: var(--font-display);
           font-weight: 700;
-          font-size: 14px;
+          font-size: 13.5px;
           cursor: pointer;
           transition: all 0.2s ease;
           border: none;
+          white-space: nowrap;
         }
 
         .btn-outline {
@@ -275,7 +279,7 @@ export default function AdminDashboard() {
           background: #ffffff;
           border-radius: 16px;
           border: 1px solid #e2e8f0;
-          padding: 24px;
+          padding: 20px;
           box-shadow: 0 1px 3px rgba(15,23,42,0.04);
           transition: border-color 0.2s ease, box-shadow 0.2s ease;
         }
@@ -311,20 +315,27 @@ export default function AdminDashboard() {
 
         .stats-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-          gap: var(--md);
+          grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+          gap: 14px;
+        }
+
+        .stats-grid-compact {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(min(100%, 160px), 1fr));
+          gap: 12px;
         }
 
         .stat-card {
           display: flex;
           flex-direction: column;
-          gap: var(--md);
+          gap: 14px;
           background: #ffffff;
           border: 1px solid #e2e8f0;
           border-radius: 14px;
-          padding: 20px;
+          padding: 18px;
           box-shadow: 0 1px 3px rgba(15,23,42,0.04);
           transition: border-color 0.2s ease, box-shadow 0.2s ease;
+          min-width: 0;
         }
 
         .stat-card:hover {
@@ -340,15 +351,15 @@ export default function AdminDashboard() {
         }
 
         .stat-icon {
-          width: 44px;
-          height: 44px;
-          border-radius: var(--radius-lg);
+          width: 40px;
+          height: 40px;
+          border-radius: 10px;
           display: flex;
           align-items: center;
           justify-content: center;
         }
         
-        .stat-icon span { font-size: 22px; font-variation-settings: 'FILL' 1; }
+        .stat-icon span { font-size: 20px; font-variation-settings: 'FILL' 1; }
         .stat-icon.primary { background: var(--primary-fixed); color: var(--primary); }
         .stat-icon.secondary { background: var(--secondary-fixed); color: var(--secondary); }
         .stat-icon.tertiary { background: var(--tertiary-fixed-dim); color: var(--tertiary); }
@@ -356,55 +367,53 @@ export default function AdminDashboard() {
 
         .stat-value {
           font-family: var(--font-display);
-          font-weight: 700;
-          font-size: 32px;
+          font-weight: 800;
+          font-size: 28px;
           color: #111c2d;
           margin: 0;
           line-height: 1.1;
           letter-spacing: -0.01em;
+          word-break: break-word;
         }
 
         .stat-label {
           color: var(--on-surface-variant);
-          font-size: 13.5px;
-          font-weight: 500;
+          font-size: 13px;
+          font-weight: 600;
           margin: 4px 0 0 0;
         }
         
         .stat-subtext {
           font-size: 12px;
           margin-top: 8px;
-          font-weight: 500;
+          font-weight: 600;
           display: flex;
-          gap: 12px;
+          gap: 10px;
+          flex-wrap: wrap;
         }
 
         .sys-health-grid {
           display: grid;
           grid-template-columns: repeat(4, 1fr);
-          gap: 20px;
-          padding: 24px 20px;
+          gap: 16px;
+          padding: 18px 16px;
           border: 1px solid #f0f3ff;
           border-radius: 12px;
-          margin-top: 20px;
-        }
-        @media (max-width: 1024px) {
-          .sys-health-grid { grid-template-columns: repeat(2, 1fr) !important; }
-        }
-        @media (max-width: 640px) {
-          .sys-health-grid { grid-template-columns: 1fr !important; }
+          margin-top: 16px;
         }
 
         .sys-health-item {
           display: flex;
           align-items: center;
           gap: 10px;
+          min-width: 0;
         }
 
         .sys-health-item .dot {
           width: 10px;
           height: 10px;
           border-radius: 50%;
+          flex-shrink: 0;
         }
 
         .sys-health-item .dot.up { background: var(--tertiary); box-shadow: 0 0 8px var(--tertiary); }
@@ -431,8 +440,8 @@ export default function AdminDashboard() {
           display: flex;
           align-items: center;
           justify-content: center;
-          z-index: 100;
-          padding: 16px;
+          z-index: 1000;
+          padding: 12px;
         }
 
         .modal-content {
@@ -441,6 +450,9 @@ export default function AdminDashboard() {
           box-shadow: 0 20px 40px rgba(0,0,0,0.15);
           border: 1px solid var(--outline-variant);
           width: 100%;
+          max-width: 448px;
+          max-height: 90vh;
+          overflow-y: auto;
           font-family: 'Manrope', sans-serif;
         }
         
@@ -448,16 +460,55 @@ export default function AdminDashboard() {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          padding: 20px 24px;
+          padding: 16px 20px;
           border-bottom: 1px solid #f0f3ff;
         }
         
-        .modal-header h3 { margin: 0; font-size: 18px; font-weight: 700; font-family: 'Plus Jakarta Sans', 'Manrope', sans-serif; }
-        .modal-body { padding: 24px; }
-        .modal-footer { padding: 16px 24px; border-top: 1px solid #f0f3ff; display: flex; justify-content: flex-end; gap: 8px; background: #fafbff; border-bottom-left-radius: 16px; border-bottom-right-radius: 16px; }
+        .modal-header h3 { margin: 0; font-size: 17px; font-weight: 700; font-family: 'Plus Jakarta Sans', 'Manrope', sans-serif; }
+        .modal-body { padding: 20px; }
+        .modal-footer { padding: 14px 20px; border-top: 1px solid #f0f3ff; display: flex; justify-content: flex-end; gap: 8px; background: #fafbff; border-bottom-left-radius: 16px; border-bottom-right-radius: 16px; flex-wrap: wrap; }
 
         @media (max-width: 1024px) {
-          .sys-health-grid { grid-template-columns: repeat(2, 1fr); }
+          .sys-health-grid { grid-template-columns: repeat(2, 1fr) !important; }
+        }
+
+        @media (max-width: 640px) {
+          .page-header {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 12px;
+          }
+          .page-title-group h1 { font-size: 22px; }
+          .header-actions {
+            width: 100%;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 120px), 1fr));
+            gap: 8px;
+          }
+          .header-actions .btn {
+            padding: 8px 10px;
+            font-size: 12.5px;
+          }
+          .stats-grid {
+            grid-template-columns: 1fr !important;
+          }
+          .stats-grid-compact {
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 10px;
+          }
+          .sys-health-grid { grid-template-columns: 1fr !important; gap: 12px; padding: 14px; }
+          .panel { padding: 16px; border-radius: 14px; }
+          .stat-card { padding: 14px; }
+          .stat-value { font-size: 24px; }
+        }
+
+        @media (max-width: 360px) {
+          .stats-grid-compact {
+            grid-template-columns: 1fr !important;
+          }
+          .header-actions {
+            grid-template-columns: 1fr !important;
+          }
         }
       `}</style>
 
@@ -469,13 +520,13 @@ export default function AdminDashboard() {
         </div>
         <div className="header-actions">
           <button className="btn btn-outline" onClick={() => setShowExportModal(true)}>
-            <span className="material-symbols-outlined">download</span>Export Data
+            <span className="material-symbols-outlined">download</span>Export
           </button>
           <button className="btn btn-outline" onClick={() => navigate('/admin/settings')}>
             <span className="material-symbols-outlined">settings</span>Settings
           </button>
           <button className="btn btn-primary" onClick={() => navigate('/admin/users')}>
-            <span className="material-symbols-outlined">group</span>Manage Users
+            <span className="material-symbols-outlined">group</span>Users
           </button>
         </div>
       </section>
@@ -542,44 +593,44 @@ export default function AdminDashboard() {
       </section>
 
       {/* Analytics KPIs */}
-      <h2 style={{ margin: '8px 0 0', fontSize: 18, fontWeight: 700 }}>Analytics Engine</h2>
-      <section className="stats-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))' }}>
-        <div className="panel stat-card" style={{ padding: '16px' }}>
+      <h2 style={{ margin: '8px 0 0', fontSize: 17, fontWeight: 700 }}>Analytics Engine</h2>
+      <section className="stats-grid-compact">
+        <div className="panel stat-card" style={{ padding: '14px' }}>
           <p className="stat-label" style={{ fontSize: '11px', textTransform: 'uppercase' }}>Avg Risk Score</p>
-          <p className="stat-value" style={{ fontSize: '24px' }}>{stats.averageScanScore?.toFixed(1) || '100.0'}</p>
+          <p className="stat-value" style={{ fontSize: '22px' }}>{stats.averageScanScore?.toFixed(1) || '100.0'}</p>
         </div>
-        <div className="panel stat-card" style={{ padding: '16px' }}>
+        <div className="panel stat-card" style={{ padding: '14px' }}>
           <p className="stat-label" style={{ fontSize: '11px', textTransform: 'uppercase' }}>Avg Findings/Scan</p>
-          <p className="stat-value" style={{ fontSize: '24px' }}>{stats.averageFindings?.toFixed(1) || '0.0'}</p>
+          <p className="stat-value" style={{ fontSize: '22px' }}>{stats.averageFindings?.toFixed(1) || '0.0'}</p>
         </div>
-        <div className="panel stat-card" style={{ padding: '16px' }}>
+        <div className="panel stat-card" style={{ padding: '14px' }}>
           <p className="stat-label" style={{ fontSize: '11px', textTransform: 'uppercase' }}>Avg Scan Time</p>
-          <p className="stat-value" style={{ fontSize: '24px' }}>{stats.averageScanDuration?.toFixed(1) || '0'}s</p>
+          <p className="stat-value" style={{ fontSize: '22px' }}>{stats.averageScanDuration?.toFixed(1) || '0'}s</p>
         </div>
-        <div className="panel stat-card" style={{ padding: '16px' }}>
+        <div className="panel stat-card" style={{ padding: '14px' }}>
           <p className="stat-label" style={{ fontSize: '11px', textTransform: 'uppercase' }}>AI Reports</p>
-          <p className="stat-value" style={{ fontSize: '24px' }}><AnimatedNumber value={stats.totalReports} /></p>
+          <p className="stat-value" style={{ fontSize: '22px' }}><AnimatedNumber value={stats.totalReports} /></p>
         </div>
-        <div className="panel stat-card" style={{ padding: '16px' }}>
+        <div className="panel stat-card" style={{ padding: '14px' }}>
           <p className="stat-label" style={{ fontSize: '11px', textTransform: 'uppercase' }}>AI Chat Requests</p>
-          <p className="stat-value" style={{ fontSize: '24px' }}><AnimatedNumber value={stats.aiRequests} /></p>
+          <p className="stat-value" style={{ fontSize: '22px' }}><AnimatedNumber value={stats.aiRequests} /></p>
         </div>
       </section>
 
       {/* Daily Activity KPIs */}
-      <h2 style={{ margin: '8px 0 0', fontSize: 18, fontWeight: 700 }}>Today's Activity</h2>
-      <section className="stats-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))' }}>
-        <div className="panel stat-card" style={{ padding: '16px' }}>
+      <h2 style={{ margin: '8px 0 0', fontSize: 17, fontWeight: 700 }}>Today's Activity</h2>
+      <section className="stats-grid-compact">
+        <div className="panel stat-card" style={{ padding: '14px' }}>
           <p className="stat-label" style={{ fontSize: '11px', textTransform: 'uppercase' }}>New Users Today</p>
-          <p className="stat-value" style={{ fontSize: '24px', color: 'var(--primary)' }}><AnimatedNumber value={stats.usersRegisteredToday} /></p>
+          <p className="stat-value" style={{ fontSize: '22px', color: 'var(--primary)' }}><AnimatedNumber value={stats.usersRegisteredToday} /></p>
         </div>
-        <div className="panel stat-card" style={{ padding: '16px' }}>
+        <div className="panel stat-card" style={{ padding: '14px' }}>
           <p className="stat-label" style={{ fontSize: '11px', textTransform: 'uppercase' }}>Projects Created Today</p>
-          <p className="stat-value" style={{ fontSize: '24px', color: 'var(--primary)' }}><AnimatedNumber value={stats.projectsCreatedToday} /></p>
+          <p className="stat-value" style={{ fontSize: '22px', color: 'var(--primary)' }}><AnimatedNumber value={stats.projectsCreatedToday} /></p>
         </div>
-        <div className="panel stat-card" style={{ padding: '16px' }}>
+        <div className="panel stat-card" style={{ padding: '14px' }}>
           <p className="stat-label" style={{ fontSize: '11px', textTransform: 'uppercase' }}>Scans Run Today</p>
-          <p className="stat-value" style={{ fontSize: '24px', color: 'var(--primary)' }}><AnimatedNumber value={stats.scansToday} /></p>
+          <p className="stat-value" style={{ fontSize: '22px', color: 'var(--primary)' }}><AnimatedNumber value={stats.scansToday} /></p>
         </div>
       </section>
 
