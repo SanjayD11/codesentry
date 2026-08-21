@@ -1,4 +1,4 @@
-﻿import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { resetPassword } from '../../api/authApi'
 import { useToast } from '../../hooks/useToast'
@@ -107,10 +107,7 @@ export default function ResetPassword() {
       <div className="absolute inset-0 bg-gradient-to-br from-transparent via-[#fafcff]/80 to-[#fafcff] pointer-events-none" />
 
       <Link to="/" className="relative z-10 flex items-center gap-3 w-fit">
-        <div className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center text-white shadow-sm">
-          <span className="material-symbols-outlined text-[20px]" style={{ fontVariationSettings:"'FILL' 1" }}>security</span>
-        </div>
-        <span className="font-headline-md text-[18px] font-extrabold tracking-tight text-on-surface">CodeSentry</span>
+        <img src="/logo.png" alt="CodeSentry" className="h-[44px] w-auto object-contain" />
       </Link>
 
       <div className="relative z-10 flex-1 flex flex-col justify-center max-w-[520px] mx-auto w-full py-6">
@@ -158,12 +155,9 @@ export default function ResetPassword() {
         <div className="absolute inset-0 lg:hidden" style={{ backgroundColor:'#f9f9ff', backgroundImage:'radial-gradient(at 100% 0%,rgba(33,112,228,0.08) 0px,transparent 50%)' }} />
 
         <div className="w-full max-w-[380px] relative z-10 py-4">
-          <div className="flex lg:hidden items-center gap-sm mb-2xl">
+          <div className="flex lg:hidden items-center gap-sm mb-6">
             <Link to="/" className="flex items-center gap-sm">
-              <div className="w-10 h-10 rounded-lg bg-primary-container flex items-center justify-center text-on-primary-container shadow-sm">
-                <span className="material-symbols-outlined" style={{ fontVariationSettings:"'FILL' 1" }}>security</span>
-              </div>
-              <span className="font-headline-md text-[18px] font-extrabold tracking-tight text-primary">CodeSentry</span>
+              <img src="/logo.png" alt="CodeSentry" className="h-[40px] w-auto object-contain" />
             </Link>
           </div>
 

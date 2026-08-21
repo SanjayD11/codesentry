@@ -39,23 +39,30 @@ spring:
         format_sql: false
 
   # ----------------------------------------------------------------------------
-  # MAIL — production SMTP
+  # MAIL — production SMTP (supports port 465 SSL and port 587 STARTTLS)
   # ----------------------------------------------------------------------------
   mail:
-    host: ${MAIL_HOST:}
-    port: ${MAIL_PORT:587}
+    host: ${MAIL_HOST:smtp.gmail.com}
+    port: ${MAIL_PORT:465}
     username: ${MAIL_USERNAME:}
     password: ${MAIL_PASSWORD:}
     properties:
       mail:
         smtp:
           auth: true
+          ssl:
+            enable: true
+            trust: "*"
           starttls:
             enable: true
             required: false
-          connectiontimeout: 5000
-          timeout: 5000
-          writetimeout: 5000
+          connectiontimeout: 10000
+          timeout: 10000
+          writetimeout: 10000
+          socketFactory:
+            port: ${MAIL_PORT:465}
+            class: javax.net.ssl.SSLSocketFactory
+            fallback: true
 
   # ----------------------------------------------------------------------------
   # MULTIPART — production overrides for Render
