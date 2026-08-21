@@ -30,7 +30,7 @@ const Settings           = lazy(() => import('./pages/settings/Settings'))
 const Profile            = lazy(() => import('./pages/profile/Profile'))
 
 // Minimum display time for splash (ms) — long enough to actually see it
-const SPLASH_MIN_MS = 1400
+const SPLASH_MIN_MS = 3000
 
 /**
  * AppSplash — shows branded splash for at least SPLASH_MIN_MS,
