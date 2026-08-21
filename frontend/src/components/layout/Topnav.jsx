@@ -27,7 +27,7 @@ export default function Topnav() {
       { name: 'Source Code Scanner', path: '/scanner',  icon: 'code' },
       { name: 'Security Reports',    path: '/reports',  icon: 'folder_special' },
       { name: 'Scan History',        path: '/history',  icon: 'manage_history' },
-      { name: 'AI Assistant',        path: '/chat',     icon: 'smart_toy' },
+      { name: 'AI Assistant', path: '/chat', icon: 'ai-bot' },
       { name: 'Settings',            path: '/settings', icon: 'settings' },
     ]
   }
@@ -131,11 +131,15 @@ export default function Topnav() {
                 }
               }}
             >
-              <span className="material-symbols-outlined" style={{
-                fontSize: 16,
-                fontVariationSettings: active ? "'FILL' 1" : "'FILL' 0",
-                transition: 'font-variation-settings 0.18s ease',
-              }}>{item.icon}</span>
+              {item.icon === 'ai-bot' ? (
+                <img src="/ai-bot.png" alt="AI" style={{ width: 16, height: 16, borderRadius: 4, objectFit: 'cover' }} />
+              ) : (
+                <span className="material-symbols-outlined" style={{
+                  fontSize: 16,
+                  fontVariationSettings: active ? "'FILL' 1" : "'FILL' 0",
+                  transition: 'font-variation-settings 0.18s ease',
+                }}>{item.icon}</span>
+              )}
               {item.name}
             </Link>
           )

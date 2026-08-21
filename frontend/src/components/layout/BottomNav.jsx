@@ -1,4 +1,4 @@
-﻿import { useState } from 'react'
+import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
 import { createPortal } from 'react-dom'
@@ -103,13 +103,16 @@ export default function BottomNav() {
           <div className="fab-overlay" onClick={() => setScanOpen(false)} />
           <div className="fab-panel">
             {[
-              { label: 'New Project',      path: '/projects', icon: 'folder_open', bg: '#e0f2fe', ic: '#0284c7' },
-              { label: 'Source Code Scan', path: '/scanner',  icon: 'code',        bg: '#eff6ff', ic: '#0058be' },
-              { label: 'Security Chat',    path: '/chat',     icon: 'smart_toy',   bg: '#fdf4ff', ic: '#9333ea' },
+              { label: 'New Project',      path: '/projects', icon: 'folder_open', bg: '#e0f2fe', ic: '#0284c7', isImg: false },
+              { label: 'Source Code Scan', path: '/scanner',  icon: 'code',        bg: '#eff6ff', ic: '#0058be', isImg: false },
+              { label: 'Security Chat',    path: '/chat',     icon: '/ai-bot.png', bg: '#eff6ff', ic: '#0058be', isImg: true  },
             ].map(item => (
               <Link key={item.path} to={item.path} className="fab-item" onClick={() => setScanOpen(false)}>
                 <div className="fab-item-icon" style={{ background: item.bg }}>
-                  <span className="material-symbols-outlined" style={{ fontSize: 19, color: item.ic }}>{item.icon}</span>
+                  {item.isImg
+                    ? <img src={item.icon} alt="AI" style={{ width: 22, height: 22, borderRadius: 5, objectFit: 'cover' }} />
+                    : <span className="material-symbols-outlined" style={{ fontSize: 19, color: item.ic }}>{item.icon}</span>
+                  }
                 </div>
                 {item.label}
               </Link>
