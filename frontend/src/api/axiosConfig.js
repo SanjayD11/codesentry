@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { isTokenExpired, clearAuthStorage } from '../utils/tokenUtils'
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || '/api/v1',
@@ -8,7 +9,13 @@ const api = axios.create({
 // Inject JWT on every request
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('token')
-  if (token) config.headers.Authorization = `Bearer ${token}`
+  if (token) {
+    if (isTokenExpired(token)) {
+      clearAuthStorage()
+    } else {
+      config.headers.Authorization = `Bearer ${token}`
+    }
+  }
   return config
 })
 
@@ -20,14 +27,11 @@ api.interceptors.response.use(
   (err) => {
     if (err.response?.status === 401) {
       // Only trigger once per session expiry cycle.
-      // Also guard: if there was never a token, this is a fresh page load
-      // on a protected route — redirect silently without a toast.
       const hadToken = !!localStorage.getItem('token')
+      clearAuthStorage()
 
       if (!redirectingToLogin) {
         redirectingToLogin = true
-        localStorage.removeItem('token')
-        localStorage.removeItem('user')
 
         if (hadToken) {
           // User was genuinely logged in — show session-expired message
@@ -48,3 +52,4 @@ api.interceptors.response.use(
 )
 
 export default api
+

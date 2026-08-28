@@ -1,14 +1,25 @@
-﻿/* eslint-disable react/only-export-components */
+/* eslint-disable react/only-export-components */
 import { createContext, useContext, useState, useCallback } from 'react'
 import { login as loginApi, register as registerApi, firebaseLogin } from '../api/authApi'
 import { auth, googleProvider, githubProvider } from '../config/firebase'
 import { signInWithPopup } from 'firebase/auth'
+import { isTokenExpired, clearAuthStorage } from '../utils/tokenUtils'
 
 const AuthContext = createContext(null)
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => {
-    try { return JSON.parse(localStorage.getItem('user')) } catch { return null }
+    try {
+      const token = localStorage.getItem('token')
+      if (isTokenExpired(token)) {
+        clearAuthStorage()
+        return null
+      }
+      return JSON.parse(localStorage.getItem('user'))
+    } catch {
+      clearAuthStorage()
+      return null
+    }
   })
 
   const login = useCallback(async (email, password) => {
@@ -69,14 +80,15 @@ export function AuthProvider({ children }) {
   }, [])
 
   const logout = useCallback(() => {
-    localStorage.removeItem('token')
-    localStorage.removeItem('user')
+    clearAuthStorage()
     setUser(null)
     window.location.href = '/login'
   }, [])
 
+  const isAuth = !!user && !isTokenExpired(localStorage.getItem('token'))
+
   return (
-    <AuthContext.Provider value={{ user, login, register, logout, updateUser, loginWithGoogle, loginWithGithub, isAuthenticated: !!user }}>
+    <AuthContext.Provider value={{ user, login, register, logout, updateUser, loginWithGoogle, loginWithGithub, isAuthenticated: isAuth }}>
       {children}
     </AuthContext.Provider>
   )
@@ -87,3 +99,4 @@ export const useAuth = () => {
   if (!ctx) throw new Error('useAuth must be inside AuthProvider')
   return ctx
 }
+
